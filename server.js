@@ -79,6 +79,14 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
 function render (req, res) {
+  if (req.url.indexOf('/api/') === 0) {
+    next()
+    return
+  } else if (req.url.indexOf('/404') === 0) {
+    res.status(404).send('404 | Page Not Found')
+    return
+  }
+
   const s = Date.now()
 
   res.setHeader("Content-Type", "text/html")
@@ -98,7 +106,7 @@ function render (req, res) {
   }
 
   const context = {
-    title: 'Vue HN 2.0', // default title
+    title: 'Readr Admin', // default title
     url: req.url
   }
   renderer.renderToString(context, (err, html) => {
@@ -116,7 +124,16 @@ app.get('*', isProd ? render : (req, res) => {
   readyPromise.then(() => render(req, res))
 })
 
+app.use('/api', require('./api/index'))
+
 const port = process.env.PORT || 8080
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })
+module.exports = {
+  close: () => {
+    server.close()
+  },
+  ready: readyPromise,
+  app: server
+}

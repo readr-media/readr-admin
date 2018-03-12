@@ -7,64 +7,41 @@
 </template>
 
 <style lang="stylus">
-body
-  font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  font-size 15px
-  background-color lighten(#eceef1, 30%)
-  margin 0
-  padding-top 55px
-  color #34495e
-  overflow-y scroll
-
 a
-  color #34495e
   text-decoration none
 
-.header
-  background-color #ff6600
-  position fixed
-  z-index 999
-  height 55px
-  top 0
-  left 0
-  right 0
-  .inner
-    max-width 800px
-    box-sizing border-box
-    margin 0px auto
-    padding 15px 5px
-  a
-    color rgba(255, 255, 255, .8)
-    line-height 24px
-    transition color .15s ease
-    display inline-block
-    vertical-align middle
-    font-weight 300
-    letter-spacing .075em
-    margin-right 1.8em
-    &:hover
-      color #fff
-    &.router-link-active
-      color #fff
-      font-weight 400
-    &:nth-child(6)
-      margin-right 0
-  .github
-    color #fff
-    font-size .9em
-    margin 0
-    float right
-
-.logo
-  width 24px
-  margin-right 10px
-  display inline-block
-  vertical-align middle
-
+button
+  cursor pointer
+  &:disabled
+    cursor not-allowed
 .view
-  max-width 800px
+  // max-width 800px
   margin 0 auto
   position relative
+  background-color #fff
+  padding-top 35px
+  &.locked
+    width 100%
+    height 100vh
+    overflow hidden
+
+.main-container
+  width 90%
+  max-width 90%
+  margin 0 auto
+  overflow hidden
+
+.main-panel
+  width 100%
+  padding 20px 5%
+  border 2px solid #d8ca21
+  background #fff
+
+.datepicker__input
+  padding-left 10px
+  width 100%
+  height 25px
+  color #808080
 
 .fade-enter-active, .fade-leave-active
   transition all .2s ease
@@ -72,16 +49,15 @@ a
 .fade-enter, .fade-leave-active
   opacity 0
 
-@media (max-width 860px)
-  .header .inner
-    padding 15px 30px
+@media (min-width 768px)
+  .view
+    background-color #e6e6e6
 
-@media (max-width 600px)
-  .header
-    .inner
-      padding 15px
-    a
-      margin-right 1em
-    .github
-      display none
+@media (min-width 950px)
+  .main-container
+    width 950px
+    max-width 950px
+    margin 22px auto 0
+  .main-panel
+    padding 35px calc((100% - 800px) / 2) 40px
 </style>

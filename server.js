@@ -1,11 +1,14 @@
-const fs = require('fs')
-const path = require('path')
+const Cookies = require('cookies')
 const LRU = require('lru-cache')
+const compression = require('compression')
 const express = require('express')
 const favicon = require('serve-favicon')
-const compression = require('compression')
+const fs = require('fs')
 const microcache = require('route-cache')
+const path = require('path')
 const resolve = file => path.resolve(__dirname, file)
+const uuidv4 = require('uuid/v4')
+const { PAGE_CACHE_EXCLUDING, GOOGLE_CLIENT_ID, TALK_SERVER } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 
 const isProd = process.env.NODE_ENV === 'production'
@@ -76,7 +79,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 // headers.
 // 1-second microcache.
 // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
+// app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
 function render (req, res) {
   if (req.url.indexOf('/api/') === 0) {
@@ -91,6 +94,12 @@ function render (req, res) {
 
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
+
+  const cookies = new Cookies( req, res, {} )
+  const readrid = cookies.get('readrid')
+  if (!readrid) {
+    cookies.set('readrid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
+  }
 
   const handleError = err => {
     if (err.url) {
@@ -107,7 +116,11 @@ function render (req, res) {
 
   const context = {
     title: 'Readr Admin', // default title
-    url: req.url
+    url: req.url,
+    cookie: cookies.get('csrf'),
+    initmember: cookies.get('initmember'),
+    GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID,
+    TALK_SERVER
   }
   renderer.renderToString(context, (err, html) => {
     if (err) {

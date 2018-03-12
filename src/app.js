@@ -4,12 +4,29 @@ import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 
+import ZHTW from 'src/locale/zh-TW'
+import EN from 'src/locale/en'
+import VueI18n from 'vue-i18n'
+Vue.use(VueI18n)
+
+const debug = require('debug')('CLIENT:app.js')
+
 // Expose a factory function that creates a fresh set of store, router,
 // app instances on each call (which is called for each SSR request)
 export function createApp () {
   // create store and router instances
   const store = createStore()
   const router = createRouter()
+
+  debug(ZHTW)
+  const messages = {
+    'zh-TW': ZHTW,
+    'en': EN
+  }
+  const i18n = new VueI18n({
+    locale: 'zh-TW', // set locale
+    messages, // set locale messages
+  })
 
   // sync the router with the vuex store.
   // this registers `store.state.route`
@@ -19,6 +36,7 @@ export function createApp () {
   // here we inject the router, store and ssr context to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = new Vue({
+    i18n,
     router,
     store,
     render: h => h(App)

@@ -4,7 +4,8 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 // route-level code splitting
-const Index = () => import('../views/Index.vue')
+const Index = () => import('src/views/Index.vue')
+const ProjectManager = () => import('src/views/ProjectManager.vue')
 
 export function createRouter () {
   return new Router({
@@ -12,7 +13,8 @@ export function createRouter () {
     fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     routes: [
-      { path: '/', component: Index }
+      { path: '/', component: Index },
+      { path: '/project-manager', component: ProjectManager }
     ]
   })
 }

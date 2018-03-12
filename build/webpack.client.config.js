@@ -10,7 +10,9 @@ const config = merge(base, {
   },
   resolve: {
     alias: {
-      'create-api': './create-api-client.js'
+      'src': path.resolve(__dirname, '../src'),
+      'components': path.resolve(__dirname, '../src/components'),
+      'api': path.resolve(__dirname, '../api')
     }
   },
   plugins: [
@@ -45,7 +47,7 @@ if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     // auto generate service worker
     new SWPrecachePlugin({
-      cacheId: 'vue-hn',
+      cacheId: 'read-admin',
       filename: 'service-worker.js',
       minify: true,
       dontCacheBustUrlsMatching: /./,
@@ -53,18 +55,6 @@ if (process.env.NODE_ENV === 'production') {
       runtimeCaching: [
         {
           urlPattern: '/',
-          handler: 'networkFirst'
-        },
-        {
-          urlPattern: /\/(top|new|show|ask|jobs)/,
-          handler: 'networkFirst'
-        },
-        {
-          urlPattern: '/item/:id',
-          handler: 'networkFirst'
-        },
-        {
-          urlPattern: '/user/:id',
           handler: 'networkFirst'
         }
       ]

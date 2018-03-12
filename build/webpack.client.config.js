@@ -9,11 +9,7 @@ const config = merge(base, {
     app: './src/entry-client.js'
   },
   resolve: {
-    alias: {
-      'src': path.resolve(__dirname, '../src'),
-      'components': path.resolve(__dirname, '../src/components'),
-      'api': path.resolve(__dirname, '../api')
-    }
+    alias: {}
   },
   plugins: [
     // strip dev-only code in Vue source

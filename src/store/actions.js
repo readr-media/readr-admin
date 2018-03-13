@@ -1,8 +1,8 @@
 import {
-  fetchUser,
-  fetchItems,
-  fetchIdsByType
-} from '../api'
+  fetchProjects
+} from 'src/api'
+
+const debug = require('debug')('CLIENT:actions')
 
 export default {
   // ensure data for rendering given list type
@@ -45,5 +45,11 @@ export default {
     return state.users[id]
       ? Promise.resolve(state.users[id])
       : fetchUser(id).then(user => commit('SET_USER', { id, user }))
+  },
+
+  FETCH_PROJECTS: ({ commit, state }, { params }) => {
+    debug('Abt to fetch data.')
+    return fetchProjects({})
+      .then((projects) => commit('SET_PROJECTS', { projects }))
   }
 }

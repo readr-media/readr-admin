@@ -18,7 +18,6 @@ export function createApp () {
   const store = createStore()
   const router = createRouter()
 
-  debug(ZHTW)
   const messages = {
     'zh-TW': ZHTW,
     'en': EN

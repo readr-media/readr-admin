@@ -24,9 +24,7 @@ const superagent = require('superagent')
 const SECRET_LENGTH = 10
 const authVerify = jwtExpress({ secret: CONFIG.JWT_SECRET })
 
-// parse application/x-www-form-urlencoded
 router.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
 router.use(bodyParser.json())
 
 const authorize = (req, res, next) => {
@@ -52,6 +50,8 @@ const authorize = (req, res, next) => {
   }
 }
 
+
+router.use('/project', require('./middle/project'))
 // router.use('/activate', verifyToken, require('./middle/member/activation'))
 // router.use('/initmember', authVerify, require('./middle/member/initMember'))
 // router.use('/member/public', require('./middle/member'))
@@ -64,6 +64,7 @@ const authorize = (req, res, next) => {
 
 router.route('*')
   .get(function (req, res, next) {
+    debug('Abt to send req to api.')
     const url = `${apiHost}${req.url}`
     if (res.redis) {
       console.log('fetch data from Redis.', req.url)

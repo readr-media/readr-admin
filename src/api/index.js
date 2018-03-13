@@ -52,6 +52,42 @@ function _doFetch (url) {
   })
 }
 
+function _doPost (url, params, token) {
+  return new Promise((resolve, reject) => {
+    superagent
+      .post(url)
+      // .set('Authorization', `Bearer ${token || getToken()}`)
+      .send(params)
+      .end(function (err, res) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ status: res.status, body: camelizeKeys(res.body) })
+        }
+      })
+  })
+}
+
+function _doPut (url, params) {
+  return new Promise((resolve, reject) => {
+    superagent
+      .put(url)
+      // .set('Authorization', `Bearer ${getToken()}`)
+      .send(params)
+      .end(function (err, res) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ status: res.status, body: camelizeKeys(res.body) })
+        }
+      })
+  })
+}
+
+export function createProject ({ params }) {
+  return _doPost(`${host}/api/project/create`, params)
+}
+
 export function fetchProjects ({ params }) {
   let url = `${host}/api/project/list`
   const query = _buildQuery(params)
@@ -60,4 +96,8 @@ export function fetchProjects ({ params }) {
   }
   debug('Abt to fetch data:', url)
   return _doFetch(url)
+}
+
+export function updateProject ({ params }) {
+  return _doPut(`${host}/api/project/update`, params)
 }

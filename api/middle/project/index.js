@@ -35,4 +35,49 @@ router.get('/list', (req, res) => {
   })
 })
 
+router.post('/create', (req, res) => {
+  debug('Got a project creating call.')
+  debug(req.body)
+  // res.send('ok')
+  const url = `${apiHost}/project`
+  superagent
+  .post(url)
+  .send(req.body)
+  .end((error, response) => {
+    if (!error && response) {
+      res.send({ status: 200, text: 'Create a new project successfully.' })
+    } else {
+      const errWrapped = handlerError(error, response)
+      res.status(errWrapped.status).send({
+        status: errWrapped.status,
+        text: errWrapped.text
+      })
+      console.error(`Error occurred during fetch data from : ${url}`)
+      console.error(error) 
+    }
+  })
+})
+
+router.put('/update', (req, res) => {
+  debug('Got a project updating call.')
+  debug(req.body)
+  const url = `${apiHost}/project`
+  superagent
+  .put(url)
+  .send(req.body)
+  .end((error, response) => {
+    if (!error && response) {
+      res.send({ status: 200, text: 'Updating a new project successfully.' })
+    } else {
+      const errWrapped = handlerError(error, response)
+      res.status(errWrapped.status).send({
+        status: errWrapped.status,
+        text: errWrapped.text
+      })
+      console.error(`Error occurred during fetch data from : ${url}`)
+      console.error(error) 
+    }
+  })
+})
+
 module.exports = router

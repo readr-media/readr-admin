@@ -2,26 +2,44 @@
   <div class="project-manager">
     <PageAside></PageAside>
     <main>
-      <div class="project-manager__title">
-        <h2 v-text="title"></h2>
+      <div class="project-manager__header">
+        <div class="project-manager__title">
+          <h2 v-text="title"></h2>
+        </div>
+        <div class="project-manager__create">
+          <div class="button" @click="openCreatePanel"><span v-text="$t('project_page.button_create_project')"></span></div>
+        </div>
       </div>
       <div class="project-manager__item th">
-        <span v-text="$t('project_page.id')"></span>
-        <span v-text="$t('project_page.period')"></span>
-        <span v-text="$t('project_page.published_time')"></span>
-        <span v-text="$t('project_page.title')"></span>
-        <span v-text="$t('project_page.custom_editor')"></span>
-        <span v-text="$t('project_page.post_count')"></span>
-        <span v-text="$t('project_page.created_time')"></span>
-        <span></span>
+        <span class="id" v-text="$t('project_page.id')"></span>
+        <span class="period" v-text="$t('project_page.period')"></span>
+        <span class="publish" v-text="$t('project_page.published_time')"></span>
+        <span class="title" v-text="$t('project_page.title')"></span>
+        <span class="editor" v-text="$t('project_page.custom_editor')"></span>
+        <span class="count" v-text="$t('project_page.post_count')"></span>
+        <span class="create" v-text="$t('project_page.created_time')"></span>
       </div>
-      <div class="project-manager__item td"></div>
+      <template v-for="proj in projects">
+        <div class="project-manager__item td">
+          <span class="id" v-text="get(proj, 'id')" @click="updateProject(get(proj, 'id'))"></span>
+          <span class="period" v-text="get(proj, 'period')"></span>
+          <span class="publish" v-text="get(proj, 'publishedAt')"></span>
+          <span class="title" v-text="get(proj, 'title')"></span>
+          <span class="editor" v-text="get(proj, 'custom_editor')"></span>
+          <span class="count" v-text="get(proj, 'commentAmount')"></span>
+          <span class="create" v-text="get(proj, 'createdAt')"></span>
+        </div>
+      </template>
     </main>
+    <CreateProjectPanel v-if="shouldShowCreatePanel" :shouldShowCreatePanel.sync="shouldShowCreatePanel" @refreshProjects="refreshProjects"></CreateProjectPanel>
+    <UpdateProjectPanel v-if="shouldShowUpdatePanel" :shouldShowUpdatePanel.sync="shouldShowUpdatePanel" @refreshProjects="refreshProjects" :project="projGoingToUpdate"></UpdateProjectPanel>
   </div>
 </template>
 <script>
+  import CreateProjectPanel from 'src/components/project/CreateProjectPanel.vue'
   import PageAside from 'src/components/PageAside.vue'
-  import { get } from 'lodash'
+  import UpdateProjectPanel from 'src/components/project/UpdateProjectPanel.vue'
+  import { find, get } from 'lodash'
 
   const debug = require('debug')('CLIENT:ProjectManager')
   const fetchProjects = (store) => {
@@ -35,26 +53,122 @@
       return fetchProjects(store)
     },
     components: {
-      PageAside
+      CreateProjectPanel,
+      PageAside,
+      UpdateProjectPanel
+    },
+    computed: {
+      projects () {
+        return get(this.$store, 'state.projects')
+      }
     },
     data () {
       return {
+        projGoingToUpdate: {},
+        shouldShowCreatePanel: false,
+        shouldShowUpdatePanel: false,
         title: this.$t('project')
       }
     },
-    methods: {},
+    methods: {
+      get,
+      openCreatePanel () {
+        this.shouldShowCreatePanel = true
+        this.shouldShowUpdatePanel = false
+      },
+      refreshProjects () {
+        fetchProjects(this.$store)
+      },
+      updateProject (projid) {
+        const project = find(this.projects, { id: projid })
+        this.shouldShowCreatePanel = false
+        this.shouldShowUpdatePanel = true
+        debug('Abt to update project.', project)
+        this.projGoingToUpdate = project
+      }
+    },
     mounted () {},
+    watch: {
+      // shouldShowCreatePanel: function () {
+        // debug('this.shouldShowCreatePanel change detected.', this.shouldShowCreatePanel)
+        // if (this.shouldShowCreatePanel) {
+          // this.shouldShowUpdatePanel
+        // }
+      // }
+      shouldShowUpdatePanel: function () {
+        if (!this.shouldShowUpdatePanel) {
+          this.projGoingToUpdate = {}
+        }
+      }
+    }
   }
 </script>
 <style lang="stylus" scoped>
   .project-manager
     min-height 100vh
-    padding-left 25% /* This Padding is for PageAside */
+    padding-left 20% /* This Padding is for PageAside */
+    > main
+      padding 0 40px
+
+    &__header
+      display flex
+      align-items center
+      margin 10px 0
+      > div
+        margin 5px 0
     &__title
       h2
         font-size 1.375rem
+        margin 0
+    &__create
+      > .button
+        padding 5px 10px
+        background-color #000
+        color #fff
+        border-radius 5px
+        margin 0 20px
+        cursor pointer
+        &:hover
+          background-color #c9c9c9
+
     &__item
+      width 100%
       display flex
-      justify-content space-between
+      align-items center
+      span
+        display inline-block
+        width calc(100% / 8)
+        // height 100%
+        padding 5px
+        // justify-content center
+        // align-items center
+        &.id
+          width 12.5%
+        &.title
+          width 27.5%
+        &.period, &.publish, &.create
+          width 12.5%
+        &.count
+          width 6%
+        &.editor
+          width 12.5%
+      &.th
+        font-size 1rem
+        font-weight 600
+      &.td
+        font-size 0.85rem
+        span.id
+          color #5858bb
+          text-decoration underline
+          cursor pointer
+          &:hover
+            color #fff
+      &:hover
+        color #fff
+        background-color #858585
+      &:nth-child(odd)
+        background-color #d9d9d9
+        &:hover
+          background-color #858585
 
 </style>

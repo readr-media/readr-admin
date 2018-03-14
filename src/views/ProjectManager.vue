@@ -12,22 +12,18 @@
       </div>
       <div class="project-manager__item th">
         <span class="id" v-text="$t('project_page.id')"></span>
-        <span class="period" v-text="$t('project_page.period')"></span>
-        <span class="publish" v-text="$t('project_page.published_time')"></span>
         <span class="title" v-text="$t('project_page.title')"></span>
-        <span class="editor" v-text="$t('project_page.custom_editor')"></span>
-        <span class="count" v-text="$t('project_page.post_count')"></span>
-        <span class="create" v-text="$t('project_page.created_time')"></span>
+        <span class="status" v-text="$t('project_page.status')"></span>
+        <span class="count" v-text="$t('project_page.donation_count')"></span>
+        <span class="updated" v-text="$t('project_page.updated_time')"></span>
       </div>
       <template v-for="proj in projects">
         <div class="project-manager__item td">
           <span class="id" v-text="get(proj, 'id')" @click="updateProject(get(proj, 'id'))"></span>
-          <span class="period" v-text="get(proj, 'period')"></span>
-          <span class="publish" v-text="get(proj, 'publishedAt')"></span>
           <span class="title" v-text="get(proj, 'title')"></span>
-          <span class="editor" v-text="get(proj, 'custom_editor')"></span>
-          <span class="count" v-text="get(proj, 'commentAmount')"></span>
-          <span class="create" v-text="get(proj, 'createdAt')"></span>
+          <span class="status" v-text="get(proj, 'status', '')"></span>
+          <span class="count" v-text="get(proj, 'donationCount', '')"></span>
+          <span class="updated" v-text="get(proj, 'updatedAt')"></span>
         </div>
       </template>
     </main>
@@ -145,11 +141,11 @@
         &.id
           width 12.5%
         &.title
-          width 27.5%
-        &.period, &.publish, &.create
-          width 12.5%
+          width 30%
+        &.period, &.publish, &.updated
+          width 20%
         &.count
-          width 6%
+          width 10%
         &.editor
           width 12.5%
       &.th

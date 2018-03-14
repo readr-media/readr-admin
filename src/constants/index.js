@@ -1,3 +1,4 @@
 export const managerTools = [
-  { name: 'project', route: 'project-manager' }
+  { name: 'candidate', route: 'project-candidate' },
+  { name: 'project', route: 'project-manager' },
 ]

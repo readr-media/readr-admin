@@ -1,11 +1,17 @@
 export default {
   'project': '議題管理',
+  'candidate': '候選議題管理',
+  'candidate_page': {
+    'list': '候選列表'
+  },
   'project_page': {
-    'id': 'ID',
+    'id': '議題編號',
     'period': '週期',
     'published_time': '預計發佈日期',
     'created_time': '新增日期',
-    'title': '標題',
+    'updated_time': '更新日期時間',
+    'donation_count': '贊助數量',
+    'title': '議題標題',
     'custom_editor': '客座總編',
     'post_count': '評論數',
     'create_project': '新增議題',
@@ -17,6 +23,10 @@ export default {
     'hero_image': '主圖',
     'og_title': 'og title',
     'og_description': 'og description',
-    'manage': '管理'
+    'manage': '管理',
+    'status': '狀態',
+    'status_published': 'Published',
+    'status_draft': 'Draft',
+    'status_wip': 'WIP'
   }
 }

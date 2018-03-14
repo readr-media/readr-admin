@@ -2,6 +2,15 @@
   <div class="update-project-panel" @click="closePanel">
     <div class="panel">
       <div class="panel__title"><h3 v-text="$t('project_page.update_project')"></h3></div>
+      <div class="panel__option">
+        <RadioItem v-for="s in status" name="status"
+          @selected="selectedHandler"
+          :label="$t(`project_page.${get(s, 'name')}`)"
+          :key="get(s, 'code')"
+          :value="get(s, 'code')"
+          :disabled="!isEditable"
+          :initValue="statusValue"></RadioItem>      
+      </div>
       <InputItem inputKey="title" 
         :initValue="get(project, 'title')"
         :placeHolder="$t('project_page.title')"
@@ -16,8 +25,14 @@
 </template>
 <script>
   import InputItem from 'src/components/formItem/InputItem.vue'
+  import RadioItem from 'src/components/formItem/RadioItem.vue'
   import { get } from 'lodash'
 
+  const PROJECT_STATUS = [
+    { code: 1, name: 'status_draft' },
+    { code: 2, name: 'status_wip' },
+    { code: 3, name: 'status_published' },
+  ]
   const debug = require('debug')('CLIENT:UpdateProjectPanel')
   const updateProject = (store, params) => {
     return store.dispatch('UPDATE_PROJECT', {
@@ -28,11 +43,20 @@
   export default {
     name: 'UpdateProjectPanel',
     components: {
-      InputItem
+      InputItem,
+      RadioItem
+    },
+    computed: {
+      statusValue () {
+        return this.selectedOption[ 'status' ] || _.get(this.status, [ 0, 'code' ])
+      },
     },
     data () {
       return {
-        formData: {}
+        formData: {},
+        selectedOption: {},
+        isEditable: true,
+        status: PROJECT_STATUS
       }
     },
     methods: {
@@ -48,7 +72,8 @@
       goUpdate () {
         const project = Object.assign({}, this.project, {
           title: get(this.formData, 'title', this.project.title),
-          ogTitle: get(this.formData, 'og_title', this.project.ogTitle)
+          ogTitle: get(this.formData, 'og_title', this.project.ogTitle),
+          active: get(this.selectedOption, 'status', this.project.active)
         })
         debug('Abt to update the curr proj.', project)
         updateProject(this.$store, project)
@@ -63,7 +88,10 @@
       },
       setInputValue (key, value) {
         this.formData[ key ] = value
-      }
+      },
+      selectedHandler (group, value) {
+        this.selectedOption[ group ] = value
+      },
     },
     mounted () {},
     props: {
@@ -108,4 +136,11 @@
         color #fff
         padding 10px 20px
         cursor pointer
+      &__option
+        > div
+          display inline-block
+          &:first-child
+            margin 0 20px 0 0
+          &:not(:first-child)
+            margin 0 20px
 </style>

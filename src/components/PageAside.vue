@@ -1,7 +1,7 @@
 <template>
   <div class='pageaside'>
     <template v-for="item in items">
-      <div class="pageaside__item" :class="get(item, 'name')" @click="goTo(get(item, 'name'))">
+      <div class="pageaside__item" :class="{ active: isCurrTool(get(item, 'route')) }" @click="goTo(get(item, 'name'))">
         <span v-text="$t(get(item, 'name'))"></span>
       </div>
     </template>
@@ -20,6 +20,10 @@
       }
     },
     methods: {
+      isCurrTool (tool) {
+        debug('this.$route.fullPath', this.$route.fullPath, tool)
+        return this.$route.fullPath.indexOf(tool) > -1
+      },
       get,
       goTo (key) {
         debug('Going to', get(find(managerTools, { name: key }), 'route', '/'))
@@ -31,6 +35,7 @@
       debug('this.items', this.items)
       debug('managerTools', managerTools)
       debug(this.$i18n)
+      debug(this.currTool)
       // this.$i18n.locale = 'en'
     },
   }
@@ -50,6 +55,8 @@
       padding 20px 50px
       background-color #1A1A1A
       cursor pointer
+      &.active
+        color #ddcf21
       &:hover
         background-color #2A2A2A
 </style>

@@ -1,5 +1,6 @@
 import {
   createProject,
+  fetchPeopleByName,
   fetchProjects,
   updateProject
 } from 'src/api'
@@ -52,6 +53,10 @@ export default {
   CREATE_PROJECT: ({ commit, state }, { params }) => {
     debug('Going to send proj creating req.')
     return createProject({ params })
+  },
+
+  FETCH_PEOPLE_BY_NAME: ({ commit, state }, { params }) => {
+    return fetchPeopleByName({ params })
   },
 
   FETCH_PROJECTS: ({ commit, state }, { params }) => {

@@ -21,12 +21,15 @@ export default {
     'button_update': '修改',
     'description': '說明',
     'hero_image': '主圖',
-    'og_title': 'og title',
-    'og_description': 'og description',
+    'og_title': '議題標題(og)',
+    'og_description': '議題說明(og)',
+    'order': '排序',
+    'project_description': '議題說明',
     'manage': '管理',
     'status': '狀態',
     'status_published': 'Published',
     'status_draft': 'Draft',
-    'status_wip': 'WIP'
+    'status_wip': 'WIP',
+    'author': '作者'
   }
 }

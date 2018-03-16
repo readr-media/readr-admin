@@ -1,6 +1,7 @@
 <template>
   <div class="input-item" :class="{ alert: alertFlag }">
     <input ref="input"
+      :style="{ width: width }"
       :disabled="disabled"
       :type="type"
       :placeholder="placeHolder"
@@ -40,7 +41,7 @@
     mounted () {
       this.initValue && (this.$refs['input'].value = this.initValue)
     },
-    props: [ 'inputKey', 'type', 'placeHolder', 'alertFlag', 'alertMsg', 'alertMsgShow', 'disabled', 'initValue' ],
+    props: [ 'inputKey', 'type', 'placeHolder', 'alertFlag', 'alertMsg', 'alertMsgShow', 'disabled', 'initValue', 'width' ],
     watch: {
       alertMsg: function () {
         const len = this.alertMsg ? this.alertMsg.length : 0
@@ -104,7 +105,7 @@
       border none
       width 100%
       height 35px
-      font-size calc((18 / 16) * 1rem)
+      font-size 1.125rem
       padding 0 10px
       vertical-align top
       background-color #ffffff

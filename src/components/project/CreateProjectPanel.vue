@@ -5,15 +5,26 @@
       <InputItem inputKey="title"
         :placeHolder="$t('project_page.title')"
         @filled="setInputValue"></InputItem>
+      <TextareaItem :placeholder="$t('project_page.project_description')"></TextareaItem>
       <InputItem inputKey="og_title"
         :placeHolder="$t('project_page.og_title')"
         @filled="setInputValue"></InputItem>
+      <TextareaItem :placeholder="$t('project_page.og_description')"></TextareaItem>
+      <InputItem inputKey="og_title" width="60px"
+        :placeHolder="$t('project_page.order')"
+        @filled="setInputValue"></InputItem>
+      <InputTagItem
+        :placeholder="$t('project_page.author')"
+        :currTagValues.sync="currTagValues"
+        :autocomplete="autocompleteForAuthor"></InputTagItem>
       <div class="panel__create" @click="goCreate"><span v-text="$t('project_page.button_create')"></span></div>
     </div>
   </div>
 </template>
 <script>
   import InputItem from 'src/components/formItem/InputItem.vue'
+  import InputTagItem from 'src/components/formItem/InputTagItem.vue'
+  import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import { get } from 'lodash'
 
   const debug = require('debug')('CLIENT:CreateProjectPanel')
@@ -22,14 +33,30 @@
       params
     })
   }
+  const fetchAuthors = (store, params) => {
+    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
+     params
+    })
+  }
   export default {
     name: 'CreateProjectPanel',
     components: {
-      InputItem
+      InputItem,
+      InputTagItem,
+      TextareaItem
     },
     data () {
       return {
-        formData: {}
+        formData: {},
+        tagsArray: [],
+        currTagValues: [ 'test' ],
+        autocompleteForAuthor: [
+          { name: 'Peter Kim', value: 'fa79fad7f9da88' },
+          { name: 'Sherry Lim', value: 'aa79fad7f9da88' },
+          { name: 'Tammy Kao', value: 'ca79fad7f9da88' },
+          { name: 'Lora Lu', value: 'ba79fad7f9da88' },
+          { name: '鐘聖雄', value: 'ga79fad7f9da88' },
+        ]
       }
     },
     methods: {
@@ -69,6 +96,17 @@
       }
     },
     mounted () {},
+    watch: {
+      currInputAuthor: function () {
+        debug('currInputAuthor change detected:', this.currInputAuthor)
+        // this.autocompleteForAuthor.push({ name: this.currInputAuthor, value: this.currInputAuthor })
+        // fetchAuthors(this.$store, {
+        //   where: {
+        //     nickname: [ `神力%` ]
+        //   }
+        // })
+      }
+    }
   }
 </script>
 <style lang="stylus" scoped>

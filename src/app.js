@@ -4,10 +4,12 @@ import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 
+import InputTag from 'vue-input-tag'
 import ZHTW from 'src/locale/zh-TW'
 import EN from 'src/locale/en'
 import VueI18n from 'vue-i18n'
 Vue.use(VueI18n)
+Vue.component('input-tag', InputTag)
 
 const debug = require('debug')('CLIENT:app.js')
 

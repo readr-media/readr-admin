@@ -14,13 +14,17 @@ function _buildQuery (params = {}) {
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where') {
+        debug('where', params)
         const where = _.mapValues(params[ele], (value) => {
           value = Array.isArray(value) ? value : [ value ]
+          debug('value', value)
           return { '$in': value }
         })
+        debug('where', where)
         Object.keys(where).forEach((key) => {
           query[key] = JSON.stringify(where[key])
         })
+        debug('query', query)
       } else if (ele === 'ids') {
         query[ele] = JSON.stringify(params[ele])
       } else {
@@ -29,7 +33,7 @@ function _buildQuery (params = {}) {
     }
   })
   query = qs.stringify(query)
-  debug('Query build done.')
+  debug('Query build done.', query)
   return query
 }
 
@@ -86,6 +90,17 @@ function _doPut (url, params) {
 
 export function createProject ({ params }) {
   return _doPost(`${host}/api/project/create`, params)
+}
+
+export function fetchPeopleByName ({ params }) {
+  let url = `${host}/api/members`
+  const query = _buildQuery(params)
+  if (query && (query.length > 0)) {
+    url = url + `?${query}`
+  }
+  // return _doFetch(url)
+  debug('fetchPeopleByName:url', url)
+  return Promise.resolve({ status: 'ok' })
 }
 
 export function fetchProjects ({ params }) {

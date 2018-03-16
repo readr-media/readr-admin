@@ -30,6 +30,8 @@ export default {
     'status_published': 'Published',
     'status_draft': 'Draft',
     'status_wip': 'WIP',
-    'author': '作者'
+    'author': '作者',
+    'heroimage': '首圖',
+    'ogImage': '首圖(og)'
   }
 }

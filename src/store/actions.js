@@ -2,7 +2,8 @@ import {
   createProject,
   fetchPeopleByName,
   fetchProjects,
-  updateProject
+  updateProject,
+  uploadImage
 } from 'src/api'
 
 const debug = require('debug')('CLIENT:actions')
@@ -68,5 +69,9 @@ export default {
   UPDATE_PROJECT: ({ commit, state }, { params }) => {
     debug('Going to sen proj updateing req.')
     return updateProject({ params })
-  }
+  },
+
+  UPLOAD_IMAGE: ({ commit, dispatch }, { file, type }) => {
+    return uploadImage(file, type)
+  },
 }

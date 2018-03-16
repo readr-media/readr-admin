@@ -58,9 +58,7 @@ router.use('/project', require('./middle/project'))
 // router.use('/member', [ authVerify, authorize ], require('./middle/member'))
 // router.use('/comment', require('./middle/comment'))
 // router.use('/register', authVerify, require('./middle/member/register'))
-// router.use('/recoverpwd', require('./middle/member/recover'))
-// router.use('/public', require('./middle/public'))
-// router.use('/search', require('./middle/search'))
+router.use('/image-post', require('./middle/image'))
 
 router.route('*')
   .get(function (req, res, next) {

@@ -1,6 +1,7 @@
 <template>
   <div class="textarea-container">
     <textarea rows="4" cols="50"
+      v-model="value"
       :placeholder="placeholder"></textarea>
   </div>
 </template>
@@ -9,7 +10,7 @@
     name: 'TextareaItem',
     methods: {},
     mounted () {},
-    props: [ 'placeholder' ]
+    props: [ 'placeholder', 'value' ]
   }
 </script>
 <style lang="stylus" scoped>

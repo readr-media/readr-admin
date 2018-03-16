@@ -116,3 +116,29 @@ export function fetchProjects ({ params }) {
 export function updateProject ({ params }) {
   return _doPut(`${host}/api/project/update`, params)
 }
+
+export function uploadImage (file, type) {
+  let url
+  debug('Abt to send uploading image req.')
+  debug('file', file)
+  return new Promise((resolve, reject) => {
+    if (type === 'member') {
+      url = `${host}/api/image-member`
+    } else if (type === 'post') {
+      url = `${host}/api/image-post`
+    } else {
+      reject()
+    }
+    superagent
+      .post(url)
+      // .set('Authorization', `Bearer ${getToken()}`)
+      .send(file)
+      .end((err, res) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(res)
+        }
+      })
+  })
+}

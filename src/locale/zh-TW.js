@@ -32,6 +32,8 @@ export default {
     'status_wip': 'WIP',
     'author': '作者',
     'heroimage': '首圖',
-    'ogImage': '首圖(og)'
+    'ogImage': '首圖(og)',
+    'slug': 'Slug',
+    'error_occurred': '發生錯誤'
   }
 }

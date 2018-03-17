@@ -52,7 +52,7 @@ router.post('/create', (req, res) => {
         status: errWrapped.status,
         text: errWrapped.text
       })
-      console.error(`Error occurred during fetch data from : ${url}`)
+      console.error(`Error occurred during create a new project : ${url}`)
       console.error(error) 
     }
   })
@@ -74,7 +74,7 @@ router.put('/update', (req, res) => {
         status: errWrapped.status,
         text: errWrapped.text
       })
-      console.error(`Error occurred during fetch data from : ${url}`)
+      console.error(`Error occurred during update project: ${url}`)
       console.error(error) 
     }
   })

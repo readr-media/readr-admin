@@ -1,16 +1,26 @@
 <template>
   <div class="textarea-container">
     <textarea rows="4" cols="50"
-      v-model="value"
+      v-model="currValue"
       :placeholder="placeholder"></textarea>
   </div>
 </template>
 <script>
   export default {
     name: 'TextareaItem',
+    data () {
+      return {
+        currValue: '',
+      }
+    },
     methods: {},
     mounted () {},
-    props: [ 'placeholder', 'value' ]
+    props: [ 'placeholder', 'value' ],
+    watch: {
+      currValue: function () {
+        this.$emit('update:value', this.currValue)
+      }
+    }
   }
 </script>
 <style lang="stylus" scoped>

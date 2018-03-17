@@ -1,6 +1,7 @@
 <template>
   <div class="input-item" :class="{ alert: alertFlag }">
     <input ref="input"
+      v-model="currValue"
       :style="{ width: width }"
       :disabled="disabled"
       :type="type"
@@ -17,7 +18,8 @@
   export default {
     data () {
       return {
-        isTooLong: false
+        isTooLong: false,
+        currValue: ''
       }
     },
     name: 'InputItem',
@@ -41,7 +43,7 @@
     mounted () {
       this.initValue && (this.$refs['input'].value = this.initValue)
     },
-    props: [ 'inputKey', 'type', 'placeHolder', 'alertFlag', 'alertMsg', 'alertMsgShow', 'disabled', 'initValue', 'width' ],
+    props: [ 'inputKey', 'type', 'placeHolder', 'alertFlag', 'alertMsg', 'alertMsgShow', 'disabled', 'initValue', 'width', 'value' ],
     watch: {
       alertMsg: function () {
         const len = this.alertMsg ? this.alertMsg.length : 0
@@ -49,6 +51,9 @@
       },
       initValue: function () {
         this.$refs['input'].value = this.initValue
+      },
+      currValue: function () {
+        this.$emit('update:value', this.currValue)
       }
     }
   }

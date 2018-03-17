@@ -2,34 +2,45 @@
   <div class="create-project-panel" @click="closePanel">
     <div class="panel">
       <div class="panel__title"><h3 v-text="$t('project_page.create_project')"></h3></div>
-      <InputItem inputKey="title"
+      <InputItem
+        :placeHolder="$t('project_page.slug')"
+        :value.sync="formData.slug"></InputItem>
+      <InputItem
         :placeHolder="$t('project_page.title')"
-        :inputKey.sync=""></InputItem>
+        :value.sync="formData.title"></InputItem>
       <TextareaItem
         :placeholder="$t('project_page.project_description')"
         :value.sync="formData.description"></TextareaItem>
-      <InputItem inputKey="og_title"
+      <InputItem
         :placeHolder="$t('project_page.og_title')"
-        @filled="setInputValue"></InputItem>
+        :value.sync="formData.og_title"></InputItem>
       <TextareaItem
         :placeholder="$t('project_page.og_description')"
         :value.sync="formData.og_description"></TextareaItem>
-      <InputItem inputKey="og_title" width="60px"
+      <InputItem width="60px"
         :placeHolder="$t('project_page.order')"
-        @filled="setInputValue"></InputItem>
+        :value.sync="formData.order"></InputItem>
       <InputTagItem
         :placeholder="$t('project_page.author')"
         :currTagValues.sync="currTagValues"
         :autocomplete="autocompleteForAuthor"></InputTagItem>
-      <UploadImage :title="$t('project_page.heroimage')" :imageUrl.sync="heroimage"></UploadImage>
-      <UploadImage :title="$t('project_page.ogImage')" :imageUrl.sync="ogImage"></UploadImage>
-      <div class="panel__create" @click="goCreate"><span v-text="$t('project_page.button_create')"></span></div>
+      <UploadImage :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
+      <UploadImage :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
+      <div class="panel__alert" v-if="alert">
+        <span v-text="$t('project_page.error_occurred') + ': '"></span>
+        <span v-text="alert"></span>
+      </div>
+      <div class="panel__create" @click="goCreate">
+        <span v-text="$t('project_page.button_create')" v-if="!isSaving"></span>
+        <Spinner class="panel__create__spinner" v-else="!isSaving" :show="true"></Spinner>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import InputItem from 'src/components/formItem/InputItem.vue'
   import InputTagItem from 'src/components/formItem/InputTagItem.vue'
+  import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
   import { get } from 'lodash'
@@ -50,11 +61,13 @@
     components: {
       InputItem,
       InputTagItem,
+      Spinner,
       TextareaItem,
       UploadImage
     },
     data () {
       return {
+        alert: null,
         autocompleteForAuthor: [
           { name: 'Peter Kim', value: 'fa79fad7f9da88' },
           { name: 'Sherry Lim', value: 'aa79fad7f9da88' },
@@ -65,10 +78,15 @@
         currTagValues: [ 'test' ],
         formData: {
           description: '',
+          heroImage: '',
           og_description: '',
+          ogImage: '',
+          og_title: '',
+          order: 0,
+          slug: '',
+          title: '',
         },
-        heroimage: null,
-        ogImage: null,
+        isSaving: false,
         tagsArray: [],
       }
     },
@@ -83,25 +101,31 @@
       },
       goCreate () {
         debug('Abt to create a new project.')
+        this.isSaving = true
+        /**
+         * ToDo: need to validate input.
+         */
         createProject(this.$store, {
           "active": 1,
-          "hero_image": this.heroimage,
-          "title": get(this.formData, 'title', ''),
-          "description": get(this.formData, 'description', ''),
           "author": null,
+          "description": get(this.formData, 'description', ''),
+          "hero_image": get(this.formData, 'heroImage', ''),
           "og_title": get(this.formData, 'og_title', ''),
           "og_description": get(this.formData, 'og_description', ''),
-          "og_image": this.ogImage,
+          "og_image": get(this.formData, 'ogImage', ''),
+          "project_order": Number(get(this.formData, 'order', 0)),
+          "slug": get(this.formData, 'slug', ''),
+          "title": get(this.formData, 'title', ''),
         }).then(res => {
           debug('res', res)
+          this.isSaving = false
           this.$emit('refreshProjects', false)
           this.$emit('update:shouldShowCreatePanel', false)
         }).catch (err => {
+          this.isSaving = false
+          this.alert = err.message
           debug('err', err)
         })
-      },
-      setInputValue (key, value) {
-        this.formData[ key ] = value
       }
     },
     mounted () {},
@@ -146,6 +170,7 @@
           margin 0
       &__create
         width 100%
+        height 40px
         background-color #000
         border-radius 5px
         display flex
@@ -154,4 +179,6 @@
         color #fff
         padding 10px 20px
         cursor pointer
+      &__alert
+        color red
 </style>

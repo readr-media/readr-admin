@@ -1,9 +1,14 @@
 <template>
   <div class='pageaside'>
     <template v-for="item in items">
-      <div class="pageaside__item" :class="{ active: isCurrTool(get(item, 'route')) }" @click="goTo(get(item, 'name'))">
+      <div class="pageaside__item" :class="{ active: isCurrTool(get(item, 'route')) }" @click="goTo(get(item, 'route'))">
         <span v-text="$t(get(item, 'name'))"></span>
       </div>
+      <template v-for="subitem in get(item, 'sub', [])">
+        <div class="pageaside__item--sub" :class="{ active: isCurrTool(get(subitem, 'route')), show: isCurrTool(get(item, 'route')) }" @click="goTo(get(subitem, 'route'))">
+          <span v-text="$t(get(subitem, 'name'))"></span>
+        </div>
+      </template>
     </template>
   </div>
 </template>
@@ -25,10 +30,10 @@
         return this.$route.fullPath.indexOf(tool) > -1
       },
       get,
-      goTo (key) {
-        debug('Going to', get(find(managerTools, { name: key }), 'route', '/'))
-        const targetRoute = get(find(managerTools, { name: key }), 'route', '')
-        this.$router.push(`/${targetRoute}`)
+      goTo (route) {
+        // debug('Going to', get(find(managerTools, { name: key }), 'route', '/'))
+        // const targetRoute = get(find(managerTools, { name: key }), 'route', '')
+        this.$router.push(`/${route}`)
       }
     },
     mounted () {
@@ -55,8 +60,41 @@
       padding 20px 50px
       background-color #1A1A1A
       cursor pointer
+      > span
+        position relative
+        &:before
+          position absolute
+          left -15px
+          top 5px
+          content ''
+          border-style solid
+          border-width 6px 0 6px 10px
+          border-color transparent transparent transparent #fff
       &.active
         color #ddcf21
+        > span
+          position relative
+          &:before
+            position absolute
+            left -15px
+            top 5px
+            content ''
+            border-style solid
+            border-width 10px 6px 0 6px
+            border-color #fff transparent transparent transparent
       &:hover
         background-color #2A2A2A
+      &--sub
+        background-color #212121
+        color #fff
+        cursor pointer
+        padding 20px 80px
+        font-size 0.9375rem
+        display none
+        &.active
+          color #ddcf21
+        &.show
+          display block
+        &:hover
+          background-color #2A2A2A
 </style>

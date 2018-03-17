@@ -17,6 +17,8 @@ export function createRouter () {
       { path: '/', component: Index },
       { path: '/project-candidate', component: ProjectCandidate },
       { path: '/project-manager', component: ProjectManager },
+      { path: '/project-manager/candidate', component: ProjectCandidate },
+      { path: '/project-manager/manager', component: ProjectManager },
     ]
   })
 }

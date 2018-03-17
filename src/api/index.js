@@ -1,4 +1,5 @@
 import { camelizeKeys } from 'humps'
+import { delInitMemToken, getToken, getSetupToken, saveToken } from '../util/services'
 import { getHost } from 'src/util/comm'
 import _ from 'lodash'
 import qs from 'qs'
@@ -56,11 +57,26 @@ function _doFetch (url) {
   })
 }
 
+function _doFetchStrict (url, { cookie }) {
+  return new Promise((resolve, reject) => {
+    superagent
+      .get(url)
+      .set('Authorization', `Bearer ${cookie || getToken()}`)
+      .end(function (err, res) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ status: res.status, body: camelizeKeys(res.body) })
+        }
+      })
+  })
+}
+
 function _doPost (url, params, token) {
   return new Promise((resolve, reject) => {
     superagent
       .post(url)
-      // .set('Authorization', `Bearer ${token || getToken()}`)
+      .set('Authorization', `Bearer ${token || getToken()}`)
       .send(params)
       .end(function (err, res) {
         if (err) {
@@ -76,7 +92,7 @@ function _doPut (url, params) {
   return new Promise((resolve, reject) => {
     superagent
       .put(url)
-      // .set('Authorization', `Bearer ${getToken()}`)
+      .set('Authorization', `Bearer ${getToken()}`)
       .send(params)
       .end(function (err, res) {
         if (err) {
@@ -86,6 +102,12 @@ function _doPut (url, params) {
         }
       })
   })
+}
+
+export function checkLoginStatus ({ params = {}}) {
+  debug('Going to send req to check status...')
+  const url = `${host}/api/status`
+  return _doFetchStrict(url, { cookie: params.cookie })
 }
 
 export function createProject ({ params }) {
@@ -111,6 +133,11 @@ export function fetchProjects ({ params }) {
   }
   debug('Abt to fetch data:', url)
   return _doFetch(url)
+}
+
+export function getProfile ({ params = {}}) {
+  const url = `${host}/api/profile`
+  return _doFetchStrict(url, { cookie: params.cookie })
 }
 
 export function updateProject ({ params }) {

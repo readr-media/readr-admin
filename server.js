@@ -6,11 +6,14 @@ const favicon = require('serve-favicon')
 const fs = require('fs')
 const microcache = require('route-cache')
 const path = require('path')
+const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
 const uuidv4 = require('uuid/v4')
 const { PAGE_CACHE_EXCLUDING, GOOGLE_CLIENT_ID, TALK_SERVER } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
+const { filter, get } = require('lodash')
 
+const debug = require('debug')('READR:server')
 const isProd = process.env.NODE_ENV === 'production'
 const useMicroCache = process.env.MICRO_CACHE !== 'false'
 const serverInfo =
@@ -92,6 +95,13 @@ function render (req, res, next) {
 
   const s = Date.now()
 
+  const curr_host = get(req, 'headers.host') || ''
+  const targ_exp = /(dev)|(localhost)/
+  debug('Current client host:', curr_host, !curr_host.match(targ_exp))
+
+  if (filter(PAGE_CACHE_EXCLUDING, (p) => (req.url.indexOf(p) > -1)).length === 0) {
+    !curr_host.match(targ_exp) && res.setHeader('Cache-Control', 'public, max-age=3600')  
+  }
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 

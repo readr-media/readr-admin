@@ -1,7 +1,9 @@
 import {
+  checkLoginStatus,
   createProject,
   fetchPeopleByName,
   fetchProjects,
+  getProfile,
   updateProject,
   uploadImage
 } from 'src/api'
@@ -51,6 +53,12 @@ export default {
   //     : fetchUser(id).then(user => commit('SET_USER', { id, user }))
   // },
 
+  CHECK_LOGIN_STATUS: ({ commit, dispatch, state }, { params }) => {
+    return checkLoginStatus({ params }).then(({ status, body }) => {
+      commit('SET_LOGGEDIN_STATUS', { status, body })
+    })
+  },
+
   CREATE_PROJECT: ({ commit, state }, { params }) => {
     debug('Going to send proj creating req.')
     return createProject({ params })
@@ -64,6 +72,14 @@ export default {
     debug('Abt to fetch data.')
     return fetchProjects({})
       .then((projects) => commit('SET_PROJECTS', { projects }))
+  },
+
+  GET_PROFILE: ({ commit, dispatch, state }, { params }) => {
+    return getProfile({ params }).then(({ status, body }) => {
+      if (status === 200) {
+        commit('SET_PROFILE', { profile: body })
+      }
+    })
   },
 
   UPDATE_PROJECT: ({ commit, state }, { params }) => {

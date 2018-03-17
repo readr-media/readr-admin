@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { ReadrPerm } from '../util/services'
 
 Vue.use(Router)
+Vue.use(ReadrPerm)
 
 // route-level code splitting
 const Index = () => import('src/views/Index.vue')
@@ -15,10 +17,10 @@ export function createRouter () {
     scrollBehavior: () => ({ y: 0 }),
     routes: [
       { path: '/', component: Index },
-      { path: '/project-candidate', component: ProjectCandidate },
-      { path: '/project-manager', component: ProjectManager },
-      { path: '/project-manager/candidate', component: ProjectCandidate },
-      { path: '/project-manager/manager', component: ProjectManager },
+      { path: '/project-candidate', component: ProjectCandidate, meta: { permission: 'admin' } },
+      { path: '/project-manager', component: ProjectManager, meta: { permission: 'admin' } },
+      { path: '/project-manager/candidate', component: ProjectCandidate, meta: { permission: 'admin' } },
+      { path: '/project-manager/manager', component: ProjectManager, meta: { permission: 'admin' } },
     ]
   })
 }

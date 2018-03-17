@@ -50,6 +50,21 @@ const authorize = (req, res, next) => {
   }
 }
 
+const fetchPromise = (url, req) => {
+  return new Promise((resolve, reject) => {
+    superagent
+    .get(`${apiHost}${url}`)
+    .end((err, res) => {
+      if (!err && res) {
+        resolve(camelizeKeys(res.body))
+      } else {
+        reject(err)
+        console.error(`error during fetch data from : ${url}`)
+        console.error(err) 
+      }
+    })
+  })
+}
 
 router.use('/project', require('./middle/project'))
 // router.use('/activate', verifyToken, require('./middle/member/activation'))
@@ -59,6 +74,40 @@ router.use('/project', require('./middle/project'))
 // router.use('/comment', require('./middle/comment'))
 // router.use('/register', authVerify, require('./middle/member/register'))
 router.use('/image-post', require('./middle/image'))
+
+router.get('/profile', [ authVerify ], (req, res) => {
+  debug('req.user')
+  debug(req.user)
+  const targetProfile = req.user.id
+  const url = `/member/${targetProfile}`
+  Promise.all([
+    fetchPromise(url, req),
+    fetchPermissions()
+  ]).then((response) => {
+    const profile = response[ 0 ][ 'items' ][ 0 ]
+    const perms = response[ 1 ]
+    const scopes = constructScope(perms, profile.role)
+    res.json({
+      name: profile.name,
+      nickname: profile.nickname,
+      mail: profile.mail,
+      description: profile.description,
+      id: profile.id,
+      role: profile.role,
+      scopes,
+      profileImage: profile.profileImage,
+      points: profile.points
+    })
+  }).catch((err) => {
+    res.status(500).send(err)
+    console.error(`error during fetch data from : ${url}`)
+    console.error(err)
+  })
+})
+
+router.get('/status', authVerify, function(req, res) {
+  res.status(200).send(true)
+})
 
 router.route('*')
   .get(function (req, res, next) {

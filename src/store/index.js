@@ -9,7 +9,9 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     state: {
-      projects: []
+      projects: [],
+      isLoggedIn: false,
+      profile: {},
     },
     actions,
     mutations,

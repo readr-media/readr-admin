@@ -84,6 +84,7 @@
           og_title: '',
           order: 0,
           slug: '',
+          status: 0,
           title: '',
         },
         isSaving: false,

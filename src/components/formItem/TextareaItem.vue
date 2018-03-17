@@ -14,7 +14,9 @@
       }
     },
     methods: {},
-    mounted () {},
+    mounted () {
+      this.currValue = this.value
+    },
     props: [ 'placeholder', 'value' ],
     watch: {
       currValue: function () {

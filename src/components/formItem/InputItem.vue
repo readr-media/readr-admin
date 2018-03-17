@@ -6,7 +6,6 @@
       :disabled="disabled"
       :type="type"
       :placeholder="placeHolder"
-      @change="valueChange"
       @focus="focus"
       @focusout="focusout"
       @keyup="keyup">
@@ -36,12 +35,10 @@
       keyup () {
         this.$emit('removeAlert', this.inputKey)
       },
-      valueChange () {
-        this.$emit('filled', this.inputKey, this.$refs['input'].value)
-      }
     },
     mounted () {
-      this.initValue && (this.$refs['input'].value = this.initValue)
+      // this.initValue && (this.$refs['input'].value = this.initValue)
+      this.currValue = this.value
     },
     props: [ 'inputKey', 'type', 'placeHolder', 'alertFlag', 'alertMsg', 'alertMsgShow', 'disabled', 'initValue', 'width', 'value' ],
     watch: {

@@ -94,7 +94,9 @@
         }
       },
     },
-    mounted () {},
+    mounted () {
+      this.preImgByte = this.imageUrl
+    },
     props: [ 'title', 'imageUrl' ]
   }
 </script>

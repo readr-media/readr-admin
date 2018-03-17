@@ -13,10 +13,10 @@
         :value.sync="formData.description"></TextareaItem>
       <InputItem
         :placeHolder="$t('project_page.og_title')"
-        :value.sync="formData.og_title"></InputItem>
+        :value.sync="formData.ogTitle"></InputItem>
       <TextareaItem
         :placeholder="$t('project_page.og_description')"
-        :value.sync="formData.og_description"></TextareaItem>
+        :value.sync="formData.ogDescription"></TextareaItem>
       <InputItem width="60px"
         :placeHolder="$t('project_page.order')"
         :value.sync="formData.order"></InputItem>
@@ -79,9 +79,9 @@
         formData: {
           description: '',
           heroImage: '',
-          og_description: '',
+          ogDescription: '',
           ogImage: '',
-          og_title: '',
+          ogTitle: '',
           order: 0,
           slug: '',
           status: 0,
@@ -110,9 +110,9 @@
           "active": 1,
           "author": null,
           "description": get(this.formData, 'description', ''),
-          "hero_image": get(this.formData, 'heroImage', ''),
-          "og_title": get(this.formData, 'og_title', ''),
-          "og_description": get(this.formData, 'og_description', ''),
+          "heroImage": get(this.formData, 'heroImage', ''),
+          "og_title": get(this.formData, 'ogTitle', ''),
+          "og_description": get(this.formData, 'ogDescription', ''),
           "og_image": get(this.formData, 'ogImage', ''),
           "project_order": Number(get(this.formData, 'order', 0)),
           "slug": get(this.formData, 'slug', ''),

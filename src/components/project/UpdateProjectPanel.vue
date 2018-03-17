@@ -21,10 +21,10 @@
         :value.sync="formData.description"></TextareaItem>
       <InputItem
         :placeHolder="$t('project_page.og_title')"
-        :value.sync="formData.og_title"></InputItem>
+        :value.sync="formData.ogTitle"></InputItem>
       <TextareaItem
         :placeholder="$t('project_page.og_description')"
-        :value.sync="formData.og_description"></TextareaItem>
+        :value.sync="formData.ogDescription"></TextareaItem>
       <InputItem width="60px"
         :placeHolder="$t('project_page.order')"
         :value.sync="formData.order"></InputItem>
@@ -94,15 +94,15 @@
         ],
         currTagValues: [ 'test' ],        
         formData: {
-          description: '',
-          heroImage: '',
-          og_description: '',
-          ogImage: '',
-          og_title: '',
-          order: 0,
-          slug: '',
+          description: get(this.project, 'description', ''),
+          heroImage: get(this.project, 'heroImage', ''),
+          ogDescription: get(this.project, 'ogDescription', ''),
+          ogImage: get(this.project, 'ogImage', ''),
+          ogTitle: get(this.project, 'ogTitle', ''),
+          order: get(this.project, 'projectOrder'),
+          slug:  get(this.project, 'slug', ''),
           status: get(PROJECT_STATUS, [ 0, 'code' ]),
-          title: '',
+          title: get(this.project, 'title', ''),
         },
         isEditable: true,
         isUpdating: false,
@@ -120,12 +120,21 @@
       },
       get,
       goUpdate () {
-        const project = Object.assign({}, this.project, {
+        const project = {
+          id: this.project.id,
           title: get(this.formData, 'title', this.project.title),
-          ogTitle: get(this.formData, 'og_title', this.project.ogTitle),
-          active: get(this.selectedOption, 'status', this.project.active)
-        })
+          description: get(this.formData, 'description', this.project.description),
+          heroImage: get(this.formData, 'heroImage', this.project.heroImage),
+          og_title: get(this.formData, 'ogTitle', this.project.ogTitle),
+          og_description: get(this.formData, 'ogDescription', this.project.ogDescription),
+          og_image: get(this.formData, 'ogImage', this.project.ogImage),
+          project_order: get(this.formData, 'order', this.project.projectOrder),
+          slug: get(this.formData, 'slug', this.project.slug),
+          // status: get(this.formData, 'status', this.project.status),
+          // active: get(this.selectedOption, 'status', this.project.active)
+        }
         debug('Abt to update the curr proj.', project)
+        debug('this.formData.ogImage', get(this.formData, 'ogImage', this.project.ogImage))
         this.isUpdating = true
         updateProject(this.$store, project)
           .then(res => {

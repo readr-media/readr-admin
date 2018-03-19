@@ -27,7 +27,7 @@ export default {
     'project_description': '議題說明',
     'manage': '管理',
     'status': '狀態',
-    'status_published': 'Published',
+    'status_finished': '完成',
     'status_draft': 'Draft',
     'status_wip': 'WIP',
     'author': '作者',

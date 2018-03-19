@@ -21,7 +21,7 @@
         <div class="project-manager__item td">
           <span class="id" v-text="get(proj, 'id')" @click="updateProject(get(proj, 'id'))"></span>
           <span class="title" v-text="get(proj, 'title')"></span>
-          <span class="status" v-text="get(proj, 'status', '')"></span>
+          <span class="status" v-text="$t(`project_page.${get(find(PROJECT_STATUS, { code: get(proj, 'status', 0) }), 'name', 'status_draft')}`)"></span>
           <span class="count" v-text="get(proj, 'donationCount', '')"></span>
           <span class="updated" v-text="get(proj, 'updatedAt')"></span>
         </div>
@@ -35,6 +35,7 @@
   import CreateProjectPanel from 'src/components/project/CreateProjectPanel.vue'
   import PageAside from 'src/components/PageAside.vue'
   import UpdateProjectPanel from 'src/components/project/UpdateProjectPanel.vue'
+  import { PROJECT_STATUS } from 'src/constants'
   import { find, get } from 'lodash'
 
   const debug = require('debug')('CLIENT:ProjectManager')
@@ -60,6 +61,7 @@
     },
     data () {
       return {
+        PROJECT_STATUS,
         projGoingToUpdate: {},
         shouldShowCreatePanel: false,
         shouldShowUpdatePanel: false,
@@ -67,6 +69,7 @@
       }
     },
     methods: {
+      find,
       get,
       openCreatePanel () {
         this.shouldShowCreatePanel = true

@@ -53,13 +53,9 @@
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
 
+  import { PROJECT_STATUS } from 'src/constants'
   import { get } from 'lodash'
 
-  const PROJECT_STATUS = [
-    { code: 1, name: 'status_draft' },
-    { code: 2, name: 'status_wip' },
-    { code: 3, name: 'status_published' },
-  ]
   const debug = require('debug')('CLIENT:UpdateProjectPanel')
   const updateProject = (store, params) => {
     return store.dispatch('UPDATE_PROJECT', {
@@ -101,7 +97,7 @@
           ogTitle: get(this.project, 'ogTitle', ''),
           order: get(this.project, 'projectOrder'),
           slug:  get(this.project, 'slug', ''),
-          status: get(PROJECT_STATUS, [ 0, 'code' ]),
+          status: get(this.project, 'status', get(PROJECT_STATUS, [ 0, 'code' ])),
           title: get(this.project, 'title', ''),
         },
         isEditable: true,
@@ -124,14 +120,13 @@
           id: this.project.id,
           title: get(this.formData, 'title', this.project.title),
           description: get(this.formData, 'description', this.project.description),
-          heroImage: get(this.formData, 'heroImage', this.project.heroImage),
+          hero_image: get(this.formData, 'heroImage', this.project.heroImage),
           og_title: get(this.formData, 'ogTitle', this.project.ogTitle),
           og_description: get(this.formData, 'ogDescription', this.project.ogDescription),
           og_image: get(this.formData, 'ogImage', this.project.ogImage),
           project_order: get(this.formData, 'order', this.project.projectOrder),
           slug: get(this.formData, 'slug', this.project.slug),
-          // status: get(this.formData, 'status', this.project.status),
-          // active: get(this.selectedOption, 'status', this.project.active)
+          status: get(this.formData, 'status', this.project.status),
         }
         debug('Abt to update the curr proj.', project)
         debug('this.formData.ogImage', get(this.formData, 'ogImage', this.project.ogImage))

@@ -1,11 +1,14 @@
 <template>
   <div class='pageaside'>
     <template v-for="item in items">
-      <div class="pageaside__item" :class="{ active: isCurrTool(get(item, 'route')) }" @click="goTo(get(item, 'route'))">
+      <div class="pageaside__item" :class="{ active: isCurrTool(get(item, 'route')), 'showSub': isSelected(get(item, 'route')) }"
+        @click="goTo({ route: get(item, 'sub', []).length === 0 ? get(item, 'route') : null, tool: get(item, 'route') })">
         <span v-text="$t(get(item, 'name'))"></span>
       </div>
       <template v-for="subitem in get(item, 'sub', [])">
-        <div class="pageaside__item--sub" :class="{ active: isCurrTool(get(subitem, 'route')), show: isCurrTool(get(item, 'route')) }" @click="goTo(get(subitem, 'route'))">
+        <div class="pageaside__item--sub"
+          :class="{ active: isCurrTool(get(subitem, 'route')), show: isCurrTool(get(item, 'route')) || isSelected(get(item, 'route')) }"
+            @click="goTo({ route: get(subitem, 'route') })">
           <span v-text="$t(get(subitem, 'name'))"></span>
         </div>
       </template>
@@ -21,6 +24,7 @@
     name: 'PageAside',
     data () {
       return {
+        selectedItem: '',
         items: managerTools || []
       }
     },
@@ -30,10 +34,17 @@
         return this.$route.fullPath.indexOf(tool) > -1
       },
       get,
-      goTo (route) {
+      goTo ({ route, tool }) {
         // debug('Going to', get(find(managerTools, { name: key }), 'route', '/'))
         // const targetRoute = get(find(managerTools, { name: key }), 'route', '')
-        this.$router.push(`/${route}`)
+        if (route) {
+          this.$router.push(`/${route}`)
+        } else {
+          this.selectedItem = tool
+        }
+      },
+      isSelected (tool) {
+        return this.selectedItem === tool
       }
     },
     mounted () {
@@ -72,6 +83,17 @@
           border-color transparent transparent transparent #fff
       &.active
         color #ddcf21
+        > span
+          position relative
+          &:before
+            position absolute
+            left -15px
+            top 5px
+            content ''
+            border-style solid
+            border-width 10px 6px 0 6px
+            border-color #fff transparent transparent transparent
+      &.showSub
         > span
           position relative
           &:before

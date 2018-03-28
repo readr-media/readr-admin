@@ -89,6 +89,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
 function render (req, res, next) {
+  debug('req.url', req.url)
   if (req.url.indexOf('/api/') === 0) {
     next()
     return
@@ -120,6 +121,8 @@ function render (req, res, next) {
       res.redirect(err.url)
     } else if(err.code === 404) {
       res.status(404).send('404 | Page Not Found')
+    } else if (err.code === 403) {
+      res.status(403).send('Please login through readr-site.')
     } else {
       // Render Error Page or Redirect
       res.status(500).send('500 | Internal Server Error')

@@ -17,19 +17,20 @@ const jwtExpress = require('express-jwt')
 const authVerify = jwtExpress({ secret: config.JWT_SECRET })
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
 
-router.post('/', upload.single('image'), (req, res) => {
+router.post('/:sourceType', upload.single('image'), (req, res) => {
   
   const url = `${apiHost}${req.url}`
   const bucket = initBucket(config.GCP_FILE_BUCKET)
   const file = req.file
+  const destination = req.params.sourceType === 'member' ? `${config.GCS_IMG_MEMBER_PATH}/${file.originalname}` : config.GCS_IMG_POST_PATH
   
-  processImage(file)
+  processImage(file, req.params.sourceType)
     .then((images) => {
-      const origImg = trim(images[0], 'tmp/')
+      const origImg = req.params.sourceType === 'member' ? trim(images[images.length - 1], 'tmp/') : trim(images[0], 'tmp/')
       Promise.all(images.map((path) => {
         const fileName = trim(path, 'tmp/')
         return uploadFileToBucket(bucket, path, {
-          destination: `${config.GCS_IMG_POST_PATH}/${fileName}`,
+          destination: `${destination}/${fileName}`,
           metadata: {
             contentType: file.mimetype
           }

@@ -150,15 +150,15 @@ export function uploadImage (file, type) {
   debug('file', file)
   return new Promise((resolve, reject) => {
     if (type === 'member') {
-      url = `${host}/api/image-member`
+      url = `${host}/api/image-member/member`
     } else if (type === 'post') {
-      url = `${host}/api/image-post`
+      url = `${host}/api/image-post/post`
     } else {
       reject()
     }
     superagent
       .post(url)
-      // .set('Authorization', `Bearer ${getToken()}`)
+      .set('Authorization', `Bearer ${getToken()}`)
       .send(file)
       .end((err, res) => {
         if (err) {

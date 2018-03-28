@@ -37,6 +37,10 @@ function createRenderer (bundle, options) {
   }))
 }
 
+app.use(requestIp.mw())
+app.set('views', path.join(__dirname, 'src/views'))
+app.set('view engine', 'ejs')
+
 let renderer
 let readyPromise
 const templatePath = resolve('./src/index.template.html')
@@ -85,6 +89,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
 function render (req, res, next) {
+  debug('req.url', req.url)
   if (req.url.indexOf('/api/') === 0) {
     next()
     return
@@ -100,7 +105,7 @@ function render (req, res, next) {
   debug('Current client host:', curr_host, !curr_host.match(targ_exp))
 
   if (filter(PAGE_CACHE_EXCLUDING, (p) => (req.url.indexOf(p) > -1)).length === 0) {
-    !curr_host.match(targ_exp) && res.setHeader('Cache-Control', 'public, max-age=3600')  
+    // !curr_host.match(targ_exp) && res.setHeader('Cache-Control', 'public, max-age=3600')  
   }
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
@@ -116,6 +121,8 @@ function render (req, res, next) {
       res.redirect(err.url)
     } else if(err.code === 404) {
       res.status(404).send('404 | Page Not Found')
+    } else if (err.code === 403) {
+      res.status(403).send('Please login through readr-site.')
     } else {
       // Render Error Page or Redirect
       res.status(500).send('500 | Internal Server Error')

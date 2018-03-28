@@ -1,6 +1,6 @@
 const _ = require('lodash')
 const { camelizeKeys } = require('humps')
-const { constructScope, fetchPermissions } = require('./services/perm')
+const { authorize, constructScope, fetchPermissions } = require('./services/perm')
 // const { verifyToken } = require('./middle/member/comm')
 const CONFIG = require('./config')
 const Cookies = require('cookies')
@@ -27,29 +27,6 @@ const authVerify = jwtExpress({ secret: CONFIG.JWT_SECRET })
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
-const authorize = (req, res, next) => {
-  const whitelist = _.get(ENDPOINT_SECURE, [ `${req.method}${req.url.replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')}` ])
-  if (whitelist) {
-    fetchPermissions().then((perms) => {
-      Promise.all([
-        new Promise((resolve) => (resolve(_.get(whitelist, [ 'role' ]) ? _.find(_.get(whitelist, [ 'role' ]), (r) => (r === req.user.role)) : true))),
-        new Promise((resolve) => (resolve(_.get(whitelist, [ 'perm' ]) ? _.get(whitelist, [ 'perm' ]).length === _.filter(_.get(whitelist, [ 'perm' ]), (p) => (_.find(_.filter(perms, { role: req.user.role }), { object: p }))).length : true)))
-      ]).then((isAuthorized) => {
-        const isRoleAuthorized = isAuthorized[ 0 ]
-        const isPermsAuthorized = isAuthorized[ 1 ]
-        if (isRoleAuthorized && isPermsAuthorized) {
-          next()
-        } else {
-          res.status(403).send('Forbidden. No right to access.').end()
-        }
-      })
-    })
-
-  } else {
-    next()
-  }
-}
-
 const fetchPromise = (url, req) => {
   return new Promise((resolve, reject) => {
     superagent
@@ -67,12 +44,6 @@ const fetchPromise = (url, req) => {
 }
 
 router.use('/project', require('./middle/project'))
-// router.use('/activate', verifyToken, require('./middle/member/activation'))
-// router.use('/initmember', authVerify, require('./middle/member/initMember'))
-// router.use('/member/public', require('./middle/member'))
-// router.use('/member', [ authVerify, authorize ], require('./middle/member'))
-// router.use('/comment', require('./middle/comment'))
-// router.use('/register', authVerify, require('./middle/member/register'))
 router.use('/image-post', require('./middle/image'))
 
 router.get('/profile', [ authVerify ], (req, res) => {

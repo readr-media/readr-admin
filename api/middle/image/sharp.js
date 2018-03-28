@@ -34,7 +34,6 @@ const processImage = (file, sourceType) => {
     const fileName = sourceType === 'member' ? file.originalname : file.filename
     const timePrefix = moment().unix()
     const image = sharp(filePath)
-
     let fileFormat
     image
       .metadata()

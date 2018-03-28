@@ -107,17 +107,17 @@
          * ToDo: need to validate input.
          */
         createProject(this.$store, {
-          "active": 1,
-          "author": null,
-          "description": get(this.formData, 'description', ''),
-          "hero_Image": get(this.formData, 'heroImage', ''),
-          "og_title": get(this.formData, 'ogTitle', ''),
-          "og_description": get(this.formData, 'ogDescription', ''),
-          "og_image": get(this.formData, 'ogImage', ''),
-          "project_order": Number(get(this.formData, 'order', 0)),
-          "slug": get(this.formData, 'slug', ''),
-          "status": 2,
-          "title": get(this.formData, 'title', ''),
+          active: 1,
+          author: null,
+          description: get(this.formData, 'description', ''),
+          hero_Image: get(this.formData, 'heroImage', ''),
+          og_title: get(this.formData, 'ogTitle', ''),
+          og_description: get(this.formData, 'ogDescription', ''),
+          og_image: get(this.formData, 'ogImage', ''),
+          project_order: Number(get(this.formData, 'order', 0)),
+          slug: get(this.formData, 'slug', ''),
+          status: 2,
+          title: get(this.formData, 'title', ''),
         }).then(res => {
           debug('res', res)
           this.isSaving = false

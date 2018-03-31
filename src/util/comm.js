@@ -1,7 +1,9 @@
+import { FE_API_HOST, } from 'api/config.js'
+
 export function getHost () {
   const browser = typeof window !== 'undefined'
   if (browser) {
-    return `//${location.host}`
+    return `//${FE_API_HOST || location.host}`
   } else {
     const host = process.env.HOST || 'localhost'
     const port = parseInt(process.env.PORT) || 8080

@@ -1,9 +1,11 @@
-import { FE_API_HOST, } from 'api/config.js'
+import { SITE_ROOT, } from 'api/config.js'
+const debug = require('debug')('CLIENT:comm')
 
 export function getHost () {
   const browser = typeof window !== 'undefined'
   if (browser) {
-    return `//${FE_API_HOST || location.host}`
+    debug('api host', `//${location.host}${SITE_ROOT ? '/' + SITE_ROOT : ''}`)
+    return `//${location.host}${SITE_ROOT ? '/' + SITE_ROOT : ''}`
   } else {
     const host = process.env.HOST || 'localhost'
     const port = parseInt(process.env.PORT) || 8080

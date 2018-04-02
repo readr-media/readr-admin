@@ -46,9 +46,6 @@
 
   export default {
     name: 'ProjectManager',
-    asyncData ({ store }) {
-      return fetchProjects(store)
-    },
     components: {
       CreateProjectPanel,
       PageAside,
@@ -85,6 +82,9 @@
         debug('Abt to update project.', project)
         this.projGoingToUpdate = project
       }
+    },
+    beforeMount () {
+      fetchProjects(this.$store)
     },
     mounted () {},
     watch: {

@@ -16,6 +16,7 @@
   </div>
 </template>
 <script>
+  import { SITE_ROOT } from 'api/config'
   import { managerTools } from 'src/constants'
   import { find, get } from 'lodash'
 
@@ -38,7 +39,7 @@
         // debug('Going to', get(find(managerTools, { name: key }), 'route', '/'))
         // const targetRoute = get(find(managerTools, { name: key }), 'route', '')
         if (route) {
-          this.$router.push(`/${route}`)
+          this.$router.push(`/${SITE_ROOT ? SITE_ROOT + '/' : ''}${route}`)
         } else {
           this.selectedItem = tool
         }

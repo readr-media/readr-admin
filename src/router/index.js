@@ -17,10 +17,8 @@ export function createRouter () {
     scrollBehavior: () => ({ y: 0 }),
     routes: [
       { path: '/', component: Index, meta: { permission: 'admin' } },
-      { path: '/project-candidate', component: ProjectCandidate, meta: { permission: 'admin' } },
-      { path: '/project-manager', component: ProjectManager, meta: { permission: 'admin' } },
-      { path: '/project-manager/candidate', component: ProjectCandidate, meta: { permission: 'admin' } },
-      { path: '/project-manager/manager', component: ProjectManager, meta: { permission: 'admin' } },
+      { path: '/project-manager/candidate', alias: '/project-candidate', component: ProjectCandidate, meta: { permission: 'admin' } },
+      { path: '/project-manager/project', component: ProjectManager, meta: { permission: 'admin' } },
     ]
   })
 }

@@ -7,7 +7,7 @@ export const managerTools = [
     name: 'project',
     route: 'project-manager',
     sub: [
-      { name: 'project', route: 'project-manager/manager' },
+      { name: 'project', route: 'project-manager/project' },
       { name: 'candidate', route: 'project-manager/candidate' }
     ]
   },

@@ -39,7 +39,8 @@
         // debug('Going to', get(find(managerTools, { name: key }), 'route', '/'))
         // const targetRoute = get(find(managerTools, { name: key }), 'route', '')
         if (route) {
-          this.$router.push(`/${SITE_ROOT ? SITE_ROOT + '/' : ''}${route}`)
+          // this.$router.push(`/${SITE_ROOT ? SITE_ROOT + '/' : ''}${route}`)
+          location.replace(`/${SITE_ROOT ? SITE_ROOT + '/' : ''}${route}`)
         } else {
           this.selectedItem = tool
         }

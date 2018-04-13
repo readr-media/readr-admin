@@ -6,11 +6,25 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="apple-touch-icon" sizes="120x120" href="/public/favicon-120x120.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/public/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
-    <link rel="shortcut icon" sizes="48x48" href="/public/favicon-48x48.png">
+    <link rel="shortcut icon" sizes="48x48" href="/public/favicon.png">
     <meta name="theme-color" content="#f60">
     <link rel="manifest" href="/manifest.json">
+    <meta name="description" content="{{ description }}">
+    <!-- <meta property="article:author" content="https://www.facebook.com/mirrormediamg/"> -->
+    <!-- <meta property="article:publisher" content="https://www.facebook.com/mirrormediamg/"> -->
+    <meta property="fb:app_id" content="175313259598308">
+    <meta property="fb:pages" content="1855418728011324">
+    <meta property="og:site_name" content="Readr" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ ogTitle }}" />
+    <meta property="og:description" content="{{ description }}" />
+    <meta property="og:url" content="{{ metaUrl }}"/>
+    <meta property="og:image" content="{{ metaImage }}">
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="800" />
     <!-- normalize.css v7.0.0 -->
     <style>
       html { line-height: 1.15; /* 1 */ -ms-text-size-adjust: 100%; /* 2 */ -webkit-text-size-adjust: 100%; /* 2 */}
@@ -70,6 +84,7 @@
       html { box-sizing: border-box; font-size: 16px; font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif; }
       button, input, optgroup, select, textarea { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif; }
       button { user-select: none; }
+      img[src=''], img:not([src]) { opacity:0; }
     </style>
     <!-- End common css  -->
     <style>
@@ -78,59 +93,16 @@
     </style>
     <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8"> -->
     <!--link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"-->
-    <script src="https://apis.google.com/js/api.js"></script>
     <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
+    {{{ include_recaptcha }}}
     <!-- Facebook SDK code -->
-    <script>
-      window.fbAsyncInit = function() {
-          FB.init({
-          appId            : '143500093073133',
-          autoLogAppEvents : true,
-          xfbml            : true,
-          version          : 'v2.9'
-          });
-          FB.AppEvents.logPageView();
-          FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-              window.fbStatus = {
-                status: 'connected',
-                uid: response.authResponse.userID
-              };
-            }
-          })
-      };
-
-      (function(d, s, id){
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) {return;}
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/zh_TW/sdk.js";
-          fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-
-      var gapiLoadedHandler = function () {
-        gapi.client.init({
-          discoveryDocs: [ 'https://people.googleapis.com/$discovery/rest?version=v1' ],
-          clientId: "{{ GOOGLE_CLIENT_ID }}",
-          scope: 'profile'
-        }).then((res) => {
-          const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
-          if (isSignedIn) {
-            const currUser = gapi.auth2.getAuthInstance().currentUser.get()
-            window.googleStatus = {
-              status: 'singedIn',
-              idToken: currUser && (currUser.getAuthResponse().id_token)
-            }
-          }
-        })
-      } 
-      window.gapi && window.gapi.load('client', this.gapiLoadedHandler);
-      </script>
+    {{{ includ_fbsdk }}}
     <!-- End of Facebook SDK code -->
-    <script src='https://www.google.com/recaptcha/api.js'></script>    
+    {{{ include_gapi }}}
   </head>
   <body>
   <div id="skip"><a href="#app">skip to content</a></div>
   <!--vue-ssr-outlet-->
   </body>
+  <script src="{{ setting.TALK_SERVER }}/static/embed.js" async></script>
 </html>

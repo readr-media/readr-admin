@@ -1,11 +1,9 @@
-import { SITE_ROOT, } from 'api/config.js'
 const debug = require('debug')('CLIENT:comm')
 
 export function getHost () {
   const browser = typeof window !== 'undefined'
   if (browser) {
-    debug('api host', `//${location.host}${SITE_ROOT ? '/' + SITE_ROOT : ''}`)
-    return `//${location.host}${SITE_ROOT ? '/' + SITE_ROOT : ''}`
+    return `//${location.host}`
   } else {
     const host = process.env.HOST || 'localhost'
     const port = parseInt(process.env.PORT) || 8080

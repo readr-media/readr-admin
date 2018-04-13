@@ -9,7 +9,7 @@ const path = require('path')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
 const uuidv4 = require('uuid/v4')
-const { PAGE_CACHE_EXCLUDING, GOOGLE_CLIENT_ID, TALK_SERVER } = require('./api/config')
+const config = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 const { filter, get } = require('lodash')
 
@@ -104,7 +104,7 @@ function render (req, res, next) {
   const targ_exp = /(dev)|(localhost)/
   debug('Current client host:', curr_host, !curr_host.match(targ_exp))
 
-  if (filter(PAGE_CACHE_EXCLUDING, (p) => (req.url.indexOf(p) > -1)).length === 0) {
+  if (filter(config.PAGE_CACHE_EXCLUDING, (p) => (req.url.indexOf(p) > -1)).length === 0) {
     // !curr_host.match(targ_exp) && res.setHeader('Cache-Control', 'public, max-age=3600')  
   }
   res.setHeader("Content-Type", "text/html")
@@ -131,13 +131,27 @@ function render (req, res, next) {
     }
   }
 
-  const context = {
-    title: 'Readr Admin', // default title
+  let context = {
+    title: 'Readr Admin',
+    ogTitle: 'Readr',
+    description: 'Readr',
+    metaUrl: 'dev.readr.tw',
+    metaImage: '/public/og.png',
     url: req.url,
     cookie: cookies.get('csrf'),
     initmember: cookies.get('initmember'),
-    GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID,
-    TALK_SERVER
+    includ_fbsdk: '',
+    include_gapi: '',
+    include_recaptcha: '',
+    setting: { 
+      TALK_SERVER: config.TALK_SERVER, 
+      POST_ACTIVE: config.POST_ACTIVE, 
+      POST_TYPE: config.POST_TYPE, 
+      PROJECT_STATUS: config.PROJECT_STATUS, 
+      TAG_ACTIVE: config.TAG_ACTIVE, 
+      GOOGLE_RECAPTCHA_SITE_KEY: config.GOOGLE_RECAPTCHA_SITE_KEY,
+      DOMAIN: config.DOMAIN
+    } 
   }
   renderer.renderToString(context, (err, html) => {
     if (err) {

@@ -19,7 +19,7 @@ export const ROLE_MAP = [
   { key: 1, value: '會員', route: 'member' }
 ]
 export const PROJECT_STATUS = [
-  { code: 0, name: 'status_draft' },
+  { code: 0, name: 'status_canadate' },
   { code: 1, name: 'status_wip' },
   { code: 2, name: 'status_finished' },
 ]

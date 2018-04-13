@@ -118,7 +118,7 @@
 </script>
 <style lang="stylus">
   .input-tag-container
-    margin-top 5px
+    // margin-top 5px
     background-color #fff
     // overflow hidden
     cursor text

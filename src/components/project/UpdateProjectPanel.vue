@@ -2,32 +2,72 @@
   <div class="update-project-panel" @click="closePanel">
     <div class="panel">
       <div class="panel__title"><h3 v-text="$t('project_page.update_project')"></h3></div>
-      <div class="panel__option">
-        <RadioItem v-for="s in status" name="status"
-          :label="$t(`project_page.${get(s, 'name')}`)"
-          :key="get(s, 'code')"
-          :value="get(s, 'code')"
-          :disabled="!isEditable"
-          :currSelected.sync="formData.status"></RadioItem>      
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.status')"></span></div>
+        <div class="panel__option">
+          <RadioItem v-for="s in status" name="status"
+            :label="$t(`project_page.${get(s, 'name')}`)"
+            :key="get(s, 'code')"
+            :value="get(s, 'code')"
+            :disabled="!isEditable"
+            :currSelected.sync="formData.status"></RadioItem>      
+        </div>
       </div>
-      <InputItem
-        :placeHolder="$t('project_page.slug')"
-        :value.sync="formData.slug"></InputItem>
-      <InputItem
-        :placeHolder="$t('project_page.title')"
-        :value.sync="formData.title"></InputItem>
-      <TextareaItem
-        :placeholder="$t('project_page.project_description')"
-        :value.sync="formData.description"></TextareaItem>
-      <InputItem
-        :placeHolder="$t('project_page.og_title')"
-        :value.sync="formData.ogTitle"></InputItem>
-      <TextareaItem
-        :placeholder="$t('project_page.og_description')"
-        :value.sync="formData.ogDescription"></TextareaItem>
-      <InputItem width="60px"
-        :placeHolder="$t('project_page.order')"
-        :value.sync="formData.order"></InputItem>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.is_published')"></span></div>
+        <div class="panel__option">
+          <RadioItem name="isPublished"
+            :label="$t(`project_page.status_draft`)"
+            :key="'draft'"
+            :value="false"
+            :disabled="!isEditable"
+            :currSelected.sync="formData.isPublished"></RadioItem>
+          <RadioItem name="isPublished"
+            :label="$t(`project_page.status_published`)"
+            :key="'published'"
+            :value="true"
+            :disabled="!isEditable"
+            :currSelected.sync="formData.isPublished"></RadioItem>
+        </div>
+      </div>
+      <div class="panel__container">
+        <div class="panel__item">
+          <div class="panel__item--title"><span v-text="$t('project_page.order')"></span></div>
+          <InputItem width="60px"
+            :placeHolder="$t('project_page.order')"
+            :value.sync="formData.order"></InputItem>
+        </div>
+        <div class="panel__item slug">
+          <div class="panel__item--title"><span v-text="$t('project_page.slug')"></span></div>
+          <InputItem
+            :placeHolder="$t('project_page.slug')"
+            :value.sync="formData.slug"></InputItem>
+        </div>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.title')"></span></div>
+        <InputItem
+          :placeHolder="$t('project_page.title')"
+          :value.sync="formData.title"></InputItem>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.project_description')"></span></div>
+        <TextareaItem
+          :placeholder="$t('project_page.project_description')"
+          :value.sync="formData.description"></TextareaItem>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.og_title')"></span></div>
+        <InputItem
+          :placeHolder="$t('project_page.og_title')"
+          :value.sync="formData.ogTitle"></InputItem>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.og_description')"></span></div>
+        <TextareaItem
+          :placeholder="$t('project_page.og_description')"
+          :value.sync="formData.ogDescription"></TextareaItem>
+      </div>
       <InputTagItem
         :placeholder="$t('project_page.author')"
         :currTagValues.sync="currTagValues"
@@ -52,6 +92,7 @@
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
+  import validator from 'validator'
 
   import { PROJECT_STATUS } from 'src/constants'
   import { get } from 'lodash'
@@ -124,7 +165,7 @@
           og_title: get(this.formData, 'ogTitle', this.project.ogTitle),
           og_description: get(this.formData, 'ogDescription', this.project.ogDescription),
           og_image: get(this.formData, 'ogImage', this.project.ogImage),
-          project_order: get(this.formData, 'order', this.project.projectOrder),
+          project_order: validator.toInt(`${get(this.formData, 'order')}` || '') || this.project.projectOrder,
           slug: get(this.formData, 'slug', this.project.slug),
           status: get(this.formData, 'status', this.project.status),
         }
@@ -184,6 +225,28 @@
       &__title
         h3
           margin 0
+      &__container
+        width 100%
+        display flex
+        > div:not(:first-child)
+          margin-left 20px
+      &__item
+        display flex
+        &--title
+          background-color #fff
+          > span
+            padding 5px 10px
+            display flex
+            justify-content center
+            align-items center
+            color #fff
+            background-color #949494
+            height 100%
+            max-height 35px
+        > div:not(.panel__item--title)
+          flex 1
+        &.slug
+          flex 1
       &__update
         width 100%
         height 40px
@@ -196,6 +259,11 @@
         padding 10px 20px
         cursor pointer
       &__option
+        // margin-left 10px
+        display flex
+        justify-content center
+        align-items center
+        background-color #fff
         > div
           display inline-block
           &:first-child

@@ -28,6 +28,7 @@
 <style lang="stylus" scoped>
   .textarea-container
     width 100%
+    background-color #fff
     textarea
       width 100%
       border none

@@ -2,24 +2,44 @@
   <div class="create-project-panel" @click="closePanel">
     <div class="panel">
       <div class="panel__title"><h3 v-text="$t('project_page.create_project')"></h3></div>
-      <InputItem
-        :placeHolder="$t('project_page.slug')"
-        :value.sync="formData.slug"></InputItem>
-      <InputItem
-        :placeHolder="$t('project_page.title')"
-        :value.sync="formData.title"></InputItem>
-      <TextareaItem
-        :placeholder="$t('project_page.project_description')"
-        :value.sync="formData.description"></TextareaItem>
-      <InputItem
-        :placeHolder="$t('project_page.og_title')"
-        :value.sync="formData.ogTitle"></InputItem>
-      <TextareaItem
-        :placeholder="$t('project_page.og_description')"
-        :value.sync="formData.ogDescription"></TextareaItem>
-      <InputItem width="60px"
-        :placeHolder="$t('project_page.order')"
-        :value.sync="formData.order"></InputItem>
+      <div class="panel__container">
+        <div class="panel__item">
+          <div class="panel__item--title"><span v-text="$t('project_page.order')"></span></div>
+          <InputItem width="60px"
+            :placeHolder="$t('project_page.order')"
+            :value.sync="formData.order"></InputItem>
+        </div>
+        <div class="panel__item slug">
+          <div class="panel__item--title"><span v-text="$t('project_page.slug')"></span></div>
+          <InputItem
+            :placeHolder="$t('project_page.slug')"
+            :value.sync="formData.slug"></InputItem>
+        </div>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.title')"></span></div>
+        <InputItem
+          :placeHolder="$t('project_page.title')"
+          :value.sync="formData.title"></InputItem>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.project_description')"></span></div>
+        <TextareaItem
+          :placeholder="$t('project_page.project_description')"
+          :value.sync="formData.description"></TextareaItem>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.og_title')"></span></div>
+        <InputItem
+          :placeHolder="$t('project_page.og_title')"
+          :value.sync="formData.ogTitle"></InputItem>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.og_description')"></span></div>
+        <TextareaItem
+          :placeholder="$t('project_page.og_description')"
+          :value.sync="formData.ogDescription"></TextareaItem>
+      </div>
       <InputTagItem
         :placeholder="$t('project_page.author')"
         :currTagValues.sync="currTagValues"
@@ -167,6 +187,28 @@
         margin 15px auto
         &.panel__create
           margin 30px auto 15px
+      &__container
+        width 100%
+        display flex
+        > div:not(:first-child)
+          margin-left 20px
+      &__item
+        display flex
+        &--title
+          background-color #fff
+          > span
+            padding 5px 10px
+            display flex
+            justify-content center
+            align-items center
+            color #fff
+            background-color #949494
+            height 100%
+            max-height 35px
+        > div:not(.panel__item--title)
+          flex 1
+        &.slug
+          flex 1
       &__title
         h3
           margin 0

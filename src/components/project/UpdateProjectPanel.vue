@@ -2,32 +2,28 @@
   <div class="update-project-panel" @click="closePanel">
     <div class="panel">
       <div class="panel__title"><h3 v-text="$t('project_page.update_project')"></h3></div>
-      <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('project_page.status')"></span></div>
-        <div class="panel__option">
-          <RadioItem v-for="s in status" name="status"
-            :label="$t(`project_page.${get(s, 'name')}`)"
-            :key="get(s, 'code')"
-            :value="get(s, 'code')"
-            :disabled="!isEditable"
-            :currSelected.sync="formData.status"></RadioItem>      
+      <div class="panel__container">
+        <div class="panel__item">
+          <div class="panel__item--title"><span v-text="$t('project_page.status')"></span></div>
+          <div class="panel__option">
+            <RadioItem v-for="s in status" name="status"
+              :label="$t(`project_page.${get(s, 'name')}`)"
+              :key="get(s, 'code')"
+              :value="get(s, 'code')"
+              :disabled="!isEditable"
+              :currSelected.sync="formData.status"></RadioItem>      
+          </div>
         </div>
-      </div>
-      <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('project_page.is_published')"></span></div>
-        <div class="panel__option">
-          <RadioItem name="isPublished"
-            :label="$t(`project_page.status_draft`)"
-            :key="'draft'"
-            :value="false"
-            :disabled="!isEditable"
-            :currSelected.sync="formData.isPublished"></RadioItem>
-          <RadioItem name="isPublished"
-            :label="$t(`project_page.status_published`)"
-            :key="'published'"
-            :value="true"
-            :disabled="!isEditable"
-            :currSelected.sync="formData.isPublished"></RadioItem>
+        <div class="panel__item publish-status">
+          <div class="panel__item--title"><span v-text="$t('project_page.is_published')"></span></div>
+          <div class="panel__option">
+            <RadioItem v-for="s in statusPublished" name="isPublished"
+              :label="$t(`project_page.${get(s, 'name')}`)"
+              :key="get(s, 'code')"
+              :value="get(s, 'code')"
+              :disabled="!isEditable"
+              :currSelected.sync="formData.isPublished"></RadioItem>
+          </div>
         </div>
       </div>
       <div class="panel__container">
@@ -94,7 +90,7 @@
   import UploadImage from 'src/components/formItem/UploadImage.vue'
   import validator from 'validator'
 
-  import { PROJECT_STATUS } from 'src/constants'
+  import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS } from 'src/constants'
   import { get } from 'lodash'
 
   const debug = require('debug')('CLIENT:UpdateProjectPanel')
@@ -140,10 +136,13 @@
           slug:  get(this.project, 'slug', ''),
           status: get(this.project, 'status', get(PROJECT_STATUS, [ 0, 'code' ])),
           title: get(this.project, 'title', ''),
+          updatedBy: get(this.profile, 'id'),
+          isPublished: get(this.project, 'publishStatus', get(PROJECT_PUBLISH_STATUS, [ 0, 'code' ])),
         },
         isEditable: true,
         isUpdating: false,
-        status: PROJECT_STATUS
+        statusPublished: PROJECT_PUBLISH_STATUS,
+        status: PROJECT_STATUS,
       }
     },
     methods: {
@@ -168,6 +167,7 @@
           project_order: validator.toInt(`${get(this.formData, 'order')}` || '') || this.project.projectOrder,
           slug: get(this.formData, 'slug', this.project.slug),
           status: get(this.formData, 'status', this.project.status),
+          publish_status: get(this.formData, 'isPublished', this.project.publishStatus),
         }
         debug('Abt to update the curr proj.', project)
         debug('this.formData.ogImage', get(this.formData, 'ogImage', this.project.ogImage))
@@ -213,7 +213,7 @@
     .panel
       background-color #efefef
       // box-shadow 0 0 10px #afafaf
-      width 500px
+      width 900px
       max-height 80%
       padding 25px 50px
       border-radius 5px
@@ -239,13 +239,13 @@
             display flex
             justify-content center
             align-items center
-            color #fff
-            background-color #949494
+            color #777
+            background-color #e2e2e2
             height 100%
             max-height 35px
         > div:not(.panel__item--title)
           flex 1
-        &.slug
+        &.slug, &.publish-status
           flex 1
       &__update
         width 100%
@@ -261,9 +261,10 @@
       &__option
         // margin-left 10px
         display flex
-        justify-content center
+        justify-content flex-start
         align-items center
         background-color #fff
+        padding-left 20px
         > div
           display inline-block
           &:first-child

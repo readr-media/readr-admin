@@ -70,7 +70,7 @@ export default {
 
   FETCH_PROJECTS: ({ commit, state }, { params }) => {
     debug('Abt to fetch data.')
-    return fetchProjects({})
+    return fetchProjects({ params })
       .then((projects) => commit('SET_PROJECTS', { projects }))
   },
 

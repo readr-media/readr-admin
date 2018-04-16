@@ -131,6 +131,7 @@ export function fetchProjects ({ params }) {
   if (query && (query.length > 0)) {
     url = url + `?${query}`
   }
+  debug('params', params)
   debug('Abt to fetch data:', url)
   return _doFetch(url)
 }

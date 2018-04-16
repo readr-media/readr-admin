@@ -38,5 +38,6 @@ export default {
     'slug': 'Slug',
     'error_occurred': '發生錯誤',
     'is_published': '發布狀態',
+    'please_type_id_or_nickname': '輸入ID或標題',
   }
 }

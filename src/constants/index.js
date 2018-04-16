@@ -23,3 +23,7 @@ export const PROJECT_STATUS = [
   { code: 1, name: 'status_wip' },
   { code: 2, name: 'status_finished' },
 ]
+export const PROJECT_PUBLISH_STATUS = [
+  { code: 0, name: 'status_draft' },
+  { code: 1, name: 'status_published' },
+]

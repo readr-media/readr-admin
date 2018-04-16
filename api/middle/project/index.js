@@ -1,5 +1,5 @@
 const { camelizeKeys } = require('humps')
-const { find } = require('lodash')
+const { find, mapKeys } = require('lodash')
 const { handlerError } = require('../../comm')
 const config = require('../../config')
 const debug = require('debug')('READR:api:project')
@@ -13,8 +13,17 @@ const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API
 
 router.get('/list', (req, res) => {
   const url = `${apiHost}/project${req.url}`
+
+  // let url = '/project/list?'
+  // mapKeys(req.query, (value, key) => {
+  //   url = `${url}&${key}=${value}`
+  // })
+  // req.url = url
+  // next()
+
   debug('Got a /project/list call:')
-  debug('>', req.url)
+  debug(req.url)
+  debug(req.body)
 
   superagent
   .get(url)

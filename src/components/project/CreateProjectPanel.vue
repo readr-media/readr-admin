@@ -138,6 +138,7 @@
           slug: get(this.formData, 'slug', ''),
           status: 2,
           title: get(this.formData, 'title', ''),
+          updated_by: get(this.profile, 'id'),
         }).then(res => {
           debug('res', res)
           this.isSaving = false
@@ -178,7 +179,7 @@
     .panel
       background-color #efefef
       // box-shadow 0 0 10px #afafaf
-      width 500px
+      width 900px
       max-height 80%
       padding 25px 50px
       border-radius 5px
@@ -201,8 +202,8 @@
             display flex
             justify-content center
             align-items center
-            color #fff
-            background-color #949494
+            color #777
+            background-color #e2e2e2
             height 100%
             max-height 35px
         > div:not(.panel__item--title)

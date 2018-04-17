@@ -39,5 +39,11 @@ export default {
     'error_occurred': '發生錯誤',
     'is_published': '發布狀態',
     'please_type_id_or_nickname': '輸入ID或標題',
-  }
+    'total': '總共',
+    'unit': '筆',
+  },
+  'img_upload': {
+    'too_big': '圖檔過大',
+    'size_limit': '(圖檔大小限制：3MB)',
+  },
 }

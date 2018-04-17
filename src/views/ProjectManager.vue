@@ -38,6 +38,10 @@
           <span class="updated" v-text="getDatetime(get(proj, 'updatedAt'))"></span>
         </div>
       </template>
+      <div class="project-manager__infobar">
+        <div class="total-record"><span v-text="$t('project_page.total')"></span><span v-text="$t('project_page.unit')"></span></div>
+        <PaginationNav totalPages='10' :currPage.sync="curr_page"></PaginationNav>
+      </div>
     </main>
     <CreateProjectPanel v-if="shouldShowCreatePanel" :shouldShowCreatePanel.sync="shouldShowCreatePanel" @refreshProjects="refreshProjects"></CreateProjectPanel>
     <UpdateProjectPanel v-if="shouldShowUpdatePanel" :shouldShowUpdatePanel.sync="shouldShowUpdatePanel" @refreshProjects="refreshProjects" :project="projGoingToUpdate"></UpdateProjectPanel>
@@ -47,17 +51,24 @@
   import CreateProjectPanel from 'src/components/project/CreateProjectPanel.vue'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import PageAside from 'src/components/PageAside.vue'
+  import PaginationNav from 'src/components/PaginationNav.vue'
   import UpdateProjectPanel from 'src/components/project/UpdateProjectPanel.vue'
   import moment from 'moment'
   import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS } from 'src/constants'
   import { find, get } from 'lodash'
 
+  const MAXRESULT_PROJECTS = 20
+  const DEFAULT_PAGE = 1
+  const DEFAULT_SORT = '-updated_at'
+
   const debug = require('debug')('CLIENT:ProjectManager')
-  const fetchProjects = (store) => {
+  const fetchProjects = (store, { page }) => {
     debug('Go fectch projects.')
     return store.dispatch('FETCH_PROJECTS', {
       params: {
-        sort: '-updated_at',
+        max_result: MAXRESULT_PROJECTS,
+        page: page || DEFAULT_PAGE,
+        sort: DEFAULT_SORT,
       }
     }).catch(err => debug(err))
   }
@@ -68,6 +79,7 @@
       CreateProjectPanel,
       InputItem,
       PageAside,
+      PaginationNav,
       UpdateProjectPanel,
     },
     computed: {
@@ -79,6 +91,7 @@
       return {
         PROJECT_STATUS,
         PROJECT_PUBLISH_STATUS,
+        curr_page: DEFAULT_PAGE,
         filter: '',
         projGoingToUpdate: {},
         shouldShowCreatePanel: false,
@@ -97,7 +110,7 @@
         this.shouldShowUpdatePanel = false
       },
       refreshProjects () {
-        fetchProjects(this.$store)
+        fetchProjects(this.$store, { page: this.curr_page })
       },
       updateProject (projid) {
         const project = find(this.projects, { id: projid })
@@ -108,20 +121,20 @@
       }
     },
     beforeMount () {
-      fetchProjects(this.$store)
+      fetchProjects(this.$store, { page: this.curr_page })
     },
     mounted () {},
     watch: {
-      // shouldShowCreatePanel: function () {
-        // debug('this.shouldShowCreatePanel change detected.', this.shouldShowCreatePanel)
-        // if (this.shouldShowCreatePanel) {
-          // this.shouldShowUpdatePanel
-        // }
-      // }
       shouldShowUpdatePanel: function () {
         if (!this.shouldShowUpdatePanel) {
           this.projGoingToUpdate = {}
         }
+      },
+      curr_page: function () {
+        debug('this.curr_page', this.curr_page)
+        fetchProjects(this.$store, {
+          page: this.curr_page
+        })
       }
     }
   }
@@ -170,6 +183,10 @@
         &:hover
           background-color #c9c9c9
 
+    &__infobar
+      margin 20px 0
+      display flex
+      justify-content space-between
     &__item
       width 100%
       display flex

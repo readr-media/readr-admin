@@ -2,6 +2,8 @@
   <div class="upload-image">
     <div class="upload-image__name">
       <div class="title" v-text="title"></div>
+      <div class="desc"><span v-text="$t('img_upload.size_limit')"></span></div>
+      <div class="alert"><span v-text="alert"></span></div>
       <div class="filename"></div>
     </div>
     <div class="upload-image__container" @click="uploadImage">
@@ -33,14 +35,18 @@
       Spinner
     },
     computed: {
+      alert () {
+        return this.alert_type && this.$t(`img_upload.${this.alert_type}`)
+      },
       isImgEmpty () {
         debug('this.thumbnailPath', this.imageUrl)
         debug('this.thumbnailPath ? true : false', this.imageUrl ? true : false)
         return this.imageUrl ? false : true
-      }
+      },
     },
     data () {
       return {
+        alert_type: '',
         isUploading: false,
         preImgByte: null
       }
@@ -72,7 +78,8 @@
         input.setAttribute('accept', 'image/*')
         input.click()
         input.onchange = (e) => {
-          this.isUploading = true          
+          this.isUploading = true
+          this.alert_type = ''        
           const file = input.files[0]
           debug('file0', file)
           if (/^image\//.test(file.type)) {
@@ -89,7 +96,13 @@
               fr.readAsDataURL(files[0]);
             }
 
-            file.size <= 5242880 ? saveImage(file) : console.log(`file size is ${file.size} bytes bigger than 5MB`)
+            if (file.size <= 3145728) {
+              saveImage(file)
+            } else {
+              console.log(`file size is ${file.size} bytes bigger than 3MB`)
+              this.isUploading = false
+              this.alert_type = 'too_big'
+            }
           }
         }
       },
@@ -127,7 +140,7 @@
       // border 1px solid #b5b5b5
       height 50%
       object-position center center
-      object-size contain
+      object-fit contain
       &.notEmpty
         height 100%
         width 100%        
@@ -147,11 +160,18 @@
         width 4px
         height 24px
     &__name
-      width 100px
+      width 150px
       padding 5px 10px
       .title
         font-size 1rem
         font-weight 600
+      .desc
+        margin 5px 0
+        font-size 0.75rem
+      .alert
+        margin 5px 0
+        color #ff7979
+        font-size 0.75rem
       // .filename
       //   color
 </style>

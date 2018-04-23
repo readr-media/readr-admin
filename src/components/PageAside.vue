@@ -68,6 +68,7 @@
     top: 0
     background-color #000
     padding-top 50px
+    z-index 999
     &__item
       color #fff
       padding 20px 50px

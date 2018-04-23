@@ -1,6 +1,5 @@
 <template>
   <div class="project-manager">
-    <PageAside></PageAside>
     <main>
       <div class="project-manager__header">
         <div class="project-manager__title">
@@ -50,7 +49,6 @@
 <script>
   import CreateProjectPanel from 'src/components/project/CreateProjectPanel.vue'
   import InputItem from 'src/components/formItem/InputItem.vue'
-  import PageAside from 'src/components/PageAside.vue'
   import PaginationNav from 'src/components/PaginationNav.vue'
   import UpdateProjectPanel from 'src/components/project/UpdateProjectPanel.vue'
   import moment from 'moment'
@@ -78,7 +76,6 @@
     components: {
       CreateProjectPanel,
       InputItem,
-      PageAside,
       PaginationNav,
       UpdateProjectPanel,
     },

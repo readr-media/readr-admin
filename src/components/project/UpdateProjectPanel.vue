@@ -11,7 +11,7 @@
               :key="get(s, 'code')"
               :value="get(s, 'code')"
               :disabled="!isEditable"
-              :currSelected.sync="formData.status"></RadioItem>      
+              :currSelected.sync="formData.status"></RadioItem>
           </div>
         </div>
         <div class="panel__item publish-status">

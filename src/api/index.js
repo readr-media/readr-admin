@@ -104,6 +104,22 @@ function _doPut (url, params) {
   })
 }
 
+function _doDelete (url, params) {
+  return new Promise((resolve, reject) => {
+    superagent
+      .delete(url)
+      .set('Authorization', `Bearer ${getToken()}`)
+      .send(params)
+      .end(function (err, res) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ status: res.status, body: camelizeKeys(res.body) })
+        }
+      })
+  })
+}
+
 export function checkLoginStatus ({ params = {}}) {
   debug('Going to send req to check status...')
   const url = `${host}/api/status`
@@ -169,4 +185,27 @@ export function uploadImage (file, type) {
         }
       })
   })
+}
+
+export function createMemo ({ params }) {
+  return _doPost(`${host}/api/memo`, params)
+}
+
+export function fetchMemos ({ params }) {
+  let url = `${host}/api/memos`
+  const query = _buildQuery(params)
+  if (query && (query.length > 0)) {
+    url = url + `?${query}`
+  }
+  debug('params', params)
+  debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, { cookie: params.cookie })
+}
+
+export function updateMemo ({ params }) {
+  return _doPut(`${host}/api/memo`, params)
+}
+
+export function deleteMemos ({ params }) {
+  return _doDelete(`${host}/api/memos`, params)
 }

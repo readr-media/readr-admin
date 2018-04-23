@@ -1,81 +1,81 @@
 <template>
-  <div class="update-project-panel" @click="closePanel">
+  <div class="update-memo-panel" @click="closePanel">
     <div class="panel">
-      <div class="panel__title"><h3 v-text="$t('project_page.update_project')"></h3></div>
-      <div class="panel__container">
+      <div class="panel__title"><h3 v-text="$t('memo_page.update_memo')"></h3></div>
+      <!-- <div class="panel__container">
         <div class="panel__item">
-          <div class="panel__item--title"><span v-text="$t('project_page.status')"></span></div>
+          <div class="panel__item--title"><span v-text="$t('memo_page.status')"></span></div>
           <div class="panel__option">
             <RadioItem v-for="s in status" name="status"
-              :label="$t(`project_page.${get(s, 'name')}`)"
+              :label="$t(`memo_page.${get(s, 'name')}`)"
               :key="get(s, 'code')"
               :value="get(s, 'code')"
               :disabled="!isEditable"
-              :currSelected.sync="formData.status"></RadioItem>
+              :currSelected.sync="formData.status"></RadioItem>      
           </div>
         </div>
         <div class="panel__item publish-status">
-          <div class="panel__item--title"><span v-text="$t('project_page.is_published')"></span></div>
+          <div class="panel__item--title"><span v-text="$t('memo_page.is_published')"></span></div>
           <div class="panel__option">
             <RadioItem v-for="s in statusPublished" name="isPublished"
-              :label="$t(`project_page.${get(s, 'name')}`)"
+              :label="$t(`memo_page.${get(s, 'name')}`)"
               :key="get(s, 'code')"
               :value="get(s, 'code')"
               :disabled="!isEditable"
               :currSelected.sync="formData.isPublished"></RadioItem>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="panel__container">
-        <div class="panel__item">
-          <div class="panel__item--title"><span v-text="$t('project_page.order')"></span></div>
+        <!-- <div class="panel__item">
+          <div class="panel__item--title"><span v-text="$t('memo_page.order')"></span></div>
           <InputItem width="60px"
-            :placeHolder="$t('project_page.order')"
+            :placeHolder="$t('memo_page.order')"
             :value.sync="formData.order"></InputItem>
-        </div>
-        <div class="panel__item slug">
-          <div class="panel__item--title"><span v-text="$t('project_page.slug')"></span></div>
+        </div> -->
+        <div class="panel__item project_id">
+          <div class="panel__item--title"><span v-text="$t('memo_page.project_id')"></span></div>
           <InputItem
-            :placeHolder="$t('project_page.slug')"
-            :value.sync="formData.slug"></InputItem>
+            :placeHolder="$t('memo_page.project_id')"
+            :value.sync="formData.project_id"></InputItem>
         </div>
       </div>
       <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('project_page.title')"></span></div>
+        <div class="panel__item--title"><span v-text="$t('memo_page.title')"></span></div>
         <InputItem
-          :placeHolder="$t('project_page.title')"
+          :placeHolder="$t('memo_page.title')"
           :value.sync="formData.title"></InputItem>
       </div>
       <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('project_page.project_description')"></span></div>
+        <div class="panel__item--title"><span v-text="$t('memo_page.memo_description')"></span></div>
         <TextareaItem
-          :placeholder="$t('project_page.project_description')"
+          :placeholder="$t('memo_page.memo_description')"
           :value.sync="formData.description"></TextareaItem>
       </div>
-      <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('project_page.og_title')"></span></div>
+      <!-- <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('memo_page.og_title')"></span></div>
         <InputItem
-          :placeHolder="$t('project_page.og_title')"
+          :placeHolder="$t('memo_page.og_title')"
           :value.sync="formData.ogTitle"></InputItem>
       </div>
       <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('project_page.og_description')"></span></div>
+        <div class="panel__item--title"><span v-text="$t('memo_page.og_description')"></span></div>
         <TextareaItem
-          :placeholder="$t('project_page.og_description')"
+          :placeholder="$t('memo_page.og_description')"
           :value.sync="formData.ogDescription"></TextareaItem>
-      </div>
-      <InputTagItem
-        :placeholder="$t('project_page.author')"
+      </div> -->
+      <!-- <InputTagItem
+        :placeholder="$t('memo_page.author')"
         :currTagValues.sync="currTagValues"
         :autocomplete="autocompleteForAuthor"></InputTagItem>
-      <UploadImage :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
-      <UploadImage :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
+      <UploadImage :title="$t('memo_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
+      <UploadImage :title="$t('memo_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage> -->
       <div class="panel__alert" v-if="alert">
-        <span v-text="$t('project_page.error_occurred') + ': '"></span>
+        <span v-text="$t('memo_page.error_occurred') + ': '"></span>
         <span v-text="alert"></span>
       </div>
       <div class="panel__update" @click="goUpdate">
-        <span v-text="$t('project_page.button_update')" v-if="!isUpdating"></span>
+        <span v-text="$t('memo_page.button_update')" v-if="!isUpdating"></span>
         <Spinner class="panel__update__spinner" v-else="!isUpdating" :show="true"></Spinner>
       </div>
     </div>
@@ -90,18 +90,17 @@
   import UploadImage from 'src/components/formItem/UploadImage.vue'
   import validator from 'validator'
 
-  import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS } from 'src/constants'
   import { get } from 'lodash'
 
-  const debug = require('debug')('CLIENT:UpdateProjectPanel')
-  const updateProject = (store, params) => {
-    return store.dispatch('UPDATE_PROJECT', {
+  const debug = require('debug')('CLIENT:UpdateMemoPanel')
+  const updateMemo = (store, params) => {
+    return store.dispatch('UPDATE_MEMO', {
       params
     })
   }
 
   export default {
-    name: 'UpdateProjectPanel',
+    name: 'UpdateMemoPanel',
     components: {
       InputItem,
       InputTagItem,
@@ -127,56 +126,57 @@
         ],
         currTagValues: [ 'test' ],        
         formData: {
-          description: get(this.project, 'description', ''),
-          heroImage: get(this.project, 'heroImage', ''),
-          ogDescription: get(this.project, 'ogDescription', ''),
-          ogImage: get(this.project, 'ogImage', ''),
-          ogTitle: get(this.project, 'ogTitle', ''),
-          order: get(this.project, 'projectOrder'),
-          slug:  get(this.project, 'slug', ''),
-          status: get(this.project, 'status', get(PROJECT_STATUS, [ 0, 'code' ])),
-          title: get(this.project, 'title', ''),
+          description: get(this.memo, 'content', ''),
+          // heroImage: get(this.memo, 'heroImage', ''),
+          // ogDescription: get(this.memo, 'ogDescription', ''),
+          // ogImage: get(this.memo, 'ogImage', ''),
+          // ogTitle: get(this.memo, 'ogTitle', ''),
+          // order: get(this.memo, 'memoOrder'),
+          project_id:  get(this.memo, 'projectId', ''),
+          // status: get(this.memo, 'status', get(PROJECT_STATUS, [ 0, 'code' ])),
+          title: get(this.memo, 'title', ''),
           updatedBy: get(this.profile, 'id'),
-          isPublished: get(this.project, 'publishStatus', get(PROJECT_PUBLISH_STATUS, [ 0, 'code' ])),
+          // isPublished: get(this.memo, 'publishStatus', get(PROJECT_PUBLISH_STATUS, [ 0, 'code' ])),
         },
         isEditable: true,
         isUpdating: false,
-        statusPublished: PROJECT_PUBLISH_STATUS,
-        status: PROJECT_STATUS,
+        // statusPublished: PROJECT_PUBLISH_STATUS,
+        // status: PROJECT_STATUS,
       }
     },
     methods: {
       closePanel (e) {
         const target = e.target
         const className = target.getAttribute('class')
-        if (className && className.indexOf('update-project-panel') > -1) {
+        if (className && className.indexOf('update-memo-panel') > -1) {
           debug('Abt to close update panel.', target.className)
           this.$emit('update:shouldShowUpdatePanel', false)
         }
       },
       get,
       goUpdate () {
-        const project = {
-          id: this.project.id,
-          title: get(this.formData, 'title', this.project.title),
-          description: get(this.formData, 'description', this.project.description),
-          hero_image: get(this.formData, 'heroImage', this.project.heroImage),
-          og_title: get(this.formData, 'ogTitle', this.project.ogTitle),
-          og_description: get(this.formData, 'ogDescription', this.project.ogDescription),
-          og_image: get(this.formData, 'ogImage', this.project.ogImage),
-          project_order: validator.toInt(`${get(this.formData, 'order')}` || '') || this.project.projectOrder,
-          slug: get(this.formData, 'slug', this.project.slug),
-          status: get(this.formData, 'status', this.project.status),
-          publish_status: get(this.formData, 'isPublished', this.project.publishStatus),
+        const memo = {
+          id: this.memo.id,
+          title: get(this.formData, 'title', this.memo.title),
+          content: get(this.formData, 'description', this.memo.content),
+          // hero_image: get(this.formData, 'heroImage', this.memo.heroImage),
+          // og_title: get(this.formData, 'ogTitle', this.memo.ogTitle),
+          // og_description: get(this.formData, 'ogDescription', this.memo.ogDescription),
+          // og_image: get(this.formData, 'ogImage', this.memo.ogImage),
+          // memo_order: validator.toInt(`${get(this.formData, 'order')}` || '') || this.memo.memoOrder,
+          project_id: get(this.formData, 'project_id', this.memo.projectId),
+          updated_by: get(this.$store.state.profile, 'id'),
+          // status: get(this.formData, 'status', this.memo.status),
+          // publish_status: get(this.formData, 'isPublished', this.memo.publishStatus),
         }
-        debug('Abt to update the curr proj.', project)
-        debug('this.formData.ogImage', get(this.formData, 'ogImage', this.project.ogImage))
+        debug('Abt to update the curr memo.', memo)
+        // debug('this.formData.ogImage', get(this.formData, 'ogImage', this.memo.ogImage))
         this.isUpdating = true
-        updateProject(this.$store, project)
+        updateMemo(this.$store, memo)
           .then(res => {
             debug('res', res)
             this.isUpdating = false
-            this.$emit('refreshProjects', false)
+            this.$emit('refreshMemos', false)
             this.$emit('update:shouldShowUpdatePanel', false)
           })
           .catch(err => {
@@ -193,14 +193,14 @@
     },
     mounted () {},
     props: {
-      project: {
+      memo: {
         type: Object
       }
     }
   }
 </script>
 <style lang="stylus" scoped>
-  .update-project-panel
+  .update-memo-panel
     position fixed
     top 0
     left 0
@@ -245,7 +245,7 @@
             max-height 35px
         > div:not(.panel__item--title)
           flex 1
-        &.slug, &.publish-status
+        &.project_id, &.publish-status
           flex 1
       &__update
         width 100%

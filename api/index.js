@@ -80,6 +80,20 @@ router.get('/status', authVerify, function(req, res) {
   res.status(200).send(true)
 })
 
+// Memos api
+router.all('/memos', authVerify, (req, res, next) => {
+  next()
+})
+router.get('/memos/count', authVerify, (req, res, next) => {
+  next()
+})
+router.all('/memo', authVerify, (req, res, next) => {
+  next()
+})
+router.all('/memo/:id', authVerify, (req, res, next) => {
+  next()
+})
+
 router.route('*')
   .get(function (req, res, next) {
     debug('Abt to send req to api.')
@@ -93,8 +107,8 @@ router.route('*')
         .get(url)
         .timeout(
           {
-            response: API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-            deadline: API_DEADLINE ? API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+            response: CONFIG.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+            deadline: CONFIG.API_DEADLINE ? CONFIG.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
           }
         )
         .end((e, r) => {
@@ -154,6 +168,7 @@ router.route('*')
     const params = req.body || {}
     superagent
     .delete(url)
+    .send(params)
     .end((err, response) => {
       if (!err && response) {
         res.status(200).end()

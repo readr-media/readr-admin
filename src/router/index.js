@@ -9,6 +9,8 @@ Vue.use(ReadrPerm)
 const Index = () => import('src/views/Index.vue')
 const ProjectCandidate = () => import('src/views/ProjectCandidate.vue')
 const ProjectManager = () => import('src/views/ProjectManager.vue')
+const MemoManagerList = () => import('src/views/MemoManagerList.vue')
+const MemoManagerReplies = () => import('src/views/MemoManagerReplies.vue')
 
 export function createRouter () {
   return new Router({
@@ -19,6 +21,8 @@ export function createRouter () {
       { path: '/', component: Index, meta: { permission: 'admin' } },
       { path: '/project-manager/candidate', alias: '/project-candidate', component: ProjectCandidate, meta: { permission: 'admin' } },
       { path: '/project-manager/project', component: ProjectManager, meta: { permission: 'admin' } },
+      { path: '/memo-manager/list', component: MemoManagerList, meta: { permission: 'admin' }},
+      { path: '/memo-manager/replies', component: MemoManagerReplies, meta: { permission: 'admin' }},
     ]
   })
 }

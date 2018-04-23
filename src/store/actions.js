@@ -5,7 +5,11 @@ import {
   fetchProjects,
   getProfile,
   updateProject,
-  uploadImage
+  uploadImage,
+  createMemo,
+  fetchMemos,
+  updateMemo,
+  deleteMemos,
 } from 'src/api'
 
 const debug = require('debug')('CLIENT:actions')
@@ -89,5 +93,23 @@ export default {
 
   UPLOAD_IMAGE: ({ commit, dispatch }, { file, type }) => {
     return uploadImage(file, type)
+  },
+
+  CREATE_MEMO: ({ commit, state }, { params }) => {
+    debug('Going to send memo creating req.')
+    return createMemo({ params })
+  },
+  FETCH_MEMOS: ({ commit, state }, { params }) => {
+    debug('Abt to fetch data.')
+    return fetchMemos({ params })
+      .then((memos) => commit('SET_MEMOS', { memos }))
+  },
+  UPDATE_MEMO: ({ commit, state }, { params }) => {
+    debug('Going to sen memo updateing req.')
+    return updateMemo({ params })
+  },
+  DELETE_MEMOS: ({ commit, state }, { params }) => {
+    debug('Going to sen memo delete req.')
+    return deleteMemos({ params }).then(() => { commit('REMOVE_MEMOS', params.ids) })
   },
 }

@@ -1,17 +1,11 @@
 <template>
   <div class="project-candidate">
-    <PageAside></PageAside>
     <div class=""></div>
   </div>
 </template>
 <script>
-  import PageAside from 'src/components/PageAside.vue'
-
   export default {
     name: 'ProjectCandidate',
-    components: {
-      PageAside
-    },
     methods: {},
     mounted () {},
   }

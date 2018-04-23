@@ -18,5 +18,11 @@ export default {
   },
   SET_PROJECTS: (state, { projects }) => {
     state.projects = get(projects, 'body.items', [])
+  },
+  SET_MEMOS: (state, { memos }) => {
+    state.memos = get(memos, 'body.items', [])
+  },
+  REMOVE_MEMOS: (state, ids) => {
+    state['memos'] = state['memos'].filter(memo => !ids.includes(memo.id))
   }
 }

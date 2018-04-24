@@ -1,6 +1,8 @@
+import _ from 'lodash'
 import {
   checkLoginStatus,
   createProject,
+  deleteProject,
   fetchPeopleByName,
   fetchProjects,
   getProfile,
@@ -68,8 +70,16 @@ export default {
     return createProject({ params })
   },
 
+  DELETE_PROJECT: ({ commit, state }, { params }) => {
+    return deleteProject({ params })
+  },
+
   FETCH_PEOPLE_BY_NAME: ({ commit, state }, { params }) => {
-    return fetchPeopleByName({ params })
+    return fetchPeopleByName({ params }).then(({ status, body }) => {
+      if (status === 200) {
+        commit('SET_PEOPLE_LIST', { people: _.get(body, 'items', []) })
+      }
+    })
   },
 
   FETCH_PROJECTS: ({ commit, state }, { params }) => {

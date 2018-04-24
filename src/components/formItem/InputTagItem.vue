@@ -93,7 +93,7 @@
             debug('Slected item', item)
           }
         }
-        debug('browser the autocomplete item.')
+        debug('browser the autocomplete item.', e.keyCode)
       },
       remove (index) {
         this.tags.splice(index, 1)

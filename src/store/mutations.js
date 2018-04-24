@@ -13,6 +13,9 @@ export default {
   SET_USER: (state, { id, user }) => {
     Vue.set(state.users, id, user || false) /* false means user not found */
   },
+  SET_PEOPLE_LIST: (state, { people }) => {
+    state['peopleList'] = people
+  },
   SET_PROFILE: (state, { profile }) => {
     state['profile'] = profile
   },

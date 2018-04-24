@@ -131,14 +131,12 @@ export function createProject ({ params }) {
 }
 
 export function fetchPeopleByName ({ params }) {
-  let url = `${host}/api/members`
+  let url = `${host}/api/members/nickname`
   const query = _buildQuery(params)
   if (query && (query.length > 0)) {
     url = url + `?${query}`
   }
-  // return _doFetch(url)
-  debug('fetchPeopleByName:url', url)
-  return Promise.resolve({ status: 'ok' })
+  return _doFetchStrict(url, {})
 }
 
 export function fetchProjects ({ params }) {
@@ -208,4 +206,8 @@ export function updateMemo ({ params }) {
 
 export function deleteMemos ({ params }) {
   return _doDelete(`${host}/api/memos`, params)
+}
+
+export function deleteProject ({ params }) {
+  return _doDelete(`${host}/api/project`, params)
 }

@@ -51,8 +51,9 @@ button
 .datepicker__input
   padding-left 10px
   width 100%
-  height 25px
+  height 35px
   color #808080
+  border none
 
 .fade-enter-active, .fade-leave-active
   transition all .2s ease

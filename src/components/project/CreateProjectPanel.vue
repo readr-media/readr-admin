@@ -43,9 +43,12 @@
       <InputTagItem
         :placeholder="$t('project_page.author')"
         :currTagValues.sync="currTagValues"
+        :currInput.sync="currInputAuthor"
         :autocomplete="autocompleteForAuthor"></InputTagItem>
-      <UploadImage :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
-      <UploadImage :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
+      <div class="panel__container">
+        <UploadImage class="panel__item upload" :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
+        <UploadImage class="panel__item upload" :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
+      </div>
       <div class="panel__alert" v-if="alert">
         <span v-text="$t('project_page.error_occurred') + ': '"></span>
         <span v-text="alert"></span>
@@ -63,7 +66,7 @@
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
-  import { get } from 'lodash'
+  import { get, map } from 'lodash'
 
   const debug = require('debug')('CLIENT:CreateProjectPanel')
   const createProject = (store, params) => {
@@ -76,6 +79,11 @@
      params
     })
   }
+  const getUserList = (store, params) => {
+    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
+      params
+    })
+  }
   export default {
     name: 'CreateProjectPanel',
     components: {
@@ -85,17 +93,16 @@
       TextareaItem,
       UploadImage
     },
+    computed: {
+      autocompleteForAuthor () {
+        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
+      },
+    },
     data () {
       return {
         alert: null,
-        autocompleteForAuthor: [
-          { name: 'Peter Kim', value: 'fa79fad7f9da88' },
-          { name: 'Sherry Lim', value: 'aa79fad7f9da88' },
-          { name: 'Tammy Kao', value: 'ca79fad7f9da88' },
-          { name: 'Lora Lu', value: 'ba79fad7f9da88' },
-          { name: '鐘聖雄', value: 'ga79fad7f9da88' },
-        ],
         currTagValues: [ 'test' ],
+        currInputAuthor: '',
         formData: {
           description: '',
           heroImage: '',
@@ -155,13 +162,10 @@
     watch: {
       currInputAuthor: function () {
         debug('currInputAuthor change detected:', this.currInputAuthor)
-        // this.autocompleteForAuthor.push({ name: this.currInputAuthor, value: this.currInputAuthor })
-        // fetchAuthors(this.$store, {
-        //   where: {
-        //     nickname: [ `神力%` ]
-        //   }
-        // })
-      }
+        getUserList(this.$store, {
+          keyword: this.currInputAuthor,
+        })
+      },
     }
   }
 </script>
@@ -176,6 +180,7 @@
     align-items center
     justify-content center
     background-color rgba(0, 0, 0, 0.6)
+    z-index 9999
     .panel
       background-color #efefef
       // box-shadow 0 0 10px #afafaf
@@ -208,7 +213,7 @@
             max-height 35px
         > div:not(.panel__item--title)
           flex 1
-        &.slug
+        &.slug, &.upload
           flex 1
       &__title
         h3

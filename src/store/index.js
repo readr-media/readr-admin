@@ -12,6 +12,7 @@ export function createStore () {
       projects: [],
       memos: [],
       isLoggedIn: false,
+      peopleList: [],
       profile: {},
     },
     actions,

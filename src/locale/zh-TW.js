@@ -7,7 +7,7 @@ export default {
   'project_page': {
     'id': '議題編號',
     'period': '週期',
-    'published_time': '預計發佈日期',
+    'published_time': '發佈日期',
     'created_time': '新增日期',
     'updated_time': '更新日期時間',
     'donation_count': '贊助數量',
@@ -19,6 +19,9 @@ export default {
     'button_create_project': '新增議題',
     'button_create': '新增',
     'button_update': '修改',
+    'button_delete': '刪除',
+    'button_cancel': '取消',
+    'button_confirm': '確定',
     'description': '說明',
     'hero_image': '主圖',
     'og_title': 'OG 標題',
@@ -41,6 +44,8 @@ export default {
     'please_type_id_or_nickname': '輸入ID或標題',
     'total': '總共',
     'unit': '筆',
+    'progress': '進度',
+    'points': '所需點數',
   },
   'img_upload': {
     'too_big': '圖檔過大',

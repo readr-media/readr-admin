@@ -3803,6 +3803,10 @@ lru-cache@^4.0.1, lru-cache@^4.1.1:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
 
+luxon@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.1.0.tgz#52f4eba14772a7620ad7c78055ee28dba53ee002"
+
 macaddress@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
@@ -6393,6 +6397,10 @@ vue-cookie@^1.1.4:
   dependencies:
     tiny-cookie "^1.0"
 
+vue-datetime@^1.0.0-beta.3:
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/vue-datetime/-/vue-datetime-1.0.0-beta.3.tgz#26522e6589b29c5327726435b770e2bdc1f85b86"
+
 vue-hot-reload-api@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.0.tgz#97976142405d13d8efae154749e88c4e358cf926"
@@ -6550,6 +6558,10 @@ webpack@^3.8.1:
     watchpack "^1.4.0"
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
+
+weekstart@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/weekstart/-/weekstart-1.0.0.tgz#e0aee358d45ad99802254769d7b2a34c9380f539"
 
 when@~3.6.x:
   version "3.6.4"

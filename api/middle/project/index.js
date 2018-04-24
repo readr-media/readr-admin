@@ -1,5 +1,5 @@
 const { camelizeKeys } = require('humps')
-const { find, mapKeys } = require('lodash')
+const { find, get, mapKeys } = require('lodash')
 const { handlerError } = require('../../comm')
 const config = require('../../config')
 const debug = require('debug')('READR:api:project')
@@ -74,6 +74,29 @@ router.put('/update', (req, res) => {
   superagent
   .put(url)
   .send(req.body)
+  .end((error, response) => {
+    if (!error && response) {
+      res.send({ status: 200, text: 'Updating a new project successfully.' })
+    } else {
+      const errWrapped = handlerError(error, response)
+      res.status(errWrapped.status).send({
+        status: errWrapped.status,
+        text: errWrapped.text
+      })
+      console.error(`Error occurred during update project: ${url}`)
+      console.error(error) 
+    }
+  })
+})
+
+router.delete('/', (req, res) => {
+  debug('Got a proj del call.')
+  debug(req.body)
+  const id = get(req, 'body.id')
+  const url = `${apiHost}/project/${id}`
+  debug(url)
+  superagent
+  .delete(url)
   .end((error, response) => {
     if (!error && response) {
       res.send({ status: 200, text: 'Updating a new project successfully.' })

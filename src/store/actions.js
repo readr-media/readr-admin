@@ -6,6 +6,7 @@ import {
   fetchPeopleByName,
   fetchProjects,
   getProfile,
+  getProjectsCount,
   updateProject,
   uploadImage,
   createMemo,
@@ -86,6 +87,11 @@ export default {
     debug('Abt to fetch data.')
     return fetchProjects({ params })
       .then((projects) => commit('SET_PROJECTS', { projects }))
+  },
+
+  GET_PROJECTS_COUNT: ({ commit, state }) => {
+    return getProjectsCount()
+      .then(({ status, body }) => status === 200 && commit('SET_PROJECTS_COUNT', { count: _.get(body, 'meta.total') }))
   },
 
   GET_PROFILE: ({ commit, dispatch, state }, { params }) => {

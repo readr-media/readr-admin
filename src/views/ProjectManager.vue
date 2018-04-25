@@ -8,13 +8,11 @@
         <div class="project-manager__create">
           <div class="button" @click="openCreatePanel"><span v-text="$t('project_page.button_create_project')"></span></div>
         </div>
-        <div class="project-manager__filter">
+        <div class="project-manager__filter" @keyup="keyupHandler">
           <InputItem
             :placeHolder="$t('project_page.please_type_id_or_nickname')"
             :value.sync="filter"></InputItem>
-          <div class="search">
-          
-          </div>
+          <div class="search" @click="goSearch"></div>
         </div>
       </div>
       <div class="project-manager__item th">
@@ -38,8 +36,12 @@
         </div>
       </template>
       <div class="project-manager__infobar">
-        <div class="total-record"><span v-text="$t('project_page.total')"></span><span v-text="$t('project_page.unit')"></span></div>
-        <PaginationNav totalPages='10' :currPage.sync="curr_page"></PaginationNav>
+        <div class="total-record">
+          <span v-text="$t('project_page.total')"></span>
+          <span v-text="` ${projectsCount} `" class="number"></span>
+          <span v-text="$t('project_page.unit')"></span>
+        </div>
+        <PaginationNav :totalPages='totalPages' :currPage.sync="curr_page"></PaginationNav>
       </div>
     </main>
     <CreateProjectPanel v-if="shouldShowCreatePanel" :shouldShowCreatePanel.sync="shouldShowCreatePanel" @refreshProjects="refreshProjects"></CreateProjectPanel>
@@ -60,17 +62,21 @@
   const DEFAULT_SORT = '-updated_at'
 
   const debug = require('debug')('CLIENT:ProjectManager')
-  const fetchProjects = (store, { page }) => {
+  const fetchProjects = (store, { page, keyword = '' }) => {
     debug('Go fectch projects.')
     return store.dispatch('FETCH_PROJECTS', {
       params: {
         max_result: MAXRESULT_PROJECTS,
         page: page || DEFAULT_PAGE,
         sort: DEFAULT_SORT,
+        keyword
       }
     }).catch(err => debug(err))
   }
-
+  const fetchProjectsCount = (store) => {
+    debug('Go fectch projects.')
+    return store.dispatch('GET_PROJECTS_COUNT').catch(err => debug(err))
+  }
   export default {
     name: 'ProjectManager',
     components: {
@@ -82,7 +88,13 @@
     computed: {
       projects () {
         return get(this.$store, 'state.projects')
-      }
+      },
+      projectsCount () {
+        return get(this.$store, 'state.projectsCount')
+      },
+      totalPages () {
+        return Math.ceil(this.projectsCount / MAXRESULT_PROJECTS) || 1
+      },
     },
     data () {
       return {
@@ -100,14 +112,23 @@
       getDatetime (dateStr) {
         return dateStr && moment(new Date(dateStr)).format('YYYY/MM/DD HH:mm:ss')
       },
+      goSearch () {
+        this.curr_page = 1
+        this.refreshProjects()
+      },
       find,
       get,
+      keyupHandler (e) {
+        if (e.keyCode === 13) {
+          this.goSearch()
+        }
+      },
       openCreatePanel () {
         this.shouldShowCreatePanel = true
         this.shouldShowUpdatePanel = false
       },
       refreshProjects () {
-        fetchProjects(this.$store, { page: this.curr_page })
+        fetchProjects(this.$store, { page: this.curr_page, keyword: this.filter })
       },
       updateProject (projid) {
         const project = find(this.projects, { id: projid })
@@ -118,7 +139,10 @@
       }
     },
     beforeMount () {
-      fetchProjects(this.$store, { page: this.curr_page })
+      Promise.all([
+        fetchProjects(this.$store, { page: this.curr_page }),
+        fetchProjectsCount(this.$store),
+      ])
     },
     mounted () {},
     watch: {

@@ -147,7 +147,12 @@ export function fetchProjects ({ params }) {
   }
   debug('params', params)
   debug('Abt to fetch data:', url)
-  return _doFetch(url)
+  return _doFetchStrict(url, {})
+}
+
+export function getProjectsCount () {
+  let url = `${host}/api/project/count`
+  return _doFetchStrict(url, {})
 }
 
 export function getProfile ({ params = {}}) {

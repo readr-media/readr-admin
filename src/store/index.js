@@ -10,6 +10,7 @@ export function createStore () {
   return new Vuex.Store({
     state: {
       projects: [],
+      projectsCount: 0,
       memos: [],
       isLoggedIn: false,
       peopleList: [],

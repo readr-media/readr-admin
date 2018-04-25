@@ -14,13 +14,6 @@ const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API
 router.get('/list', (req, res) => {
   const url = `${apiHost}/project${req.url}`
 
-  // let url = '/project/list?'
-  // mapKeys(req.query, (value, key) => {
-  //   url = `${url}&${key}=${value}`
-  // })
-  // req.url = url
-  // next()
-
   debug('Got a /project/list call:')
   debug(req.url)
   debug(req.body)

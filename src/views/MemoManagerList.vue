@@ -22,7 +22,7 @@
         <span class="title" v-text="$t('memo_page.title')"></span>
         <span class="project_id" v-text="$t('memo_page.project_id')"></span>
         <!-- <span class="status" v-text="$t('memo_page.status')"></span> -->
-        <!-- <span class="publish-status" v-text="$t('memo_page.is_published')"></span> -->
+        <span class="publish-status" v-text="$t('memo_page.is_published')"></span>
         <span class="order" v-text="$t('memo_page.order')"></span>
         <span class="updated" v-text="$t('memo_page.updated_time')"></span>
       </div>
@@ -31,8 +31,8 @@
           <span class="id" v-text="get(memo, 'id')" @click="updateMemo(get(memo, 'id'))"></span>
           <span class="title" v-text="get(memo, 'title')"></span>
           <span class="project_id" v-text="get(memo, 'projectId')"></span>
-          <!-- <span class="status" v-text="$t(`memo_page.${get(find(PROJECT_STATUS_MAP, { code: get(memo, 'status', 0) }), 'name', 'status_canadate')}`)"></span> -->
-          <!-- <span class="publish-status" v-text="$t(`memo_page.${get(find(PROJECT_PUBLISH_STATUS, { code: get(memo, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></span> -->
+          <!-- <span class="status" v-text="$t(`memo_page.${get(find(PROJECT_STATUS, { code: get(memo, 'status', 0) }), 'name', 'status_canadate')}`)"></span> -->
+          <span class="publish-status" v-text="$t(`memo_page.${get(find(MEMO_PUBLISH_STATUS_MAP, { code: get(memo, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></span>
           <span class="order" v-text="get(memo, 'memoOrder', '')"></span>
           <span class="updated" v-text="getDatetime(get(memo, 'updatedAt'))"></span>
           <span class="delete" @click="deleteMemo(get(memo, 'id'))">刪除</span>
@@ -53,7 +53,7 @@
   import PaginationNav from 'src/components/PaginationNav.vue'
   import UpdateMemoPanel from 'src/components/memo/UpdateMemoPanel.vue'
   import moment from 'moment'
-  // import { PROJECT_STATUS_MAP, PROJECT_PUBLISH_STATUS_MAP } from 'src/constants'
+  import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
   import { find, get } from 'lodash'
 
   const MAXRESULT_MEMOS = 20
@@ -97,8 +97,9 @@
     },
     data () {
       return {
-        // PROJECT_STATUS_MAP,
-        // PROJECT_PUBLISH_STATUS_MAP,
+        // PROJECT_STATUS,
+        // PROJECT_PUBLISH_STATUS,
+        MEMO_PUBLISH_STATUS_MAP,
         curr_page: DEFAULT_PAGE,
         filter: '',
         projGoingToUpdate: {},

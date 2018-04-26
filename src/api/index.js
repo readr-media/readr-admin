@@ -160,6 +160,15 @@ export function getProfile ({ params = {}}) {
   return _doFetchStrict(url, { cookie: params.cookie })
 }
 
+export function getMember ({ params }) {
+  let url = `${host}/api/member`
+  if (params && params.id) {
+    url += `/${params.id}`
+  }
+  debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, {})
+}
+
 export function updateProject ({ params }) {
   return _doPut(`${host}/api/project/update`, params)
 }

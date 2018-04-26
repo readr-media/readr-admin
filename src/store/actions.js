@@ -6,6 +6,7 @@ import {
   fetchPeopleByName,
   fetchProjects,
   getProfile,
+  getMember,
   getProjectsCount,
   updateProject,
   uploadImage,
@@ -98,6 +99,14 @@ export default {
     return getProfile({ params }).then(({ status, body }) => {
       if (status === 200) {
         commit('SET_PROFILE', { profile: body })
+      }
+    })
+  },
+
+  GET_MEMBER: ({ commit, dispatch, state }, { params }) => {
+    return getMember({ params }).then(({ status, body }) => {
+      if (status === 200) {
+        return body
       }
     })
   },

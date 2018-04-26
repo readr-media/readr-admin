@@ -4,16 +4,48 @@
       <div class="panel__title"><h3 v-text="$t('memo_page.create_memo')"></h3></div>
       <div class="panel__container">
         <!-- <div class="panel__item">
+          <div class="panel__item--title"><span v-text="$t('memo_page.status')"></span></div>
+          <div class="panel__option">
+            <RadioItem v-for="s in status" name="status"
+              :label="$t(`memo_page.${get(s, 'name')}`)"
+              :key="get(s, 'code')"
+              :value="get(s, 'code')"
+              :disabled="!isEditable"
+              :currSelected.sync="formData.status"></RadioItem>      
+          </div>
+        </div> -->
+        <div class="panel__item publish-status">
+          <div class="panel__item--title"><span v-text="$t('memo_page.is_published')"></span></div>
+          <div class="panel__option">
+            <RadioItem v-for="s in statusPublished" name="isPublished"
+              :label="$t(`memo_page.${get(s, 'name')}`)"
+              :key="get(s, 'code')"
+              :value="get(s, 'code')"
+              :disabled="!isEditable"
+              :currSelected.sync="formData.isPublished"></RadioItem>
+          </div>
+        </div>
+      </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('memo_page.published_time')"></span></div>
+        <Datetime 
+          v-model="formData.publishedAt"
+          :format="dateFormat"
+          type="datetime"/>
+      </div>
+      <div class="panel__container">
+        <div class="panel__item">
           <div class="panel__item--title"><span v-text="$t('memo_page.order')"></span></div>
           <InputItem width="60px"
             :placeHolder="$t('memo_page.order')"
             :value.sync="formData.order"></InputItem>
-        </div> -->
+        </div>
         <div class="panel__item project_id">
           <div class="panel__item--title"><span v-text="$t('memo_page.project_id')"></span></div>
-          <InputItem
+          <!-- <InputItem
             :placeHolder="$t('memo_page.project_id')"
-            :value.sync="formData.project_id"></InputItem>
+            :value.sync="formData.project_id"></InputItem> -->
+          <ProjectSelect class="project-select" :projectId.sync="formData.projectId"/>
         </div>
       </div>
       <div class="panel__item">
@@ -23,10 +55,19 @@
           :value.sync="formData.title"></InputItem>
       </div>
       <div class="panel__item">
-        <div class="panel__item--title"><span v-text="$t('memo_page.memo_description')"></span></div>
-        <TextareaItem
+        <InputTagItem
+          :placeholder="$t('memo_page.author')"
+          :currTagValues.sync="currTagValues"
+          :tagLimitNum="1"
+          :currInput.sync="currInputAuthor"
+          :autocomplete="autocompleteForAuthor"></InputTagItem>
+      </div>
+      <div class="panel__item">
+        <!-- <div class="panel__item--title"><span v-text="$t('memo_page.memo_description')"></span></div> -->
+        <!-- <TextareaItem
           :placeholder="$t('memo_page.memo_description')"
-          :value.sync="formData.description"></TextareaItem>
+          :value.sync="formData.description"></TextareaItem> -->
+          <QuillEditorNews :content="content" @updateContent="$_postPanel_updateContent"/>
       </div>
       <!-- <div class="panel__item">
         <div class="panel__item--title"><span v-text="$t('memo_page.og_title')"></span></div>
@@ -58,12 +99,19 @@
   </div>
 </template>
 <script>
+  import 'vue-datetime/dist/vue-datetime.css'
+  import { Datetime, } from 'vue-datetime'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
+  import RadioItem from 'src/components/formItem/RadioItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
-  import { get } from 'lodash'
+  import QuillEditorNews from 'src/components/QuillEditorNews.vue'
+  import ProjectSelect from 'src/components/memo/ProjectSelect.vue'
+  import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
+  import { get, map, debounce, } from 'lodash'
+  import validator from 'validator'
 
   const debug = require('debug')('CLIENT:CreateMemoPanel')
   const createMemo = (store, params) => {
@@ -76,6 +124,11 @@
      params
     })
   }
+  const getUserList = (store, params) => {
+    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
+      params
+    })
+  }
   export default {
     name: 'CreateMemoPanel',
     components: {
@@ -83,19 +136,18 @@
       InputTagItem,
       Spinner,
       TextareaItem,
-      UploadImage
+      RadioItem,
+      UploadImage,
+      QuillEditorNews,
+      Datetime,
+      ProjectSelect
     },
     data () {
       return {
         alert: null,
-        autocompleteForAuthor: [
-          { name: 'Peter Kim', value: 'fa79fad7f9da88' },
-          { name: 'Sherry Lim', value: 'aa79fad7f9da88' },
-          { name: 'Tammy Kao', value: 'ca79fad7f9da88' },
-          { name: 'Lora Lu', value: 'ba79fad7f9da88' },
-          { name: '鐘聖雄', value: 'ga79fad7f9da88' },
-        ],
-        currTagValues: [ 'test' ],
+        currTagValues: [],
+        currInputAuthor: '',
+        dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
         formData: {
           description: '',
           heroImage: '',
@@ -103,15 +155,26 @@
           ogImage: '',
           ogTitle: '',
           order: 0,
-          project_id: 0,
+          projectId: 0,
           status: 0,
           title: '',
+          isPublished: 0,
+          publishedAt: new Date(Date.now()).toISOString()
         },
+        isEditable: true,
         isSaving: false,
         tagsArray: [],
+        statusPublished: MEMO_PUBLISH_STATUS_MAP,
+        content: '',
       }
     },
+    computed: {
+      autocompleteForAuthor () {
+        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
+      },
+    },
     methods: {
+      get,
       closePanel (e) {
         const target = e.target
         const className = target.getAttribute('class')
@@ -128,13 +191,15 @@
          */
         createMemo(this.$store, {
           title: get(this.formData, 'title', ''),
-          content: get(this.formData, 'description', ''),
+          content: get(this, 'content', ''),
+          memo_order: validator.toInt(`${get(this.formData, 'order')}` || '0'),
           // link:,
-          author: get(this.$store.state.profile, 'id'),
-          project_id: Number(get(this.formData, 'project_id', 0)),
+          author: get(this.currTagValues[0], 'value', get(this.$store.state.profile, 'id')),
+          project_id: get(this.formData, 'projectId', 0),
           active: 1,
           updated_by: get(this.$store.state.profile, 'id'),
-          // published_at:,
+          publish_status: get(this.formData, 'isPublished', 0),
+          published_at: get(this.formData, 'publishedAt'),
         }).then(res => {
           debug('res', res)
           this.isSaving = false
@@ -145,19 +210,24 @@
           this.alert = err.message
           debug('err', err)
         })
-      }
+      },
+      $_postPanel_updateContent (content) {
+        this.$set(this, 'content', content)
+      },
+      fetchUserDebounce: debounce(function () {
+        getUserList(this.$store, {
+          keyword: this.currInputAuthor,
+        })
+      }, 200)
     },
     mounted () {},
     watch: {
       currInputAuthor: function () {
         debug('currInputAuthor change detected:', this.currInputAuthor)
-        // this.autocompleteForAuthor.push({ name: this.currInputAuthor, value: this.currInputAuthor })
-        // fetchAuthors(this.$store, {
-        //   where: {
-        //     nickname: [ `神力%` ]
-        //   }
-        // })
-      }
+        if (this.currTagValues.length === 0) {
+          this.fetchUserDebounce()
+        }
+      },
     }
   }
 </script>
@@ -204,7 +274,7 @@
             max-height 35px
         > div:not(.panel__item--title)
           flex 1
-        &.project_id
+        &.project_id, &.publish-status
           flex 1
       &__title
         h3
@@ -222,4 +292,39 @@
         cursor pointer
       &__alert
         color red
+      &__option
+        // margin-left 10px
+        display flex
+        justify-content flex-start
+        align-items center
+        background-color #fff
+        padding-left 20px
+        > div
+          display inline-block
+          &:first-child
+            margin 0 20px 0 0
+          &:not(:first-child)
+            margin 0 20px
+
+  .vdatetime
+    >>> input
+      border none
+      width 100%
+      height 35px
+      font-size 1.125rem
+      padding 0 10px
+      vertical-align top
+      background-color #fff
+      outline none
+      font-weight 100
+  .project-select
+    border: none;
+    width: 100%;
+    height: 35px;
+    font-size: 1.125rem;
+    padding: 0 10px;
+    vertical-align: top;
+    background-color: #fff;
+    outline: none;
+    font-weight: 100;
 </style>

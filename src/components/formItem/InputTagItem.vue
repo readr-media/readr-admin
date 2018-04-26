@@ -6,6 +6,7 @@
     </span>
     <div class="input__wrapper">
       <input type="text" class="input" ref="input"
+        :disabled="isTagsExceedLimit"
         :placeholder="placeholder"
         v-model="currInput"
         @keyup="keyupHandeler"
@@ -34,7 +35,15 @@
         currInput: '',
         currAutocompleteIndex: 0,
         keys: [ 13, 188, 9 ],
-        tags: [ ...this.currTagValues ],
+        // tags: [ ...this.currTagValues ],
+      }
+    },
+    computed: {
+      tags () {
+        return this.currTagValues
+      },
+      isTagsExceedLimit () {
+        return this.tags.length >= this.tagLimitNum
       }
     },
     methods: {
@@ -104,7 +113,17 @@
       },
     },
     mounted () {},
-    props: [ 'placeholder', 'autocomplete', 'readOnly', 'currTagValues' ],
+    // props: [ 'placeholder', 'autocomplete', 'readOnly', 'currTagValues', ],
+    props: {
+      placeholder: String,
+      autocomplete: Array,
+      readOnly: Boolean,
+      currTagValues: Array,
+      tagLimitNum: {
+        type: Number,
+        default: Infinity,
+      }
+    },
     watch: {
       autocomplete: function () {
         debug('autocomplete change detected.', this.autocomplete)
@@ -113,6 +132,11 @@
         debug('tags change detected.')
         this.$emit('update:currTagValues', this.tags)
       },
+      isTagsExceedLimit () {
+        if (this.isTagsExceedLimit) {
+          this.$refs[ 'input' ].blur()
+        }
+      }
     }
   }
 </script>

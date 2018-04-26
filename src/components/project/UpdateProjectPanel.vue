@@ -62,6 +62,8 @@
           <div class="panel__item--title"><span v-text="$t('project_page.slug')"></span></div>
           <InputItem
             :placeHolder="$t('project_page.slug')"
+            :alert.sync="alert.slug"
+            alertPosition="bottom"
             :value.sync="formData.slug"></InputItem>
         </div>
       </div>
@@ -123,7 +125,8 @@
   import 'vue-datetime/dist/vue-datetime.css'
   import { Datetime } from 'vue-datetime'
   
-  import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS } from 'src/constants'
+  import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS, } from 'api/config'
+  import { PROJECT_STATUS_MAP, PROJECT_PUBLISH_STATUS_MAP } from 'src/constants'
   import { get, map, } from 'lodash'
 
   const debug = require('debug')('CLIENT:UpdateProjectPanel')
@@ -166,7 +169,7 @@
     },
     data () {
       return {
-        alert: null,
+        alert: {},
         currTagValues: [ 'test' ],
         currTagInput: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
@@ -188,8 +191,8 @@
         },
         isEditable: true,
         isUpdating: false,
-        statusPublished: PROJECT_PUBLISH_STATUS,
-        status: PROJECT_STATUS,
+        statusPublished: PROJECT_PUBLISH_STATUS_MAP,
+        status: PROJECT_STATUS_MAP,
       }
     },
     methods: {
@@ -226,12 +229,16 @@
           status: get(this.formData, 'status', this.project.status),
           progress: validator.toFloat(`${get(this.formData, 'progress')}` || '') || this.project.progress,
           memo_points: validator.toInt(`${get(this.formData, 'memoPoints')}` || '') || this.project.memoPoints,          
-          published_at: moment(new Date(get(this.formData, 'publishedAt', this.project.publishedAt))).format('YYYY-MM-DD hh:mm:ss'),
+          published_at: get(this.formData, 'publishedAt', this.project.publishedAt) ? moment(new Date(get(this.formData, 'publishedAt', this.project.publishedAt))).format('YYYY-MM-DD hh:mm:ss') : null,
           publish_status: get(this.formData, 'isPublished', this.project.publishStatus),
         }
         debug('Abt to update the curr proj.', project)
         debug('this.formData.ogImage', get(this.formData, 'ogImage', this.project.ogImage))
         this.isUpdating = true
+        if (!this.validate(project)) {
+          this.isUpdating = false
+          return
+        }
         updateProject(this.$store, project)
           .then(res => {
             debug('res', res)
@@ -249,6 +256,29 @@
       },
       selectedHandler (group, value) {
         this.selectedOption[ group ] = value
+      },
+      validate (input) {
+        let pass = true
+        if (PROJECT_PUBLISH_STATUS.PUBLISHED === input.publish_status
+          || PROJECT_PUBLISH_STATUS.SCHEDULING === input.publish_status) {
+          if (validator.isEmpty(input.slug || '')) {
+            debug('Slug must be not null.')
+            this.alert.slug = {
+              flag: true,
+              msg: this.$t('project_page.slug_should_not_be_empty'),
+            }
+            pass = false
+          }
+          if (validator.isEmpty(input.published_at || '')) {
+            debug('published_at must be not null.')
+            // this.alert.pwd = {
+            //   flag: true,
+            //   msg: this.$t('login.WORDING_REGISTER_PWD_EMPTY'),
+            // }
+            pass = false
+          }
+        }
+        return pass
       },
     },
     mounted () {},
@@ -304,6 +334,7 @@
         display flex
         &--title
           background-color #fff
+          max-height 35px
           > span
             padding 5px 10px
             display flex
@@ -338,7 +369,7 @@
         > div
           display inline-block
           &:first-child
-            margin 0 20px 0 0
+            margin 0 10px 0 0
           &:not(:first-child)
-            margin 0 20px
+            margin 0 10px
 </style>

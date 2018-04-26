@@ -29,8 +29,8 @@
           <span class="id" v-text="get(proj, 'id')" @click="updateProject(get(proj, 'id'))"></span>
           <span class="title" v-text="get(proj, 'title')"></span>
           <span class="slug" v-text="get(proj, 'slug')"></span>
-          <span class="status" v-text="$t(`project_page.${get(find(PROJECT_STATUS, { code: get(proj, 'status', 0) }), 'name', 'status_canadate')}`)"></span>
-          <span class="publish-status" v-text="$t(`project_page.${get(find(PROJECT_PUBLISH_STATUS, { code: get(proj, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></span>
+          <span class="status" v-text="$t(`project_page.${get(find(PROJECT_STATUS_MAP, { code: get(proj, 'status', 0) }), 'name', 'status_canadate')}`)"></span>
+          <span class="publish-status" v-text="$t(`project_page.${get(find(PROJECT_PUBLISH_STATUS_MAP, { code: get(proj, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></span>
           <span class="order" v-text="get(proj, 'projectOrder', '')"></span>
           <span class="updated" v-text="getDatetime(get(proj, 'updatedAt'))"></span>
         </div>
@@ -54,7 +54,7 @@
   import PaginationNav from 'src/components/PaginationNav.vue'
   import UpdateProjectPanel from 'src/components/project/UpdateProjectPanel.vue'
   import moment from 'moment'
-  import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS } from 'src/constants'
+  import { PROJECT_STATUS_MAP, PROJECT_PUBLISH_STATUS_MAP } from 'src/constants'
   import { find, get } from 'lodash'
 
   const MAXRESULT_PROJECTS = 20
@@ -98,8 +98,8 @@
     },
     data () {
       return {
-        PROJECT_STATUS,
-        PROJECT_PUBLISH_STATUS,
+        PROJECT_STATUS_MAP,
+        PROJECT_PUBLISH_STATUS_MAP,
         curr_page: DEFAULT_PAGE,
         filter: '',
         projGoingToUpdate: {},

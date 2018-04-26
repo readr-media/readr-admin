@@ -48,6 +48,7 @@
     "vue-datetime": "^1.0.0-beta.3",
     "vue-i18n": "^7.5.0",
     "vue-input-tag": "^1.0.3",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue-server-renderer": "^2.5.3",
     "vuex": "^3.0.1",

@@ -11,6 +11,11 @@ import VueI18n from 'vue-i18n'
 Vue.use(VueI18n)
 Vue.component('input-tag', InputTag)
 
+if (process.browser) {
+  const VueQuillEditor = require('vue-quill-editor/dist/ssr')
+  Vue.use(VueQuillEditor)
+}
+
 const debug = require('debug')('CLIENT:app.js')
 
 // Expose a factory function that creates a fresh set of store, router,

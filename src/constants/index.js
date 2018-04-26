@@ -37,3 +37,9 @@ export const PROJECT_PUBLISH_STATUS_MAP = [
   { code: 2, name: 'status_published' },
   { code: 3, name: 'status_scheduling' },
 ]
+export const MEMO_PUBLISH_STATUS_MAP = [
+  { code: 0, name: 'status_draft' },
+  { code: 1, name: 'status_scheduled' },
+  { code: 2, name: 'status_published' },
+  { code: 3, name: 'status_deactive' },
+]

@@ -170,7 +170,7 @@ app.get('*', isProd ? render : (req, res, next) => {
 
 app.use('/api', require('./api/index'))
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8081
 const server = app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })

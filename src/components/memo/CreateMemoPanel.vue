@@ -145,7 +145,7 @@
     data () {
       return {
         alert: null,
-        currTagValues: [],
+        currTagValues: [ { name: get(this.$store.state, 'profile.nickname', ''), value: get(this.$store.state, 'profile.uuid', '') } ],
         currInputAuthor: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
         formData: {

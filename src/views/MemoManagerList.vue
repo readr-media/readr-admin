@@ -30,7 +30,7 @@
         <div class="memo-manager__item td">
           <span class="id" v-text="get(memo, 'id')" @click="updateMemo(get(memo, 'id'))"></span>
           <span class="title" v-text="get(memo, 'title')"></span>
-          <span class="project_id" v-text="get(memo, 'projectId')"></span>
+          <span class="project_id" v-text="get(find($store.state.projects, { id: get(memo, 'projectId', 0) }), 'title', '')"></span>
           <!-- <span class="status" v-text="$t(`memo_page.${get(find(PROJECT_STATUS, { code: get(memo, 'status', 0) }), 'name', 'status_canadate')}`)"></span> -->
           <span class="publish-status" v-text="$t(`memo_page.${get(find(MEMO_PUBLISH_STATUS_MAP, { code: get(memo, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></span>
           <span class="order" v-text="get(memo, 'memoOrder', '')"></span>
@@ -56,6 +56,7 @@
   import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
   import { find, get } from 'lodash'
 
+  const MAXRESULT_PROJECTS = 50
   const MAXRESULT_MEMOS = 20
   const DEFAULT_PAGE = 1
   const DEFAULT_SORT = '-updated_at'
@@ -78,6 +79,16 @@
       params: {
         ids: ids,
         updated_by: updated_by
+      }
+    }).catch(err => debug(err))
+  }
+
+  const fetchProjects = (store, { page }) => {
+    return store.dispatch('FETCH_PROJECTS', {
+      params: {
+        max_result: MAXRESULT_PROJECTS,
+        page: page || DEFAULT_PAGE,
+        sort: DEFAULT_SORT,
       }
     }).catch(err => debug(err))
   }
@@ -138,6 +149,7 @@
     },
     beforeMount () {
       fetchMemos(this.$store, { page: this.curr_page })
+      fetchProjects(this.$store, { page: this.curr_page })
     },
     mounted () {},
     watch: {

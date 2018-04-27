@@ -193,6 +193,7 @@
       goUpdate () {
         const memo = {
           id: this.memo.id,
+          author: get(this.currTagValues[0], 'value', this.memo.author),
           title: get(this.formData, 'title', this.memo.title),
           content: get(this, 'content', this.memo.content),
           // hero_image: get(this.formData, 'heroImage', this.memo.heroImage),
@@ -257,6 +258,7 @@
 </script>
 <style lang="stylus" scoped>
   .update-memo-panel
+    z-index 9999
     position fixed
     top 0
     left 0
@@ -269,8 +271,10 @@
     .panel
       background-color #efefef
       // box-shadow 0 0 10px #afafaf
-      width 900px
-      max-height 80%
+      // width 900px
+      // max-height 80%
+      width 50vw
+      height 90vh
       padding 25px 50px
       border-radius 5px
       overflow auto
@@ -339,13 +343,13 @@
       outline none
       font-weight 100
   .project-select
-    border: none;
-    width: 100%;
-    height: 35px;
-    font-size: 1.125rem;
-    padding: 0 10px;
-    vertical-align: top;
-    background-color: #fff;
-    outline: none;
-    font-weight: 100;
+    border none
+    flex 1
+    height 35px
+    font-size 1.125rem
+    padding 0 10px
+    vertical-align top
+    background-color #fff
+    outline none
+    font-weight 100
 </style>

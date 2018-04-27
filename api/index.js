@@ -65,6 +65,7 @@ router.get('/profile', [ authVerify ], (req, res) => {
       mail: profile.mail,
       description: profile.description,
       id: profile.id,
+      uuid: profile.uuid,
       role: profile.role,
       scopes,
       profileImage: profile.profileImage,

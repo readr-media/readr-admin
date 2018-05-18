@@ -127,9 +127,9 @@
     display flex
     // align-items center
     &__container
+      flex 1
       background-color #fff
       height 80px
-      width 120px
       display flex
       align-items center
       justify-content center
@@ -160,11 +160,11 @@
         width 4px
         height 24px
     &__name
-      width 150px
-      padding 5px 10px
+      min-width 80px
+      max-width 80px
+      margin-right 15px
       .title
-        font-size 1rem
-        font-weight 600
+        font-size 1.25rem
       .desc
         margin 5px 0
         font-size 0.75rem

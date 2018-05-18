@@ -1,4 +1,4 @@
-import { camelizeKeys } from 'humps'
+import { camelizeKeys, decamelizeKeys } from 'humps'
 import { delInitMemToken, getToken, getSetupToken, saveToken } from '../util/services'
 import { getHost } from 'src/util/comm'
 import _ from 'lodash'
@@ -77,7 +77,7 @@ function _doPost (url, params, token) {
     superagent
       .post(url)
       .set('Authorization', `Bearer ${token || getToken()}`)
-      .send(params)
+      .send(decamelizeKeys(params))
       .end(function (err, res) {
         if (err) {
           reject(err)
@@ -93,7 +93,7 @@ function _doPut (url, params) {
     superagent
       .put(url)
       .set('Authorization', `Bearer ${getToken()}`)
-      .send(params)
+      .send(decamelizeKeys(params))
       .end(function (err, res) {
         if (err) {
           reject(err)
@@ -130,6 +130,10 @@ export function createProject ({ params }) {
   return _doPost(`${host}/api/project/create`, params)
 }
 
+export function createReport ({ params }) {
+  return _doPost(`${host}/api/report/create`, params)
+}
+
 export function fetchPeopleByName ({ params }) {
   let url = `${host}/api/members/nickname`
   const query = _buildQuery(params)
@@ -150,8 +154,30 @@ export function fetchProjects ({ params }) {
   return _doFetchStrict(url, {})
 }
 
+export function fetchReports ({ params }) {
+  let url = `${host}/api/report/list`
+  const query = _buildQuery(params)
+  if (query && (query.length > 0)) {
+    url = url + `?${query}`
+  }
+  debug('params', params)
+  debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, {})
+}
+
 export function getProjectsCount () {
   let url = `${host}/api/project/count`
+  return _doFetchStrict(url, {})
+}
+
+export function getReportsCount ({ params }) {
+  let url = `${host}/api/report/count`
+  const query = _buildQuery(params)
+  if (query && (query.length > 0)) {
+    url = url + `?${query}`
+  }
+  debug('params', params)
+  debug('Abt to fetch data:', url)
   return _doFetchStrict(url, {})
 }
 
@@ -171,6 +197,10 @@ export function getMember ({ params }) {
 
 export function updateProject ({ params }) {
   return _doPut(`${host}/api/project/update`, params)
+}
+
+export function updateReport ({ params }) {
+  return _doPut(`${host}/api/report/update`, params)
 }
 
 export function uploadImage (file, type) {
@@ -224,4 +254,8 @@ export function deleteMemos ({ params }) {
 
 export function deleteProject ({ params }) {
   return _doDelete(`${host}/api/project`, params)
+}
+
+export function deleteReport ({ params }) {
+  return _doDelete(`${host}/api/report`, params)
 }

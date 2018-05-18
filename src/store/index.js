@@ -15,6 +15,8 @@ export function createStore () {
       isLoggedIn: false,
       peopleList: [],
       profile: {},
+      reports: [],
+      reportsCount: 0,
     },
     actions,
     mutations,

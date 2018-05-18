@@ -25,6 +25,12 @@ export default {
   SET_PROJECTS_COUNT: (state, { count }) => {
     state.projectsCount = count
   },
+  SET_REPORTS: (state, { reports }) => {
+    state.reports = get(reports, 'body.items', [])
+  },
+  SET_REPORTS_COUNT: (state, { count }) => {
+    state.reportsCount = count
+  },
   SET_MEMOS: (state, { memos }) => {
     state.memos = get(memos, 'body.items', [])
   },

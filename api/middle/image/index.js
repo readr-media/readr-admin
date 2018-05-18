@@ -46,7 +46,7 @@ router.post('/:sourceType', upload.single('image'), (req, res) => {
         })
       }))
       .then(() => {
-        res.status(200).send({url: `http://dev.readr.tw${destination}/${origImg}`,})
+        res.status(200).send({url: `${destination}/${origImg}`,})
       })
     })
     .catch((err) => {

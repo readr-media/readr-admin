@@ -2,18 +2,23 @@ import _ from 'lodash'
 import {
   checkLoginStatus,
   createProject,
+  createReport,
   deleteProject,
   fetchPeopleByName,
   fetchProjects,
+  fetchReports,
   getProfile,
   getMember,
   getProjectsCount,
+  getReportsCount,
   updateProject,
+  updateReport,
   uploadImage,
   createMemo,
   fetchMemos,
   updateMemo,
   deleteMemos,
+  deleteReport,
 } from 'src/api'
 
 const debug = require('debug')('CLIENT:actions')
@@ -72,8 +77,17 @@ export default {
     return createProject({ params })
   },
 
+  CREATE_REPORT: ({ commit, state }, { params }) => {
+    debug('Going to send report creating req.')
+    return createReport({ params })
+  },
+
   DELETE_PROJECT: ({ commit, state }, { params }) => {
     return deleteProject({ params })
+  },
+
+  DELETE_REPORT: ({ commit, state }, { params }) => {
+    return deleteReport({ params })
   },
 
   FETCH_PEOPLE_BY_NAME: ({ commit, state }, { params }) => {
@@ -90,9 +104,20 @@ export default {
       .then((projects) => commit('SET_PROJECTS', { projects }))
   },
 
+  FETCH_REPORTS: ({ commit, state }, { params }) => {
+    debug('Abt to fetch data.')
+    return fetchReports({ params })
+      .then((reports) => commit('SET_REPORTS', { reports }))
+  },
+
   GET_PROJECTS_COUNT: ({ commit, state }) => {
     return getProjectsCount()
       .then(({ status, body }) => status === 200 && commit('SET_PROJECTS_COUNT', { count: _.get(body, 'meta.total') }))
+  },
+
+  GET_REPORTS_COUNT: ({ commit, state }, { params }) => {
+    return getReportsCount({ params })
+      .then(({ status, body }) => status === 200 && commit('SET_REPORTS_COUNT', { count: _.get(body, 'meta.total') }))
   },
 
   GET_PROFILE: ({ commit, dispatch, state }, { params }) => {
@@ -114,6 +139,11 @@ export default {
   UPDATE_PROJECT: ({ commit, state }, { params }) => {
     debug('Going to sen proj updateing req.')
     return updateProject({ params })
+  },
+
+  UPDATE_REPORT: ({ commit, state }, { params }) => {
+    debug('Going to sen proj updateing req.')
+    return updateReport({ params })
   },
 
   UPLOAD_IMAGE: ({ commit, dispatch }, { file, type }) => {

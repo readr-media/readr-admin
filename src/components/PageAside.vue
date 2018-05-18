@@ -76,7 +76,7 @@
     left 0
     top: 0
     background-color #d8d8d8
-    padding-top 50px
+    padding-top 70px
     z-index 999
     &.dark
       background-color #000

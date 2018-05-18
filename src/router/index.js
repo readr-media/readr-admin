@@ -11,6 +11,7 @@ const ProjectCandidate = () => import('src/views/ProjectCandidate.vue')
 const ProjectManager = () => import('src/views/ProjectManager.vue')
 const MemoManagerList = () => import('src/views/MemoManagerList.vue')
 const MemoManagerReplies = () => import('src/views/MemoManagerReplies.vue')
+const ReportManager = () => import('src/views/ReportManager.vue')
 
 export function createRouter () {
   return new Router({
@@ -23,6 +24,7 @@ export function createRouter () {
       { path: '/project-manager/project', component: ProjectManager, meta: { permission: 'admin' } },
       { path: '/memo-manager/list', component: MemoManagerList, meta: { permission: 'admin' }},
       { path: '/memo-manager/replies', component: MemoManagerReplies, meta: { permission: 'admin' }},
+      { path: '/report-manager/report', component: ReportManager, meta: { permission: 'admin' }},
     ]
   })
 }

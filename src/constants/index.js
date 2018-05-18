@@ -12,6 +12,13 @@ export const managerTools = [
     ]
   },
   {
+    name: 'report',
+    route: 'report-manager',
+    sub: [
+      { name: 'report', route: 'report-manager/report' },
+    ]
+  },
+  {
     name: 'memo',
     route: 'memo-manager',
     sub: [
@@ -37,6 +44,14 @@ export const PROJECT_PUBLISH_STATUS_MAP = [
   { code: 2, name: 'status_published' },
   { code: 3, name: 'status_scheduling' },
 ]
+
+export const REPORT_PUBLISH_STATUS_MAP = [
+  { code: 0, name: 'status_unpublished' },
+  { code: 1, name: 'status_draft' },
+  { code: 2, name: 'status_published' },
+  { code: 3, name: 'status_scheduling' },
+]
+
 export const MEMO_PUBLISH_STATUS_MAP = [
   { code: 0, name: 'status_draft' },
   { code: 1, name: 'status_scheduled' },

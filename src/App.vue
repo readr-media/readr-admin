@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <PageHeader></PageHeader>
     <PageAside></PageAside>
     <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
@@ -9,10 +10,12 @@
 
 <script>
 import PageAside from 'src/components/PageAside.vue'
+import PageHeader from 'src/components/PageHeader.vue'
 
 export default {
   components: {
-    PageAside
+    PageAside,
+    PageHeader
   },  
 }
 </script>
@@ -30,24 +33,21 @@ button
   margin 0 auto
   position relative
   background-color #fff
-  padding-top 35px
+  padding-top 70px
   &.locked
     width 100%
     height 100vh
     overflow hidden
 
-.main-container
-  width 90%
-  max-width 90%
-  margin 0 auto
-  overflow hidden
 
-.main-panel
-  width 100%
-  padding 20px 5%
-  border 2px solid #d8ca21
-  background #fff
-
+.backstage
+  min-height 100vh
+  max-height 100vh
+  padding-left 20% /* This Padding is for PageAside */
+  background-color #4a4a4a
+  main
+    padding 20px 40px
+    
 .datepicker__input
   padding-left 10px
   width 100%
@@ -61,15 +61,4 @@ button
 .fade-enter, .fade-leave-active
   opacity 0
 
-@media (min-width 768px)
-  .view
-    background-color #e6e6e6
-
-@media (min-width 950px)
-  .main-container
-    width 950px
-    max-width 950px
-    margin 22px auto 0
-  .main-panel
-    padding 35px calc((100% - 800px) / 2) 40px
 </style>

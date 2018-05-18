@@ -1,4 +1,10 @@
+import moment from 'moment'
+
 const debug = require('debug')('CLIENT:comm')
+
+export function getDatetime ({ dateStr, format = 'YYYY/MM/DD HH:mm:ss' } = {}) {
+  return dateStr && moment(new Date(dateStr)).format(format)
+}
 
 export function getHost () {
   const browser = typeof window !== 'undefined'
@@ -10,6 +16,7 @@ export function getHost () {
     return `${host}:${port}`
   }
 }
+
 export function isDescendant (child, { parentClassname = 'none', parant }) {
   let node = child.parentNode 
   while (node !== null && node !== undefined) {

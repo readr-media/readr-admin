@@ -59,6 +59,7 @@
           <div class="item__title" v-text="$t('report_page.is_published')"></div>
           <div class="item__option">
             <RadioItem v-for="s in statusPublished" name="isPublished"
+              v-if="s.name !== 'status_scheduling' || (s.name === 'status_scheduling' && report.publishStatus !== REPORT_PUBLISH_STATUS.PUBLISHED)"
               :label="$t(`report_page.${get(s, 'name')}`)"
               :key="get(s, 'code')"
               :value="get(s, 'code')"
@@ -128,6 +129,7 @@
     },
     data () {
       return {
+        REPORT_PUBLISH_STATUS,
         currTagValues: [ 'test' ],
         currTagInput: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
@@ -227,9 +229,11 @@
 
   .panel
     width 1100px
+    max-height 100vh
     padding 30px 50px 50px
     background-color #f2f2f2
     border-radius 10px
+    overflow-y auto
     &__multiple
       flex 1
       display flex

@@ -59,7 +59,6 @@
           <div class="item__title" v-text="$t('report_page.is_published')"></div>
           <div class="item__option">
             <RadioItem v-for="s in statusPublished" name="isPublished"
-              v-if="s.name !== 'status_scheduling' || (s.name === 'status_scheduling' && report.publishStatus !== config.PUBLISHED)"
               :label="$t(`report_page.${get(s, 'name')}`)"
               :key="get(s, 'code')"
               :value="get(s, 'code')"
@@ -163,6 +162,9 @@
           keyword: value,
         })
       },
+    },
+    mounted () {
+      console.log('config', this.config)
     },
     methods: {
       closePanel () {

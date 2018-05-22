@@ -59,6 +59,7 @@
           <div class="item__title" v-text="$t('report_page.is_published')"></div>
           <div class="item__option">
             <RadioItem v-for="s in statusPublished" name="isPublished"
+              v-if="s.name !== 'status_scheduling' || (s.name === 'status_scheduling' && report.publishStatus !== REPORT_PUBLISH_STATUS.PUBLISHED)"
               :label="$t(`report_page.${get(s, 'name')}`)"
               :key="get(s, 'code')"
               :value="get(s, 'code')"
@@ -84,7 +85,7 @@
 </template>
 <script>
   import { Datetime } from 'vue-datetime'
-  import { REPORT_PUBLISH_STATUS, PROJECT_PUBLISH_STATUS } from 'api/config'
+  import { REPORT_PUBLISH_STATUS } from 'api/config'
   import { REPORT_PUBLISH_STATUS_MAP } from 'src/constants'
   import { get, includes, } from 'lodash'
   import InputItem from 'src/components/formItem/InputItem.vue'
@@ -128,7 +129,7 @@
     },
     data () {
       return {
-        config: REPORT_PUBLISH_STATUS,
+        REPORT_PUBLISH_STATUS,
         currTagValues: [ 'test' ],
         currTagInput: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
@@ -162,11 +163,6 @@
           keyword: value,
         })
       },
-    },
-    mounted () {
-      console.log('config', this.config)
-      console.log('config REPORT_PUBLISH_STATUS', REPORT_PUBLISH_STATUS)
-      console.log('config PROJECT_PUBLISH_STATUS', PROJECT_PUBLISH_STATUS)
     },
     methods: {
       closePanel () {

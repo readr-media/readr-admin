@@ -84,7 +84,7 @@
 </template>
 <script>
   import { Datetime } from 'vue-datetime'
-  import { REPORT_PUBLISH_STATUS, } from 'api/config'
+  import { REPORT_PUBLISH_STATUS, PROJECT_PUBLISH_STATUS } from 'api/config'
   import { REPORT_PUBLISH_STATUS_MAP } from 'src/constants'
   import { get, includes, } from 'lodash'
   import InputItem from 'src/components/formItem/InputItem.vue'
@@ -165,6 +165,8 @@
     },
     mounted () {
       console.log('config', this.config)
+      console.log('config REPORT_PUBLISH_STATUS', REPORT_PUBLISH_STATUS)
+      console.log('config PROJECT_PUBLISH_STATUS', PROJECT_PUBLISH_STATUS)
     },
     methods: {
       closePanel () {

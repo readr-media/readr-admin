@@ -24,12 +24,22 @@
   import PaginationNav from 'src/components/PaginationNav.vue'
   import ReportList from 'src/components/report/ReportList.vue'
   
-
+  const MAXRESULT_PROJECTS = 50
   const MAXRESULT_REPORTS = 10
   const DEFAULT_PAGE = 1
   const DEFAULT_SORT = '-updated_at'
 
   const debug = require('debug')('CLIENT:ReportManager')
+
+  const fetchProjects = (store, { page = DEFAULT_PAGE } = {}) => {
+    return store.dispatch('FETCH_PROJECTS', {
+      params: {
+        max_result: MAXRESULT_PROJECTS,
+        page: page,
+        sort: DEFAULT_SORT,
+      }
+    }).catch(err => debug(err))
+  }
 
   const fetchReports = (store, { page = DEFAULT_PAGE, keyword = '' } = {}) => {
     debug('Go fectch reports.')
@@ -88,6 +98,7 @@
     },
     beforeMount () {
       Promise.all([
+        fetchProjects(this.$store),
         fetchReports(this.$store),
         fetchReportsCount(this.$store),
       ])

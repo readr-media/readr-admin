@@ -30,7 +30,8 @@
     <UpdateReportPanel
       v-if="shouldShowUpdatePanel"
       :report="reportGoingToUpdate"
-      :shouldShowUpdatePanel.sync="shouldShowUpdatePanel">
+      :shouldShowUpdatePanel.sync="shouldShowUpdatePanel"
+      @refreshReports="refreshReports">
     </UpdateReportPanel>
   </section>
 </template>
@@ -77,6 +78,9 @@
       find,
       get,
       getDatetime,
+      refreshReports () {
+        this.$emit('refreshReports', false)
+      },
       updateReport (id) {
         const report = find(this.reports, { id: id })
         debug('Abt to update report.', report)

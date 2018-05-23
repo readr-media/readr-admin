@@ -108,7 +108,7 @@
   import RadioItem from 'src/components/formItem/RadioItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
   import QuillEditorNews from 'src/components/QuillEditorNews.vue'
-  import ProjectSelect from 'src/components/memo/ProjectSelect.vue'
+  import ProjectSelect from 'src/components/formItem/ProjectSelect.vue'
   import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
   import { get, map, debounce, } from 'lodash'
   import validator from 'validator'

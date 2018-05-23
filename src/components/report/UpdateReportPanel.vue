@@ -4,10 +4,7 @@
       <h2 v-text="$t('report_page.update_report')"></h2>
       <div class="item" :class="{ 'item--error': includes(validateErrors, 'projectId') }">
         <div class="item__title" v-text="$t('report_page.belong_to_project')"></div>
-        <InputItem
-          :placeHolder="$t('report_page.belong_to_project')"
-          :type="'number'"
-          :value.sync="formData.projectId"></InputItem>
+        <ProjectSelect class="project-select" :projectId.sync="formData.projectId"/>
       </div>
       <div class="item" :class="{ 'item--error': includes(validateErrors, 'slug') }">
         <div class="item__title" v-text="$t('report_page.slug')"></div>
@@ -90,6 +87,7 @@
   import { get, includes, } from 'lodash'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import InputTagItem from 'src/components/formItem/InputTagItem.vue'
+  import ProjectSelect from 'src/components/formItem/ProjectSelect.vue'
   import RadioItem from 'src/components/formItem/RadioItem.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
@@ -117,6 +115,7 @@
       Datetime,
       InputItem,
       InputTagItem,
+      ProjectSelect,
       RadioItem,
       Spinner,
       TextareaItem,
@@ -276,4 +275,11 @@
       align-self flex-start
     &--not-full
       flex 0 1 auto
+  .project-select
+    flex 1
+    height 35px
+    background-color #fff
+    border none
+    border-radius 0
+    outline none
 </style>

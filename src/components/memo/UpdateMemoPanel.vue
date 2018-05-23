@@ -108,7 +108,7 @@
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
   import QuillEditorNews from 'src/components/QuillEditorNews.vue'
-  import ProjectSelect from 'src/components/memo/ProjectSelect.vue'
+  import ProjectSelect from 'src/components/formItem/ProjectSelect.vue'
   import validator from 'validator'
 
   import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'

@@ -1,5 +1,5 @@
 const { camelizeKeys } = require('humps')
-const { find, get, mapKeys } = require('lodash')
+const { find, get, map, mapKeys } = require('lodash')
 const { handlerError } = require('../../comm')
 const config = require('../../config')
 const debug = require('debug')('READR:api:project')
@@ -37,50 +37,90 @@ router.get('/list', (req, res) => {
   })
 })
 
-router.post('/create', (req, res) => {
+const updateAuthors = (req, res) => {
+  debug('Going to update authors.')
+  const url = `${apiHost}/report/author`
+  const payload = {
+    report_id: get(req.body, 'id'),
+    author_ids: map(get(req.body, 'authors'), a => a.value),
+  }
+
+  superagent
+  .put(url)
+  .send(payload)
+  .end((error, response) => {
+    if (!error) {
+      res.send({ status: 200, text: 'Updating a report successfully.' })
+    } else {
+      /**
+       * Error occurred when updating report authors.
+       */
+      const errWrapped = handlerError(error, response)
+      res.status(errWrapped.status).send({
+        status: errWrapped.status,
+        text: errWrapped.text
+      })
+      console.error(`Error occurred during updating report authors: ${get(req.body, 'id')}`)
+      console.error(error)         
+    }
+  })
+}
+router.post('/create', (req, res, next) => {
   debug('Got a report creating call.')
   debug(req.body)
-  // res.send('ok')
+
   const url = `${apiHost}/report`
   superagent
   .post(url)
   .send(req.body)
   .end((error, response) => {
     if (!error && response) {
-      res.send({ status: 200, text: 'Create a new report successfully.' })
+      debug('response', response.body)
+      /**
+       * Creating a new report successfully, then go next to update authors.
+       */
+      req.body.id = get(response, 'body._items.last_id')
+      next()
     } else {
       const errWrapped = handlerError(error, response)
       res.status(errWrapped.status).send({
         status: errWrapped.status,
         text: errWrapped.text
       })
-      console.error(`Error occurred during create a new report : ${url}`)
+      console.error(`Error occurred during create a new report : ${req.body}`)
       console.error(error) 
     }
   })
-})
+}, updateAuthors)
 
-router.put('/update', (req, res) => {
+router.put('/update', (req, res, next) => {
   debug('Got a report updating call.')
   debug(req.body)
+
   const url = `${apiHost}/report`
   superagent
   .put(url)
   .send(req.body)
   .end((error, response) => {
-    if (!error && response) {
-      res.send({ status: 200, text: 'Updating a new report successfully.' })
+    if (!error) {
+      /**
+       * Updating report successfully, then go next to update authors.
+       */
+      next()
     } else {
+      /**
+       * Error occurred when updating report.
+       */
       const errWrapped = handlerError(error, response)
       res.status(errWrapped.status).send({
         status: errWrapped.status,
         text: errWrapped.text
       })
-      console.error(`Error occurred during update report: ${url}`)
-      console.error(error) 
+      console.error(`Error occurred during updating report: ${get(req.body, 'id')}`)
+      console.error(error)       
     }
   })
-})
+}, updateAuthors)
 
 router.delete('/', (req, res) => {
   debug('Got a proj del call.')

@@ -40,11 +40,6 @@
           :placeholder="$t('project_page.og_description')"
           :value.sync="formData.ogDescription"></TextareaItem>
       </div>
-      <InputTagItem
-        :placeholder="$t('project_page.author')"
-        :currTagValues.sync="currTagValues"
-        :currInput.sync="currInputAuthor"
-        :autocomplete="autocompleteForAuthor"></InputTagItem>
       <div class="panel__container">
         <UploadImage class="panel__item upload" :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
         <UploadImage class="panel__item upload" :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
@@ -62,11 +57,11 @@
 </template>
 <script>
   import InputItem from 'src/components/formItem/InputItem.vue'
-  import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
   import { get, map } from 'lodash'
+  import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS, } from 'api/config'
 
   const debug = require('debug')('CLIENT:CreateProjectPanel')
   const createProject = (store, params) => {
@@ -74,35 +69,17 @@
       params
     })
   }
-  const fetchAuthors = (store, params) => {
-    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
-     params
-    })
-  }
-  const getUserList = (store, params) => {
-    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
-      params
-    })
-  }
   export default {
     name: 'CreateProjectPanel',
     components: {
       InputItem,
-      InputTagItem,
       Spinner,
       TextareaItem,
       UploadImage
     },
-    computed: {
-      autocompleteForAuthor () {
-        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
-      },
-    },
     data () {
       return {
         alert: null,
-        currTagValues: [ 'test' ],
-        currInputAuthor: '',
         formData: {
           description: '',
           heroImage: '',
@@ -111,7 +88,8 @@
           ogTitle: '',
           order: 0,
           slug: '',
-          status: 0,
+          status: PROJECT_STATUS.WIP,
+          publish_status: PROJECT_PUBLISH_STATUS.DRAFT,
           title: '',
         },
         isSaving: false,
@@ -135,15 +113,15 @@
          */
         createProject(this.$store, {
           active: 1,
-          author: null,
           description: get(this.formData, 'description', ''),
           hero_Image: get(this.formData, 'heroImage', ''),
           og_title: get(this.formData, 'ogTitle', ''),
           og_description: get(this.formData, 'ogDescription', ''),
           og_image: get(this.formData, 'ogImage', ''),
           project_order: Number(get(this.formData, 'order', 0)),
+          publish_status: PROJECT_PUBLISH_STATUS.DRAFT,
           slug: get(this.formData, 'slug', ''),
-          status: 2,
+          status: PROJECT_STATUS.WIP,
           title: get(this.formData, 'title', ''),
           updated_by: get(this.profile, 'id'),
         }).then(res => {
@@ -159,14 +137,6 @@
       }
     },
     mounted () {},
-    watch: {
-      currInputAuthor: function () {
-        debug('currInputAuthor change detected:', this.currInputAuthor)
-        getUserList(this.$store, {
-          keyword: this.currInputAuthor,
-        })
-      },
-    }
   }
 </script>
 <style lang="stylus" scoped>

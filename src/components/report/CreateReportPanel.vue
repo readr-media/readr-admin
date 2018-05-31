@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-  import { get, includes, map } from 'lodash'
+  import { get, includes, map, } from 'lodash'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import ProjectSelect from 'src/components/formItem/ProjectSelect.vue'
@@ -112,10 +112,9 @@
     },
     data () {
       return {
-        currTagValues: [ 'test' ],
+        currTagValues: [ ...map(get(this.report, 'authors'), a => ({ name: a.nickname, value: a.id, })) ],
         currInputAuthor: '',
         formData: {
-          author: null,
           description: '',
           heroImage: '',
           ogDescription: '',
@@ -134,7 +133,7 @@
     },
     computed: {
       autocompleteForAuthor () {
-        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
+        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.id, }))
       },
     },
     watch: {
@@ -154,6 +153,7 @@
         this.isSaving = true
 
         this.formData.projectId = Number(this.formData.projectId)
+        this.formData.authors = this.currTagValues
 
         createReport(this.$store, this.formData)
           .then(res => {

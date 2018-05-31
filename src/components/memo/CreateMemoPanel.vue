@@ -55,14 +55,6 @@
           :value.sync="formData.title"></InputItem>
       </div>
       <div class="panel__item">
-        <InputTagItem
-          :placeholder="$t('memo_page.author')"
-          :currTagValues.sync="currTagValues"
-          :tagLimitNum="1"
-          :currInput.sync="currInputAuthor"
-          :autocomplete="autocompleteForAuthor"></InputTagItem>
-      </div>
-      <div class="panel__item">
         <!-- <div class="panel__item--title"><span v-text="$t('memo_page.memo_description')"></span></div> -->
         <!-- <TextareaItem
           :placeholder="$t('memo_page.memo_description')"
@@ -102,7 +94,6 @@
   import 'vue-datetime/dist/vue-datetime.css'
   import { Datetime, } from 'vue-datetime'
   import InputItem from 'src/components/formItem/InputItem.vue'
-  import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import RadioItem from 'src/components/formItem/RadioItem.vue'
@@ -110,7 +101,7 @@
   import QuillEditorNews from 'src/components/QuillEditorNews.vue'
   import ProjectSelect from 'src/components/formItem/ProjectSelect.vue'
   import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
-  import { get, map, debounce, } from 'lodash'
+  import { get, map, } from 'lodash'
   import validator from 'validator'
 
   const debug = require('debug')('CLIENT:CreateMemoPanel')
@@ -119,21 +110,11 @@
       params
     })
   }
-  const fetchAuthors = (store, params) => {
-    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
-     params
-    })
-  }
-  const getUserList = (store, params) => {
-    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
-      params
-    })
-  }
+
   export default {
     name: 'CreateMemoPanel',
     components: {
       InputItem,
-      InputTagItem,
       Spinner,
       TextareaItem,
       RadioItem,
@@ -145,8 +126,6 @@
     data () {
       return {
         alert: null,
-        currTagValues: [ { name: get(this.$store.state, 'profile.nickname', ''), value: get(this.$store.state, 'profile.uuid', '') } ],
-        currInputAuthor: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
         formData: {
           description: '',
@@ -167,11 +146,6 @@
         statusPublished: MEMO_PUBLISH_STATUS_MAP,
         content: '',
       }
-    },
-    computed: {
-      autocompleteForAuthor () {
-        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
-      },
     },
     methods: {
       get,
@@ -194,7 +168,7 @@
           content: get(this, 'content', ''),
           memo_order: validator.toInt(`${get(this.formData, 'order')}` || '0'),
           // link:,
-          author: get(this.currTagValues[0], 'value', get(this.$store.state.profile, 'id')),
+          author: get(this.$store.state, 'profile.id'),
           project_id: get(this.formData, 'projectId', 0),
           active: 1,
           updated_by: get(this.$store.state.profile, 'id'),
@@ -214,21 +188,8 @@
       $_postPanel_updateContent (content) {
         this.$set(this, 'content', content)
       },
-      fetchUserDebounce: debounce(function () {
-        getUserList(this.$store, {
-          keyword: this.currInputAuthor,
-        })
-      }, 200)
     },
     mounted () {},
-    watch: {
-      currInputAuthor: function () {
-        debug('currInputAuthor change detected:', this.currInputAuthor)
-        if (this.currTagValues.length === 0) {
-          this.fetchUserDebounce()
-        }
-      },
-    }
   }
 </script>
 <style lang="stylus" scoped>

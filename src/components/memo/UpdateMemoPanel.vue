@@ -55,14 +55,6 @@
           :value.sync="formData.title"></InputItem>
       </div>
       <div class="panel__item">
-        <InputTagItem
-          :placeholder="$t('memo_page.author')"
-          :currTagValues.sync="currTagValues"
-          :tagLimitNum="1"
-          :currInput.sync="currInputAuthor"
-          :autocomplete="autocompleteForAuthor"></InputTagItem>
-      </div>
-      <div class="panel__item">
         <!-- <div class="panel__item--title"><span v-text="$t('memo_page.memo_description')"></span></div>
         <TextareaItem
           :placeholder="$t('memo_page.memo_description')"
@@ -102,7 +94,6 @@
   import 'vue-datetime/dist/vue-datetime.css'
   import { Datetime, } from 'vue-datetime'
   import InputItem from 'src/components/formItem/InputItem.vue'
-  import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import RadioItem from 'src/components/formItem/RadioItem.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
@@ -112,21 +103,11 @@
   import validator from 'validator'
 
   import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
-  import { get, map, debounce } from 'lodash'
+  import { get, map } from 'lodash'
 
   const debug = require('debug')('CLIENT:UpdateMemoPanel')
   const updateMemo = (store, params) => {
     return store.dispatch('UPDATE_MEMO', {
-      params
-    })
-  }
-  const getUserList = (store, params) => {
-    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
-      params
-    })
-  }
-  const getMember = (store, params) => {
-    return store.dispatch('GET_MEMBER', {
       params
     })
   }
@@ -135,7 +116,6 @@
     name: 'UpdateMemoPanel',
     components: {
       InputItem,
-      InputTagItem,
       RadioItem,
       Spinner,
       TextareaItem,
@@ -152,8 +132,6 @@
     data () {
       return {
         alert: null,
-        currTagValues: [ get(this.memo, 'author', '') ],
-        currInputAuthor: '',
         formData: {
           description: get(this.memo, 'content', ''),
           // heroImage: get(this.memo, 'heroImage', ''),
@@ -175,11 +153,6 @@
         // status: PROJECT_STATUS,
       }
     },
-    computed: {
-      autocompleteForAuthor () {
-        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
-      },
-    },
     methods: {
       closePanel (e) {
         const target = e.target
@@ -193,7 +166,6 @@
       goUpdate () {
         const memo = {
           id: this.memo.id,
-          author: get(this.currTagValues[0], 'value', this.memo.author),
           title: get(this.formData, 'title', this.memo.title),
           content: get(this, 'content', this.memo.content),
           // hero_image: get(this.formData, 'heroImage', this.memo.heroImage),
@@ -231,22 +203,6 @@
       $_postPanel_updateContent (content) {
         this.$set(this, 'content', content)
       },
-      fetchUserDebounce: debounce(function () {
-        getUserList(this.$store, {
-          keyword: this.currInputAuthor,
-        })
-      }, 200)
-    },
-    watch: {
-      currInputAuthor: function () {
-        debug('currInputAuthor change detected:', this.currInputAuthor)
-        this.fetchUserDebounce()
-      },
-    },
-    beforeMount () {
-      getMember(this.$store, { id: this.currTagValues[0] }).then((body) => {
-        this.$set(this.currTagValues, 0, { name: get(body.items[0], 'nickname', this.currTagValues[0]), value: this.currTagValues[0]})
-      })
     },
     mounted () {},
     props: {

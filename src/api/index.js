@@ -11,7 +11,20 @@ const host = getHost()
 function _buildQuery (params = {}) {
   let query = {}
   debug('Query is going to build.')
-  const whitelist = [ 'where', 'max_result', 'page', 'sort', 'sorting', 'ids', 'custom_editor', 'updated_by', 'keyword', 'stats', 'role' ]
+  const whitelist = [
+    'where',
+    'max_result',
+    'page',
+    'sort',
+    'sorting',
+    'ids',
+    'custom_editor',
+    'updated_by',
+    'keyword',
+    'stats',
+    'role',
+    'fields'
+  ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where') {
@@ -26,7 +39,7 @@ function _buildQuery (params = {}) {
           query[key] = JSON.stringify(where[key])
         })
         debug('query', query)
-      } else if (ele === 'ids') {
+      } else if (ele === 'ids' || ele === 'fields') {
         query[ele] = JSON.stringify(params[ele])
       } else {
         query[ele] = params[ele]

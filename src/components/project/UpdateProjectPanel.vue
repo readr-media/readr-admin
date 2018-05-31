@@ -91,11 +91,6 @@
           :placeholder="$t('project_page.og_description')"
           :value.sync="formData.ogDescription"></TextareaItem>
       </div>
-      <InputTagItem
-        :placeholder="$t('project_page.author')"
-        :currTagValues.sync="currTagValues"
-        :currInput.sync="currTagInput"
-        :autocomplete="autocompleteForAuthor"></InputTagItem>
       <div class="panel__container">
         <UploadImage class="panel__item upload" :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
         <UploadImage class="panel__item upload" :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
@@ -114,7 +109,6 @@
 <script>
   import DeleteProject from 'src/components/project/DeleteProject.vue'
   import InputItem from 'src/components/formItem/InputItem.vue'
-  import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import RadioItem from 'src/components/formItem/RadioItem.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
@@ -140,12 +134,6 @@
       params
     })
   }
-  const getUserList = (store, params) => {
-    return store.dispatch('FETCH_PEOPLE_BY_NAME', {
-      params
-    })
-  }
-
 
   export default {
     name: 'UpdateProjectPanel',
@@ -153,16 +141,12 @@
       Datetime,
       DeleteProject,
       InputItem,
-      InputTagItem,
       RadioItem,
       Spinner,
       TextareaItem,
       UploadImage
     },
     computed: {
-      autocompleteForAuthor () {
-        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.uuid, }))
-      },
       statusValue () {
         return get(this.status, [ 0, 'code' ])
       },
@@ -170,8 +154,6 @@
     data () {
       return {
         alert: {},
-        currTagValues: [ 'test' ],
-        currTagInput: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
         formData: {
           description: get(this.project, 'description', ''),
@@ -285,14 +267,6 @@
     props: {
       project: {
         type: Object
-      }
-    },
-    watch: {
-      currTagInput () {
-        debug('currTagInput:', this.currTagInput)
-        getUserList(this.$store, {
-          keyword: this.currTagInput,
-        })
       }
     },
   }

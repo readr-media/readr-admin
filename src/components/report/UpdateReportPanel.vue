@@ -41,7 +41,8 @@
         <InputTagItem
           :placeholder="$t('report_page.author')"
           :currTagValues.sync="currTagValues"
-          :currInput.sync="currTagInput"></InputTagItem>
+          :currInput.sync="currInputAuthor"
+          :autocomplete="autocompleteForAuthor"></InputTagItem>
       </div>
       <div class="panel__multiple">
         <div class="item" :class="{ 'item--error': includes(validateErrors, 'heroimage') }">
@@ -84,7 +85,7 @@
   import { Datetime } from 'vue-datetime'
   import { REPORT_PUBLISH_STATUS } from 'api/config'
   import { REPORT_PUBLISH_STATUS_MAP } from 'src/constants'
-  import { get, includes, } from 'lodash'
+  import { get, map, includes, } from 'lodash'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import ProjectSelect from 'src/components/formItem/ProjectSelect.vue'
@@ -121,6 +122,11 @@
       TextareaItem,
       UploadImage,
     },
+    computed: {
+      autocompleteForAuthor () {
+        return map(get(this.$store, 'state.peopleList', []), p => ({ name: p.nickname, value: p.id, }))
+      },
+    },
     props: {
       report: {
         type: Object
@@ -129,8 +135,8 @@
     data () {
       return {
         REPORT_PUBLISH_STATUS,
-        currTagValues: [ 'test' ],
-        currTagInput: '',
+        currTagValues: [ ...map(get(this.report, 'authors'), a => ({ name: a.nickname, value: a.id, })) ],
+        currInputAuthor: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
         formData: {
           description: get(this.report, 'description', ''),
@@ -176,6 +182,7 @@
 
         this.formData.projectId = Number(this.formData.projectId)
         this.formData.publishedAt = this.formData.publishedAt ? this.formData.publishedAt : null
+        this.formData.authors = this.currTagValues
     
         updateReport(this.$store, this.formData)
           .then(res => {

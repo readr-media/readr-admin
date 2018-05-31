@@ -17,7 +17,7 @@
   </section>
 </template>
 <script>
-  import { get } from 'lodash'
+  import { get, } from 'lodash'
   import CreateReportPanel from 'src/components/report/CreateReportPanel.vue'
   import PageControlBar from 'src/components/PageControlBar.vue'
   import PageInfoBar from 'src/components/PageInfoBar.vue'
@@ -37,6 +37,7 @@
         max_result: MAXRESULT_PROJECTS,
         page: page,
         sort: DEFAULT_SORT,
+        fields: [ 'nickname', 'id' ],
       }
     }).catch(err => debug(err))
   }
@@ -48,7 +49,8 @@
         max_result: MAXRESULT_REPORTS,
         page: page,
         sort: DEFAULT_SORT,
-        keyword
+        keyword,
+        fields: [ 'nickname', 'id' ],
       }
     }).catch(err => debug(err))
   }

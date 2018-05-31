@@ -1,6 +1,6 @@
 <template>
-  <div class="create-project-panel" @click="closePanel">
-    <div class="panel">
+  <ItemMaintainContainer :closePanelHandler="closePanel">
+    <template slot="panel">
       <div class="panel__title"><h3 v-text="$t('project_page.create_project')"></h3></div>
       <div class="panel__container">
         <div class="panel__item">
@@ -48,15 +48,16 @@
         <span v-text="$t('project_page.error_occurred') + ': '"></span>
         <span v-text="alert"></span>
       </div>
-      <div class="panel__create" @click="goCreate">
+      <div class="panel__btn" @click="goCreate">
         <span v-text="$t('project_page.button_create')" v-if="!isSaving"></span>
         <Spinner class="panel__create__spinner" v-else="!isSaving" :show="true"></Spinner>
-      </div>
-    </div>
-  </div>
+      </div>    
+    </template>
+  </ItemMaintainContainer>
 </template>
 <script>
   import InputItem from 'src/components/formItem/InputItem.vue'
+  import ItemMaintainContainer from 'src/components/ItemMaintainContainer.vue'
   import Spinner from 'src/components/Spinner.vue'
   import TextareaItem from 'src/components/formItem/TextareaItem.vue'
   import UploadImage from 'src/components/formItem/UploadImage.vue'
@@ -73,6 +74,7 @@
     name: 'CreateProjectPanel',
     components: {
       InputItem,
+      ItemMaintainContainer,
       Spinner,
       TextareaItem,
       UploadImage
@@ -98,12 +100,7 @@
     },
     methods: {
       closePanel (e) {
-        const target = e.target
-        const className = target.getAttribute('class')
-        if (className && className.indexOf('create-project-panel') > -1) {
-          debug('Abt to close panel.', target.className)
-          this.$emit('update:shouldShowCreatePanel', false)
-        }
+        this.$emit('update:shouldShowCreatePanel', false)
       },
       goCreate () {
         debug('Abt to create a new project.')
@@ -139,66 +136,3 @@
     mounted () {},
   }
 </script>
-<style lang="stylus" scoped>
-  .create-project-panel
-    position fixed
-    top 0
-    left 0
-    width 100vw
-    height 100vh
-    display flex
-    align-items center
-    justify-content center
-    background-color rgba(0, 0, 0, 0.6)
-    z-index 9999
-    .panel
-      background-color #efefef
-      // box-shadow 0 0 10px #afafaf
-      width 900px
-      max-height 80%
-      padding 25px 50px
-      border-radius 5px
-      overflow auto
-      > div:not(:first-child)
-        margin 15px auto
-        &.panel__create
-          margin 30px auto 15px
-      &__container
-        width 100%
-        display flex
-        > div:not(:first-child)
-          margin-left 20px
-      &__item
-        display flex
-        &--title
-          background-color #fff
-          > span
-            padding 5px 10px
-            display flex
-            justify-content center
-            align-items center
-            color #777
-            background-color #e2e2e2
-            height 100%
-            max-height 35px
-        > div:not(.panel__item--title)
-          flex 1
-        &.slug, &.upload
-          flex 1
-      &__title
-        h3
-          margin 0
-      &__create
-        width 100%
-        height 40px
-        background-color #000
-        border-radius 5px
-        display flex
-        justify-content center
-        align-items center
-        color #fff
-        padding 10px 20px
-        cursor pointer
-      &__alert
-        color red
-</style>

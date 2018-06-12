@@ -178,6 +178,11 @@ export function fetchReports ({ params }) {
   return _doFetchStrict(url, {})
 }
 
+export function getMemosCount () {
+  let url = `${host}/api/memos/count`
+  return _doFetchStrict(url, {})
+}
+
 export function getProjectsCount () {
   let url = `${host}/api/project/count`
   return _doFetchStrict(url, {})

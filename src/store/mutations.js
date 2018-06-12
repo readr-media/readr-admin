@@ -34,6 +34,9 @@ export default {
   SET_MEMOS: (state, { memos }) => {
     state.memos = get(memos, 'body.items', [])
   },
+  SET_MEMOS_COUNT: (state, { count }) => {
+    state.memosCount = count
+  },
   REMOVE_MEMOS: (state, ids) => {
     state['memos'] = state['memos'].filter(memo => !ids.includes(memo.id))
   }

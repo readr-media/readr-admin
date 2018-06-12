@@ -4,7 +4,7 @@
     <div class="control-bar__buttons">
       <slot v-for="(t, i) in slotItems" :name="i"></slot>
     </div>
-    <div class="filter" @keyup.enter="keyupHandler">
+    <div class="filter" @keyup.enter="goSearch">
       <InputItem
         :placeHolder="$t('project_page.please_type_id_or_nickname')"
         :value.sync="filter"></InputItem>
@@ -21,9 +21,13 @@
       InputItem,
     },
     props: {
-      amount: {
+      amount: { // set button amount
         type: Number,
         default: 0,
+      },
+      initFilter: {
+        type: String,
+        default: '',
       },
       title: {
         type: String,
@@ -31,7 +35,7 @@
     },
     data () {
       return {
-        filter: '',
+        filter: this.initFilter,
       }
     },
     computed: {
@@ -44,9 +48,6 @@
     methods: {
       goSearch () {
         this.$emit('goSearch', this.filter)
-      },
-      keyupHandler () {
-        this.goSearch()
       },
     }
   }

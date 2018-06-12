@@ -9,6 +9,7 @@ import {
   fetchReports,
   getProfile,
   getMember,
+  getMemosCount,
   getProjectsCount,
   getReportsCount,
   updateProject,
@@ -108,6 +109,11 @@ export default {
     debug('Abt to fetch data.')
     return fetchReports({ params })
       .then((reports) => commit('SET_REPORTS', { reports }))
+  },
+
+  GET_MEMOS_COUNT: ({ commit, state }) => {
+    return getMemosCount()
+      .then(({ status, body }) => status === 200 && commit('SET_MEMOS_COUNT', { count: _.get(body, 'meta.total') }))
   },
 
   GET_PROJECTS_COUNT: ({ commit, state }) => {

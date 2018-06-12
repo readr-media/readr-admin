@@ -71,6 +71,7 @@ export default {
     'update_memo': '修改筆記',
     'button_create_memo': '新增筆記',
     'button_create': '新增',
+    'button_delete': '刪除',
     'button_update': '修改',
     'description': '說明',
     'hero_image': '主圖',

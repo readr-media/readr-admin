@@ -17,7 +17,7 @@
           <td class="align-center" v-text="report.id"></td>
           <td class="report-list--title"><span @click="updateReport(get(report, 'id'))" v-text="report.title"></span></td>
           <td class="align-center" v-text="report.slug"></td>
-          <td class="align-center" v-text="get(report, 'project_id.title')"></td>
+          <td class="align-center" v-text="get(report, 'project.title')"></td>
           <td class="align-center" v-text="$t(`report_page.${get(find(REPORT_PUBLISH_STATUS_MAP, { code: get(report, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></td>
           <td class="align-center" v-text="getDatetime({ dateStr: report.updatedAt })"></td>
           <td>
@@ -51,13 +51,13 @@
 
   export default {
     name: 'ReportList',
+    components: {
+      UpdateReportPanel,
+    },
     props: {
       reports: {
         type: Array,
       }
-    },
-    components: {
-      UpdateReportPanel,
     },
     data () {
       return {
@@ -72,14 +72,14 @@
         deleteReport(this.$store, {
           id: id
         }).then(() => {
-          this.$emit('refreshReports', false)
+          this.$emit('refreshReports')
         })
       },
       find,
       get,
       getDatetime,
       refreshReports () {
-        this.$emit('refreshReports', false)
+        this.$emit('refreshReports')
       },
       updateReport (id) {
         const report = find(this.reports, { id: id })

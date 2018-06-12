@@ -1,7 +1,7 @@
 <template>
   <section class="report-list backstage">
     <main>
-      <PageControlBar :amount="1" :title="$t('report')" @goSearch="goSearch">
+      <PageControlBar :amount="1" :initFilter="filter" :title="$t('report')" @goSearch="goSearch">
         <button slot="0" @click="shouldShowCreatePanel = true" v-text="$t('report_page.button_create_report')"></button>
       </PageControlBar>
       <ReportList :reports="reports" @refreshReports="refreshReports"></ReportList>
@@ -76,6 +76,7 @@
     data () {
       return {
         currPage: DEFAULT_PAGE,
+        filter: '',
         shouldShowCreatePanel: false,
       }
     },
@@ -108,19 +109,19 @@
     methods: {
       goSearch (filter) {
         this.currPage = 1
+        this.filter = filter
         Promise.all([
-          fetchReports(this.$store, { page: this.currPage, keyword: filter }),
-          fetchReportsCount(this.$store, { page: this.currPage, keyword: filter }),
+          fetchReports(this.$store, { page: this.currPage, keyword: this.filter }),
+          fetchReportsCount(this.$store, { keyword: this.filter }),
         ])
       },
       refreshReports () {
         Promise.all([
           fetchReports(this.$store, { page: this.currPage, keyword: this.filter }),
-          fetchReportsCount(this.$store, { page: this.currPage, keyword: this.filter }),
+          fetchReportsCount(this.$store, { keyword: this.filter }),
         ])
       },
     }
   }
 </script>
-<style lang="stylus" scoped>
-</style>
+<style lang="stylus" scoped></style>

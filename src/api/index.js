@@ -23,7 +23,8 @@ function _buildQuery (params = {}) {
     'keyword',
     'stats',
     'role',
-    'fields'
+    'fields',
+    'member_id'
   ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {

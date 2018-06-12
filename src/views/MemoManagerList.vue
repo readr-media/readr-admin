@@ -35,6 +35,7 @@
     return store.dispatch('FETCH_MEMOS', {
       params: {
         max_result: MAXRESULT_MEMOS,
+        member_id: get(store, 'state.profile.id'),
         page: page || DEFAULT_PAGE,
         sort: DEFAULT_SORT,
       }

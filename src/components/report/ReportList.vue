@@ -19,7 +19,7 @@
           <td class="align-center" v-text="report.slug"></td>
           <td class="align-center" v-text="get(report, 'project.title')"></td>
           <td class="align-center" v-text="$t(`report_page.${get(find(REPORT_PUBLISH_STATUS_MAP, { code: get(report, 'publishStatus', 0) }), 'name', 'status_draft')}`)"></td>
-          <td class="align-center" v-text="getDatetime({ dateStr: report.updatedAt })"></td>
+          <td class="align-center" v-text="getDatetime(report.updatedAt)"></td>
           <td>
             <button @click="updateReport(get(report, 'id'))" v-text="$t('report_page.button_update')"></button>
             <button @click="deleteReport(get(report, 'id'))" v-text="$t('report_page.button_delete')"></button>

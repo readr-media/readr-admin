@@ -37,6 +37,7 @@
   import moment from 'moment'
   import { PROJECT_STATUS_MAP, PROJECT_PUBLISH_STATUS_MAP } from 'src/constants'
   import { find, get } from 'lodash'
+  import { getDatetime } from 'src/util/comm.js'
 
   const debug = require('debug')('CLIENT:ProjectList')
 
@@ -61,9 +62,7 @@
     methods: {
       find,
       get,
-      getDatetime (dateStr) {
-        return dateStr && moment(new Date(dateStr)).format('YYYY/MM/DD HH:mm:ss')
-      },
+      getDatetime,
       refreshProjects () {
         this.$emit('refreshProjects')
       },

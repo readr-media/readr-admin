@@ -1,4 +1,9 @@
 export default {
+  'alert': {
+    'cancel': '取消',
+    'confirm': '確定',
+    'message_delete': '確定要刪除嗎'
+  },
   'project': '議題管理',
   'candidate': '候選議題管理',
   'candidate_page': {

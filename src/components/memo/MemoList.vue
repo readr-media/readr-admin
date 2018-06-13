@@ -22,7 +22,6 @@
           <button @click="updateMemo(get(memo, 'id'))" v-text="$t('memo_page.button_update')"></button>
           <button @click="deleteMemo(get(memo, 'id'))" v-text="$t('memo_page.button_delete')"></button>
         </span>
-        <!-- <span class="delete" @click="deleteMemo(get(memo, 'id'))">刪除</span> -->
       </div>
     </template>
     <UpdateMemoPanel
@@ -31,9 +30,17 @@
       :shouldShowUpdatePanel.sync="shouldShowUpdatePanel"
       @refreshMemos="refreshMemos">
     </UpdateMemoPanel>
+    <AlertDelete
+      v-if="shouldShowAlert"
+      :item="memoGoingToDelete"
+      :shouldShowAlert.sync="shouldShowAlert"
+      @cancel="shouldShowAlert = false"
+      @confirm="confirmDelete">
+    </AlertDelete>
   </section>
 </template>
 <script>
+  import AlertDelete from 'src/components/alert/AlertDelete.vue'
   import UpdateMemoPanel from 'src/components/memo/UpdateMemoPanel.vue'
   import moment from 'moment'
   import { MEMO_PUBLISH_STATUS_MAP } from 'src/constants'
@@ -55,6 +62,7 @@
   export default {
     name: 'MemoList',
     components: {
+      AlertDelete,
       UpdateMemoPanel,
     },
     props: {
@@ -65,19 +73,27 @@
     data () {
       return {
         MEMO_PUBLISH_STATUS_MAP,
+        memoGoingToDelete: {},
         memoGoingToUpdate: {},
+        shouldShowAlert: false,
         shouldShowUpdatePanel: false,
       }
     },
     methods: {
-      deleteMemo (id) {
-        debug('Going to del this proj')
+      confirmDelete () {
+        const id = get(this.memoGoingToDelete, 'id')
+        debug('Going to del this memo')
         deleteMemos(this.$store, {
           ids: [Number(id)],
           updated_by: get(this.$store.state.profile, 'id')
         }).then(() => {
+          this.shouldShowAlert = false
           this.$emit('refreshMemos')
         })
+      },
+      deleteMemo (id) {
+        this.memoGoingToDelete = find(this.memos, { id: id })
+        this.shouldShowAlert = true
       },
       find,
       get,

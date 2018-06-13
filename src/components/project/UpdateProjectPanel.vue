@@ -3,7 +3,6 @@
     <template class="panel" slot="panel">
       <div class="panel__container">
         <div class="panel__title"><h3 v-text="$t('project_page.update_project')"></h3></div>
-        <DeleteProject @del="deleteProject"></DeleteProject>
       </div>
       <div class="panel__container">
         <div class="panel__item">
@@ -107,7 +106,6 @@
   </ItemMaintainContainer>
 </template>
 <script>
-  import DeleteProject from 'src/components/project/DeleteProject.vue'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import ItemMaintainContainer from 'src/components/ItemMaintainContainer.vue'
   import RadioItem from 'src/components/formItem/RadioItem.vue'
@@ -130,17 +128,11 @@
       params
     })
   }
-  const deleteProject = (store, params) => {
-    return store.dispatch('DELETE_PROJECT', {
-      params
-    })
-  }
 
   export default {
     name: 'UpdateProjectPanel',
     components: {
       Datetime,
-      DeleteProject,
       InputItem,
       ItemMaintainContainer,
       RadioItem,
@@ -182,15 +174,6 @@
     methods: {
       closePanel () {
         this.$emit('update:shouldShowUpdatePanel', false)
-      },
-      deleteProject () {
-        debug('Going to del this proj')
-        deleteProject(this.$store, {
-          id:  get(this.project, 'id')
-        }).then(() => {
-          this.$emit('refreshProjects', false)
-          this.$emit('update:shouldShowUpdatePanel', false)
-        })
       },
       get,
       goUpdate () {

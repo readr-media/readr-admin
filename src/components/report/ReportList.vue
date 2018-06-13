@@ -33,12 +33,20 @@
       :shouldShowUpdatePanel.sync="shouldShowUpdatePanel"
       @refreshReports="refreshReports">
     </UpdateReportPanel>
+    <AlertDelete
+      v-if="shouldShowAlert"
+      :item="reportGoingToDelete"
+      :shouldShowAlert.sync="shouldShowAlert"
+      @cancel="shouldShowAlert = false"
+      @confirm="confirmDelete">
+    </AlertDelete>
   </section>
 </template>
 <script>
   import { REPORT_PUBLISH_STATUS_MAP } from 'src/constants'
   import { find, get } from 'lodash'
   import { getDatetime } from 'src/util/comm.js'
+  import AlertDelete from 'src/components/alert/AlertDelete.vue'
   import UpdateReportPanel from 'src/components/report/UpdateReportPanel.vue'
 
   const debug = require('debug')('CLIENT:ReportList')
@@ -52,6 +60,7 @@
   export default {
     name: 'ReportList',
     components: {
+      AlertDelete,
       UpdateReportPanel,
     },
     props: {
@@ -62,18 +71,25 @@
     data () {
       return {
         REPORT_PUBLISH_STATUS_MAP,
+        reportGoingToDelete: {},
         reportGoingToUpdate: {},
+        shouldShowAlert: false,
         shouldShowUpdatePanel: false,
       }
     },
     methods: {
-      deleteReport (id) {
-        debug('Going to del this proj')
+      confirmDelete () {
+        debug('Going to del this report')
         deleteReport(this.$store, {
-          id: id
+          id: get(this.reportGoingToDelete, 'id')
         }).then(() => {
+          this.shouldShowAlert = false
           this.$emit('refreshReports')
         })
+      },
+      deleteReport (id) {
+        this.reportGoingToDelete = find(this.reports, { id: id })
+        this.shouldShowAlert = true
       },
       find,
       get,

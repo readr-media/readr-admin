@@ -19,8 +19,8 @@
         <span class="order" v-text="get(proj, 'projectOrder', '')"></span>
         <span class="updated" v-text="getDatetime(get(proj, 'updatedAt'))"></span>
         <span class="action">
-          <button @click="updateProject(get(proj, 'id'))" v-text="$t('report_page.button_update')"></button>
-          <!-- <button v-text="$t('report_page.button_delete')"></button> -->
+          <button @click="updateProject(get(proj, 'id'))" v-text="$t('project_page.button_update')"></button>
+          <button @click="deleteProject(get(proj, 'id'))" v-text="$t('project_page.button_delete')"></button>
         </span>
       </div>
     </template>
@@ -30,9 +30,17 @@
       :shouldShowUpdatePanel.sync="shouldShowUpdatePanel"
       @refreshProjects="refreshProjects">
     </UpdateProjectPanel>
+    <AlertDelete
+      v-if="shouldShowAlert"
+      :item="projGoingToDelete"
+      :shouldShowAlert.sync="shouldShowAlert"
+      @cancel="shouldShowAlert = false"
+      @confirm="confirmDelete">
+    </AlertDelete>
   </section>
 </template>
 <script>
+  import AlertDelete from 'src/components/alert/AlertDelete.vue'
   import UpdateProjectPanel from 'src/components/project/UpdateProjectPanel.vue'
   import moment from 'moment'
   import { PROJECT_STATUS_MAP, PROJECT_PUBLISH_STATUS_MAP } from 'src/constants'
@@ -41,9 +49,16 @@
 
   const debug = require('debug')('CLIENT:ProjectList')
 
+  const deleteProject = (store, params) => {
+    return store.dispatch('DELETE_PROJECT', {
+      params
+    })
+  }
+
   export default {
     name: 'ProjectList',
     components: {
+      AlertDelete,
       UpdateProjectPanel,
     },
     props: {
@@ -55,11 +70,26 @@
       return {
         PROJECT_STATUS_MAP,
         PROJECT_PUBLISH_STATUS_MAP,
+        projGoingToDelete: {},
         projGoingToUpdate: {},
+        shouldShowAlert: false,
         shouldShowUpdatePanel: false,
       }
     },
     methods: {
+      confirmDelete () {
+        debug('Going to del this proj')
+        deleteProject(this.$store, {
+          id: get(this.projGoingToDelete, 'id')
+        }).then(() => {
+          this.shouldShowAlert = false
+          this.$emit('refreshProjects', false)
+        })
+      },
+      deleteProject (id) {
+        this.projGoingToDelete = find(this.projects, { id: id })
+        this.shouldShowAlert = true
+      },
       find,
       get,
       getDatetime,

@@ -37,7 +37,7 @@
         max_result: MAXRESULT_MEMOS,
         member_id: get(store, 'state.profile.id'),
         page: page || DEFAULT_PAGE,
-        sort: DEFAULT_SORT,
+        sort: 'memo_order',
       }
     }).catch(err => debug(err))
   }

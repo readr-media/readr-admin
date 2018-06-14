@@ -68,15 +68,18 @@
   }
 </script>
 <style lang="stylus" scoped>
+  theme-color = hsl(176.1, 40.9%, 70.8%)
+  theme-color-dark = hsl(176.1, 40.9%, 50.8%)
+
   .pageaside
     height 100%
-    width 20%
+    width 180px
     // max-width 400px
     position absolute
-    left 0
+    left calc(20% - 180px)
     top: 0
-    background-color #d8d8d8
-    padding-top 70px
+    background-color #f2f2f2
+    padding-top 146px
     z-index 999
     &.dark
       background-color #000
@@ -86,34 +89,37 @@
         > span
           &:before
             position absolute
-            left -15px
+            left -20px
             top 5px
             content ''
-            border-style solid
-            border-width 6px 0 6px 10px
-            border-color transparent transparent transparent #fff
+            width 10px
+            height 10px
+            background-color #fff
+            border-radius 50%
         &.active
           color #ddcf21
           background-color none
           > span
             &:before
               position absolute
-              left -15px
+              left -20px
               top 5px
               content ''
-              border-style solid
-              border-width 10px 6px 0 6px
-              border-color #fff transparent transparent transparent
+              width 10px
+              height 10px
+              background-color #fff
+              border-radius 50%
         &.showSub
           > span
             &:before
               position absolute
-              left -15px
+              left -20px
               top 5px
               content ''
-              border-style solid
-              border-width 10px 6px 0 6px
-              border-color #fff transparent transparent transparent
+              width 10px
+              height 10px
+              background-color #fff
+              border-radius 50%
         &:hover
           background-color #2A2A2A
         &--sub
@@ -124,44 +130,48 @@
           &:hover
             background-color #2A2A2A
     &__item
-      padding 20px 50px
+      padding 20px 20px 20px 40px
       color #000
-      background-color #d8d8d8
+      font-weight 700
+      background-color #f2f2f2
+      border-top 2px solid #4a4a4a
       cursor pointer
       > span
         position relative
       &.active
         color #000
-        background-color #ddcf21
+        background-color theme-color
         > span
           position relative
       &.showSub
         > span
           position relative
       &:hover
-        background-color #d4c50d
+        background-color theme-color-dark
       &--sub
         color #000
         cursor pointer
-        padding 20px 80px
+        padding 20px 20px 20px 40px
         font-size 0.9375rem
         display none
+        
         &.parent-active
-          background-color #ddcf21        
+          background-color theme-color    
         &.active
           color #000
           span
             position relative
             &:before
               position absolute
-              left -15px
+              left -20px
               top 5px
               content ''
-              border-style solid
-              border-width 6px 0 6px 10px
-              border-color transparent transparent transparent #fff          
+              width 10px
+              height 10px
+              background-color #fff
+              border-radius 50%
         &.show
           display block
         &:hover
-          background-color #d4c50d
+          background-color theme-color-dark
 </style>

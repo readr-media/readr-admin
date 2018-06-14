@@ -32,7 +32,7 @@ button
   // max-width 800px
   margin 0 auto
   position relative
-  background-color #fff
+  background-color #4a4a4a
   padding-top 70px
   &.locked
     width 100%

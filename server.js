@@ -144,7 +144,6 @@ function render (req, res, next) {
     include_gapi: '',
     include_recaptcha: '',
     setting: { 
-      TALK_SERVER: config.TALK_SERVER, 
       POST_ACTIVE: config.POST_ACTIVE, 
       POST_TYPE: config.POST_TYPE, 
       PROJECT_STATUS: config.PROJECT_STATUS, 

@@ -56,11 +56,12 @@ module.exports = {
                 {
                   loader: 'css-loader',
                   options: { minimize: true }
-                }
+                },
+                'postcss-loader'
               ],
               fallback: 'vue-style-loader'
             })
-          : ['vue-style-loader', 'css-loader']
+          : ['vue-style-loader', 'css-loader', 'postcss-loader']
       },
       {
         test: /\.styl(us)?$/,
@@ -71,11 +72,12 @@ module.exports = {
                 loader: 'css-loader',
                 options: { minimize: true }
               },
+              'postcss-loader',
               'stylus-loader'
             ],
             fallback: 'vue-style-loader'
           })
-        : ['vue-style-loader', 'css-loader', 'stylus-loader']
+        : ['vue-style-loader', 'css-loader', 'postcss-loader', 'stylus-loader']
       },
     ]
   },

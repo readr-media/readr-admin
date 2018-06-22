@@ -44,7 +44,7 @@
 
   const fetchMemosCount = (store) => {
     debug('Go fectch memos count.')
-    return store.dispatch('GET_MEMOS_COUNT').catch(err => debug(err))
+    return store.dispatch('FETCH_MEMOS_COUNT').catch(err => debug(err))
   }
 
   const fetchProjects = (store, { page = DEFAULT_PAGE } = {}) => {

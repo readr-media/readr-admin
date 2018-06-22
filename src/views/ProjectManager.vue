@@ -42,7 +42,7 @@
   }
   const fetchProjectsCount = (store) => {
     debug('Go fectch projects.')
-    return store.dispatch('GET_PROJECTS_COUNT').catch(err => debug(err))
+    return store.dispatch('FETCH_PROJECTS_COUNT').catch(err => debug(err))
   }
 
   export default {

@@ -57,7 +57,7 @@
 
   const fetchReportsCount = (store, { keyword = '' } = {}) => {
     debug('Go fectch reports count.')
-    return store.dispatch('GET_REPORTS_COUNT', {
+    return store.dispatch('FETCH_REPORTS_COUNT', {
       params: {
         keyword
       }

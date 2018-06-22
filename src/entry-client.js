@@ -21,7 +21,7 @@ Vue.mixin({
       ? !get(store, 'state.profile.role') || !get(store, 'state.isLoggedIn')
       ? [
           store.dispatch('CHECK_LOGIN_STATUS', { params: { cookie, }, }).then(() => debug('CHECKT LOGGIN STATUS')),
-          store.dispatch('GET_PROFILE', { params: { cookie, }, }).then(() => debug('FETCH DATA')),
+          store.dispatch('FETCH_PROFILE', { params: { cookie, }, }).then(() => debug('FETCH DATA')),
         ]
       : [ new Promise((rslv) => rslv()), ]
       : [ new Promise((rslv) => rslv()), ]

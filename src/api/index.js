@@ -1,9 +1,9 @@
-import { camelizeKeys, decamelize, decamelizeKeys } from 'humps'
-import { getToken } from '../util/services'
-import { getHost } from 'src/util/comm'
-import { mapValues } from 'lodash'
 import qs from 'qs'
 import superagent from 'superagent'
+import { camelizeKeys, decamelize, decamelizeKeys } from 'humps'
+import { getHost } from 'src/util/comm'
+import { getToken } from '../util/services'
+import { mapValues } from 'lodash'
 
 const debug = require('debug')('CLIENT:api')
 const host = getHost()
@@ -13,14 +13,14 @@ function _buildQuery (params = {}) {
   debug('Query is going to build.')
   // Use camelCase
   const whitelist = [
-    'where',
-    'maxResult',
-    'page',
-    'sort',
+    'fields',
     'ids',
     'keyword',
-    'fields',
-    'memberId'
+    'maxResult',
+    'memberId',
+    'page',
+    'sort',
+    'where'
   ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
@@ -44,6 +44,22 @@ function _buildQuery (params = {}) {
   query = qs.stringify(query)
   debug('Query build done.', query)
   return query
+}
+
+function _doDelete (url, params) {
+  return new Promise((resolve, reject) => {
+    superagent
+      .delete(url)
+      .set('Authorization', `Bearer ${getToken()}`)
+      .send(params)
+      .end(function (err, res) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ status: res.status, body: camelizeKeys(res.body) })
+        }
+      })
+  })
 }
 
 function _doFetchStrict (url, { cookie }) {
@@ -93,26 +109,14 @@ function _doPut (url, params) {
   })
 }
 
-function _doDelete (url, params) {
-  return new Promise((resolve, reject) => {
-    superagent
-      .delete(url)
-      .set('Authorization', `Bearer ${getToken()}`)
-      .send(params)
-      .end(function (err, res) {
-        if (err) {
-          reject(err)
-        } else {
-          resolve({ status: res.status, body: camelizeKeys(res.body) })
-        }
-      })
-  })
-}
-
 export function checkLoginStatus ({ params = {}}) {
   debug('Going to send req to check status...')
   const url = `${host}/api/status`
   return _doFetchStrict(url, { cookie: params.cookie })
+}
+
+export function createMemo ({ params }) {
+  return _doPost(`${host}/api/memo`, params)
 }
 
 export function createProject ({ params }) {
@@ -121,6 +125,43 @@ export function createProject ({ params }) {
 
 export function createReport ({ params }) {
   return _doPost(`${host}/api/report/create`, params)
+}
+
+export function deleteMemos ({ params }) {
+  return _doDelete(`${host}/api/memos`, params)
+}
+
+export function deleteProject ({ params }) {
+  return _doDelete(`${host}/api/project`, params)
+}
+
+export function deleteReport ({ params }) {
+  return _doDelete(`${host}/api/report`, params)
+}
+
+export function fetchMember ({ params }) {
+  let url = `${host}/api/member`
+  if (params && params.id) {
+    url += `/${params.id}`
+  }
+  debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, {})
+}
+
+export function fetchMemos ({ params }) {
+  let url = `${host}/api/memos`
+  const query = _buildQuery(params)
+  if (query && (query.length > 0)) {
+    url = url + `?${query}`
+  }
+  debug('params', params)
+  debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, { cookie: params.cookie })
+}
+
+export function fetchMemosCount () {
+  let url = `${host}/api/memos/count`
+  return _doFetchStrict(url, {})
 }
 
 export function fetchPeopleByName ({ params }) {
@@ -132,6 +173,11 @@ export function fetchPeopleByName ({ params }) {
   return _doFetchStrict(url, {})
 }
 
+export function fetchProfile ({ params = {}}) {
+  const url = `${host}/api/profile`
+  return _doFetchStrict(url, { cookie: params.cookie })
+}
+
 export function fetchProjects ({ params }) {
   let url = `${host}/api/project/list`
   const query = _buildQuery(params)
@@ -140,6 +186,11 @@ export function fetchProjects ({ params }) {
   }
   debug('params', params)
   debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, {})
+}
+
+export function fetchProjectsCount () {
+  let url = `${host}/api/project/count`
   return _doFetchStrict(url, {})
 }
 
@@ -154,17 +205,7 @@ export function fetchReports ({ params }) {
   return _doFetchStrict(url, {})
 }
 
-export function getMemosCount () {
-  let url = `${host}/api/memos/count`
-  return _doFetchStrict(url, {})
-}
-
-export function getProjectsCount () {
-  let url = `${host}/api/project/count`
-  return _doFetchStrict(url, {})
-}
-
-export function getReportsCount ({ params }) {
+export function fetchReportsCount ({ params }) {
   let url = `${host}/api/report/count`
   const query = _buildQuery(params)
   if (query && (query.length > 0)) {
@@ -175,18 +216,8 @@ export function getReportsCount ({ params }) {
   return _doFetchStrict(url, {})
 }
 
-export function getProfile ({ params = {}}) {
-  const url = `${host}/api/profile`
-  return _doFetchStrict(url, { cookie: params.cookie })
-}
-
-export function getMember ({ params }) {
-  let url = `${host}/api/member`
-  if (params && params.id) {
-    url += `/${params.id}`
-  }
-  debug('Abt to fetch data:', url)
-  return _doFetchStrict(url, {})
+export function updateMemo ({ params }) {
+  return _doPut(`${host}/api/memo`, params)
 }
 
 export function updateProject ({ params }) {
@@ -221,35 +252,4 @@ export function uploadImage (file, type) {
         }
       })
   })
-}
-
-export function createMemo ({ params }) {
-  return _doPost(`${host}/api/memo`, params)
-}
-
-export function fetchMemos ({ params }) {
-  let url = `${host}/api/memos`
-  const query = _buildQuery(params)
-  if (query && (query.length > 0)) {
-    url = url + `?${query}`
-  }
-  debug('params', params)
-  debug('Abt to fetch data:', url)
-  return _doFetchStrict(url, { cookie: params.cookie })
-}
-
-export function updateMemo ({ params }) {
-  return _doPut(`${host}/api/memo`, params)
-}
-
-export function deleteMemos ({ params }) {
-  return _doDelete(`${host}/api/memos`, params)
-}
-
-export function deleteProject ({ params }) {
-  return _doDelete(`${host}/api/project`, params)
-}
-
-export function deleteReport ({ params }) {
-  return _doDelete(`${host}/api/report`, params)
 }

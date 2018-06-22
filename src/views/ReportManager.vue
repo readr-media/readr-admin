@@ -34,7 +34,7 @@
   const fetchProjects = (store, { page = DEFAULT_PAGE } = {}) => {
     return store.dispatch('FETCH_PROJECTS', {
       params: {
-        max_result: MAXRESULT_PROJECTS,
+        maxResult: MAXRESULT_PROJECTS,
         page: page,
         sort: DEFAULT_SORT,
         fields: [ 'nickname', 'id' ],
@@ -46,7 +46,7 @@
     debug('Go fectch reports.')
     return store.dispatch('FETCH_REPORTS', {
       params: {
-        max_result: MAXRESULT_REPORTS,
+        maxResult: MAXRESULT_REPORTS,
         page: page,
         sort: DEFAULT_SORT,
         keyword,

@@ -33,7 +33,7 @@
     debug('Go fectch projects.')
     return store.dispatch('FETCH_PROJECTS', {
       params: {
-        max_result: MAXRESULT_PROJECTS,
+        maxResult: MAXRESULT_PROJECTS,
         page: page || DEFAULT_PAGE,
         sort: DEFAULT_SORT,
         keyword

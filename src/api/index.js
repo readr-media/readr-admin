@@ -1,7 +1,7 @@
-import { camelizeKeys, decamelizeKeys } from 'humps'
-import { delInitMemToken, getToken, getSetupToken, saveToken } from '../util/services'
+import { camelizeKeys, decamelize, decamelizeKeys } from 'humps'
+import { getToken } from '../util/services'
 import { getHost } from 'src/util/comm'
-import _ from 'lodash'
+import { mapValues } from 'lodash'
 import qs from 'qs'
 import superagent from 'superagent'
 
@@ -11,64 +11,39 @@ const host = getHost()
 function _buildQuery (params = {}) {
   let query = {}
   debug('Query is going to build.')
+  // Use camelCase
   const whitelist = [
     'where',
-    'max_result',
+    'maxResult',
     'page',
     'sort',
-    'sorting',
     'ids',
-    'custom_editor',
-    'updated_by',
     'keyword',
-    'stats',
-    'role',
     'fields',
-    'member_id'
+    'memberId'
   ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where') {
         debug('where', params)
-        const where = _.mapValues(params[ele], (value) => {
+        const where = mapValues(params[ele], (value) => {
           value = Array.isArray(value) ? value : [ value ]
           debug('value', value)
           return { '$in': value }
         })
         debug('where', where)
         Object.keys(where).forEach((key) => {
-          query[key] = JSON.stringify(where[key])
+          query[decamelize(key)] = JSON.stringify(where[key])
         })
         debug('query', query)
-      } else if (ele === 'ids' || ele === 'fields') {
-        query[ele] = JSON.stringify(params[ele])
-      } else {
-        query[ele] = params[ele]
+      } else if (params[ele]) {
+        query[decamelize(ele)] = Array.isArray(params[ele]) ? JSON.stringify(params[ele]) : params[ele]
       }
     }
   })
   query = qs.stringify(query)
   debug('Query build done.', query)
   return query
-}
-
-function _doFetch (url) {
-  debug('Abt to fetch data:', url)
-  return new Promise((resolve, reject) => {
-    superagent
-    .get(url)
-    .end(function (err, res) {
-      if (err) {
-        reject(err)
-      } else {
-        if (res.text === 'not found') {
-          reject(res.text)
-        } else {
-          resolve({ status: res.status, body: camelizeKeys(res.body) })
-        }
-      }
-    })
-  })
 }
 
 function _doFetchStrict (url, { cookie }) {

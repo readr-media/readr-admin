@@ -34,8 +34,8 @@
     debug('Go fectch memos.')
     return store.dispatch('FETCH_MEMOS', {
       params: {
-        max_result: MAXRESULT_MEMOS,
-        member_id: get(store, 'state.profile.id'),
+        maxResult: MAXRESULT_MEMOS,
+        memberId: get(store, 'state.profile.id'),
         page: page || DEFAULT_PAGE,
         sort: 'memo_order',
       }
@@ -50,7 +50,7 @@
   const fetchProjects = (store, { page = DEFAULT_PAGE } = {}) => {
     return store.dispatch('FETCH_PROJECTS', {
       params: {
-        max_result: MAXRESULT_PROJECTS,
+        maxResult: MAXRESULT_PROJECTS,
         page: page,
         sort: DEFAULT_SORT,
       }

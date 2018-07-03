@@ -60,6 +60,7 @@
   </div>
 </template>
 <script>
+  import { REPORT_PUBLISH_STATUS, } from 'api/config'
   import { get, includes, map, } from 'lodash'
   import InputItem from 'src/components/formItem/InputItem.vue'
   import InputTagItem from 'src/components/formItem/InputTagItem.vue'
@@ -121,7 +122,7 @@
           ogImage: '',
           ogTitle: '',
           projectId: 0,
-          publishStatus: 2,
+          publishStatus: REPORT_PUBLISH_STATUS.DRAFT,
           slug: '',
           title: '',
           updated_by: `${get(this.$store, 'state.profile.id')}`,
@@ -154,6 +155,13 @@
 
         this.formData.projectId = Number(this.formData.projectId)
         this.formData.authors = this.currTagValues
+
+
+        if (this.formData.heroImage && !this.formData.ogImage) {
+          this.formData.ogImage = this.formData.heroImage
+        } else if (!this.formData.heroImage && this.formData.ogImage) {
+          this.formData.heroImage = this.formData.ogImage
+        }
 
         createReport(this.$store, this.formData)
           .then(res => {

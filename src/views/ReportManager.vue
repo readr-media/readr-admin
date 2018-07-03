@@ -36,7 +36,7 @@
       params: {
         maxResult: MAXRESULT_PROJECTS,
         page: page,
-        sort: DEFAULT_SORT,
+        sort: '-published_at',
         fields: [ 'nickname', 'id' ],
       }
     }).catch(err => debug(err))

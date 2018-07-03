@@ -30,7 +30,7 @@
   const DEFAULT_SORT = '-updated_at'
 
   const debug = require('debug')('CLIENT:MemoManager')
-  const fetchMemos = (store, { page }) => {
+  const fetchMemos = (store, { page, keyword = '' }) => {
     debug('Go fectch memos.')
     return store.dispatch('FETCH_MEMOS', {
       params: {
@@ -38,6 +38,7 @@
         memberId: get(store, 'state.profile.id'),
         page: page || DEFAULT_PAGE,
         sort: 'memo_order',
+        keyword: keyword
       }
     }).catch(err => debug(err))
   }
@@ -52,7 +53,7 @@
       params: {
         maxResult: MAXRESULT_PROJECTS,
         page: page,
-        sort: DEFAULT_SORT,
+        sort: '-published_at',
       }
     }).catch(err => debug(err))
   }
@@ -102,14 +103,14 @@
         this.curr_page = 1
         this.filter = filter
         Promise.all([
-          fetchMemos(this.$store, { page: this.curr_page }),
-          fetchMemosCount(this.$store),
+          fetchMemos(this.$store, { page: this.curr_page, keyword: this.filter }),
+          fetchMemosCount(this.$store, { keyword: this.filter }),
         ])
       },
       refreshMemos () {
         Promise.all([
-          fetchMemos(this.$store, { page: this.curr_page }),
-          fetchMemosCount(this.$store),
+          fetchMemos(this.$store, { page: this.curr_page, keyword: this.filter }),
+          fetchMemosCount(this.$store, { keyword: this.filter }),
         ])
       }
     }

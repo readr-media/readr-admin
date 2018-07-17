@@ -37,7 +37,7 @@
         maxResult: MAXRESULT_MEMOS,
         memberId: get(store, 'state.profile.id'),
         page: page || DEFAULT_PAGE,
-        sort: 'memo_order',
+        sort: '-updated_at,-memo_order',
         keyword: keyword
       }
     }).catch(err => debug(err))
@@ -53,7 +53,7 @@
       params: {
         maxResult: MAXRESULT_PROJECTS,
         page: page,
-        sort: '-published_at',
+        sort: DEFAULT_SORT,
       }
     }).catch(err => debug(err))
   }

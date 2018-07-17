@@ -90,7 +90,12 @@ app.use('/service-worker.js', serve(path.join(__dirname, './dist/service-worker.
 
 function render (req, res, next) {
   debug('req.url', req.url)
-  if (req.url.indexOf('/api/') === 0) {
+  const cookies = new Cookies( req, res, {} )
+  const csrf = cookies.get('csrf')
+  
+  if (!csrf) {
+    return res.redirect('https://www.readr.tw/login')
+  } else if (req.url.indexOf('/api/') === 0) {
     next()
     return
   } else if (req.url.indexOf('/404') === 0) {
@@ -109,12 +114,6 @@ function render (req, res, next) {
   }
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
-
-  const cookies = new Cookies( req, res, {} )
-  const readrid = cookies.get('readrid')
-  if (!readrid) {
-    cookies.set('readrid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
-  }
 
   const handleError = err => {
     if (err.url) {
@@ -138,7 +137,7 @@ function render (req, res, next) {
     metaUrl: 'dev.readr.tw',
     metaImage: '/public/og.png',
     url: req.url,
-    cookie: cookies.get('csrf'),
+    cookie: csrf,
     initmember: cookies.get('initmember'),
     includ_fbsdk: '',
     include_gapi: '',

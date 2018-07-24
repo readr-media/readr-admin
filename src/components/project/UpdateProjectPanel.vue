@@ -191,7 +191,7 @@
           status: get(this.formData, 'status', this.project.status),
           progress: validator.toFloat(`${get(this.formData, 'progress') || 0}`),
           memo_points: validator.toInt(`${get(this.formData, 'memoPoints') || 0}`),          
-          published_at: get(this.formData, 'publishedAt', this.project.publishedAt) ? moment(new Date(get(this.formData, 'publishedAt', this.project.publishedAt))).format('YYYY-MM-DD hh:mm:ss') : null,
+          published_at: get(this.formData, 'publishedAt', this.project.publishedAt) ? new Date(get(this.formData, 'publishedAt', this.project.publishedAt)).toISOString() : null,
           publish_status: get(this.formData, 'isPublished', this.project.publishStatus),
         }
         debug('Abt to update the curr proj.', project)

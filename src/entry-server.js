@@ -39,6 +39,7 @@ export default context => {
       let targUrl
       if ((permission && (role === 'visitor' || (permission !== role && permission !== 'member'))) || (isInitMember && !initmember)) {
         store.state.unauthorized = true
+        console.error('-- entry server cookie', cookie)
         if (!cookie) {
           router.push('/login')
           targUrl = '/login'

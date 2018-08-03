@@ -34,11 +34,15 @@ Vue.mixin({
     ]).then(() => {
       debug(get(store, 'state.profile.role'))
       debug(get(store, 'state.isLoggedIn'))
+      console.info('-- info permission', permission)
+      console.error('-- error permission', permission)
       if (permission) {
         next(vm => { 
+          console.error('-- cookie', cookie)
           if (cookie) {
             const role = get(filter(ROLE_MAP, { key: get(vm, '$store.state.profile.role'), }), [ 0, 'route', ], 'visitor') 
             debug('role', role)
+            console.error('-- role', role)
             if (role === 'visitor' || (permission !== 'member' && permission !== role)) {
               /** User doesn't have the right to go to route "to". So, go back to route "from" */
               debug(`User doesn't have the right to go to route "to". So, go back to route "from"`)

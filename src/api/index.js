@@ -216,6 +216,17 @@ export function fetchReportsCount ({ params }) {
   return _doFetchStrict(url, {})
 }
 
+export function fetchTags ({ params }) {
+  let url = `${host}/api/tags`
+  const query = _buildQuery(params)
+  if (query && (query.length > 0)) {
+    url = url + `?${query}`
+  }
+  debug('params', params)
+  debug('Abt to fetch data:', url)
+  return _doFetchStrict(url, {})
+}
+
 export function updateMemo ({ params }) {
   return _doPut(`${host}/api/memo`, params)
 }

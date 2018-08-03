@@ -90,6 +90,15 @@
           :placeholder="$t('project_page.og_description')"
           :value.sync="formData.ogDescription"></TextareaItem>
       </div>
+      <div class="panel__item">
+        <div class="panel__item--title"><span v-text="$t('project_page.tag')"></span></div>
+        <InputTagItem
+          :autocomplete="tags"
+          :currInput.sync="inputTag"
+          :currTagValues.sync="projectTags"
+          :placeholder="$t('project_page.tag')"
+          class="tags"></InputTagItem>
+      </div>
       <div class="panel__container">
         <UploadImage class="panel__item upload" :title="$t('project_page.heroimage')" :imageUrl.sync="formData.heroImage"></UploadImage>
         <UploadImage class="panel__item upload" :title="$t('project_page.ogImage')" :imageUrl.sync="formData.ogImage"></UploadImage>
@@ -100,13 +109,14 @@
       </div>
       <div class="panel__btn" @click="goUpdate">
         <span v-text="$t('project_page.button_update')" v-if="!isUpdating"></span>
-        <Spinner class="panel__update__spinner" v-else="!isUpdating" :show="true"></Spinner>
+        <Spinner class="panel__update__spinner" v-else :show="true"></Spinner>
       </div>
     </template>
   </ItemMaintainContainer>
 </template>
 <script>
   import InputItem from 'src/components/formItem/InputItem.vue'
+  import InputTagItem from 'src/components/formItem/InputTagItem.vue'
   import ItemMaintainContainer from 'src/components/ItemMaintainContainer.vue'
   import RadioItem from 'src/components/formItem/RadioItem.vue'
   import Spinner from 'src/components/Spinner.vue'
@@ -120,9 +130,31 @@
   
   import { PROJECT_STATUS, PROJECT_PUBLISH_STATUS, } from 'api/config'
   import { PROJECT_STATUS_MAP, PROJECT_PUBLISH_STATUS_MAP } from 'src/constants'
-  import { get, map, } from 'lodash'
+  import { get, map, uniq, } from 'lodash'
 
   const debug = require('debug')('CLIENT:UpdateProjectPanel')
+  
+  const MAXRESULT_TAGS = 10
+  const DEFAULT_PAGE = 1
+  const DEFAULT_SORT = '-updated_at'
+
+  const fetchTags = (store, {
+    keyword = '',
+    maxResult = MAXRESULT_TAGS,
+    page = DEFAULT_PAGE,
+    sort = DEFAULT_SORT
+  } = {}) => {
+    debug('Go fectch reports.')
+    return store.dispatch('FETCH_TAGS', {
+      params: {
+        keyword,
+        maxResult,
+        page,
+        sort,
+      }
+    }).catch(err => debug(err))
+  }
+
   const updateProject = (store, params) => {
     return store.dispatch('UPDATE_PROJECT', {
       params
@@ -134,6 +166,7 @@
     components: {
       Datetime,
       InputItem,
+      InputTagItem,
       ItemMaintainContainer,
       RadioItem,
       Spinner,
@@ -144,10 +177,14 @@
       statusValue () {
         return get(this.status, [ 0, 'code' ])
       },
+      tags () {
+        return get(this.$store, 'state.tags', []).map(tag => ({ name: tag.text, value: tag.id, })) || []
+      }
     },
     data () {
       return {
         alert: {},
+        inputTag: '',
         dateFormat: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' },
         formData: {
           description: get(this.project, 'description', ''),
@@ -167,8 +204,17 @@
         },
         isEditable: true,
         isUpdating: false,
+        projectTags: get(this.project, 'tags') || [],
         statusPublished: PROJECT_PUBLISH_STATUS_MAP,
         status: PROJECT_STATUS_MAP,
+      }
+    },
+    watch: {
+      inputTag (value) {
+        debug('inputTag change detected:', value)
+        fetchTags(this.$store, {
+          keyword: value,
+        })
       }
     },
     methods: {
@@ -193,6 +239,7 @@
           memo_points: validator.toInt(`${get(this.formData, 'memoPoints') || 0}`),          
           published_at: get(this.formData, 'publishedAt', this.project.publishedAt) ? new Date(get(this.formData, 'publishedAt', this.project.publishedAt)).toISOString() : null,
           publish_status: get(this.formData, 'isPublished', this.project.publishStatus),
+          tags: uniq(this.projectTags.map(tag => tag.value || tag.id)) || [],
         }
         debug('Abt to update the curr proj.', project)
         debug('this.formData.ogImage', get(this.formData, 'ogImage', this.project.ogImage))
@@ -243,6 +290,9 @@
         return pass
       },
     },
+    beforeMount () {
+      fetchTags(this.$store)
+    },
     mounted () {},
     props: {
       project: {
@@ -251,3 +301,13 @@
     },
   }
 </script>
+<style lang="stylus" scoped>
+.tags
+  >>> .input__wrapper
+    > .input
+      height 25px
+  >>> .input__tag
+    height 25px
+
+</style>
+

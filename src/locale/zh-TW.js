@@ -54,6 +54,7 @@ export default {
     'unit': '筆',
     'progress': '進度',
     'points': '所需點數',
+    'tag': '關鍵字',
   },
   'img_upload': {
     'too_big': '圖檔過大',
@@ -128,6 +129,6 @@ export default {
     'status_scheduling': '排程',
     'status_unpublished': '下架',
     'title': '報導標題',
-    'updated_time': '更新日期時間',
+    'updated_time': '更新時間',
   }
 }

@@ -24,6 +24,9 @@ export default {
   SET_REPORTS_COUNT: (state, { count }) => {
     state.reportsCount = count
   },
+  SET_TAGS: (state, { tags }) => {
+    state.tags = get(tags, 'body.items', [])
+  },
   SET_MEMOS: (state, { memos }) => {
     state.memos = get(memos, 'body.items', [])
   },

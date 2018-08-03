@@ -84,7 +84,7 @@
       },
       get,
       getTagVal (rawVal) {
-        return typeof(rawVal) !== 'string' ? get(rawVal, 'name') : rawVal
+        return typeof(rawVal) !== 'string' ? get(rawVal, 'name') || get(rawVal, 'text') : rawVal
       },
       browser (e) {
         if (e.keyCode !== 38 && e.keyCode !== 40 && e.keyCode !== 13) {

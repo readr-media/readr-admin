@@ -18,6 +18,7 @@ export function createStore () {
       profile: {},
       reports: [],
       reportsCount: 0,
+      tags: [],
     },
     actions,
     mutations,

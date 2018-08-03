@@ -16,6 +16,7 @@ import {
   fetchProjectsCount,
   fetchReports,
   fetchReportsCount,
+  fetchTags,
   updateMemo,
   updateProject,
   updateReport,
@@ -114,6 +115,12 @@ export default {
   FETCH_REPORTS_COUNT: ({ commit, state }, { params }) => {
     return fetchReportsCount({ params })
       .then(({ status, body }) => status === 200 && commit('SET_REPORTS_COUNT', { count: get(body, 'meta.total') }))
+  },
+
+  FETCH_TAGS: ({ commit, }, { params }) => {
+    debug('Abt to fetch data.')
+    return fetchTags({ params })
+      .then((tags) => commit('SET_TAGS', { tags }))
   },
 
   UPDATE_MEMO: ({ commit, state }, { params }) => {

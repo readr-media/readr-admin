@@ -9,7 +9,7 @@
           <th v-text="$t('report_page.belong_to_project')"></th>
           <th v-text="$t('report_page.is_published')"></th>
           <th v-text="$t('report_page.updated_time')"></th>
-          <th></th>
+          <th class="report-list--action" ></th>
         </tr>
       </thead>
       <tbody>
@@ -119,6 +119,8 @@
       width 100%
       border-collapse collapse
     th
+      max-width 1px
+      width 70px
       padding .5em 0
       border-top 4px solid #9b9b9b
       border-bottom 4px solid #9b9b9b
@@ -139,16 +141,20 @@
       outline none
     button + button
       margin-left 10px
+    &--title
+      max-width 280px
+      padding-left .5em !important
+      text-align left
+      text-overflow ellipsis
+      white-space nowrap
+      overflow hidden
+      span
+        cursor pointer
+    .report-list--action
+      max-width 1px
+      width 90px
   .align-center
     text-align center
-  .report-list--title
-    max-width 280px
-    padding-left .5em !important
-    text-align left
-    text-overflow ellipsis
-    white-space nowrap
-    overflow hidden
-    span
-      cursor pointer
+    
       
 </style>

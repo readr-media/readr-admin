@@ -63,8 +63,6 @@ router.get('/profile', [ authVerify ], (req, res) => {
     const perms = response[ 1 ]
     const scopes = constructScope(perms, profile.role)
     console.error('--- profile', profile)
-    console.error('--- perms', perms)
-    console.error('--- scopes', scopes)
     res.json({
       name: profile.name,
       nickname: profile.nickname,

@@ -29,6 +29,8 @@ export default context => {
     ] : [ new Promise((rslv) => rslv()), ]
 
     Promise.all(preRouteInit).then((res) => {
+      console.error('!!!!! entry server preRouteInit res', res)
+      console.error('!!!!! entry server preRouteInit get role', get(res, [ 0, 'profile', 'role', ]))
       const role = get(filter(ROLE_MAP, { key: get(res, [ 0, 'profile', 'role', ]), }), [ 0, 'route', ], 'visitor')
       const permission = get(route, [ 'meta', 'permission', ])
       const isInitMember = get(route, [ 'path', ]) === '/initmember'

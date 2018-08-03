@@ -23,7 +23,7 @@ export default context => {
     if (fullPath !== url) {
       return reject({ url: fullPath, })
     }
-
+    console.error('-- entry server cookie', cookie)
     const preRouteInit = cookie ? [
       getProfile(cookie),
     ] : [ new Promise((rslv) => rslv()), ]
@@ -32,6 +32,11 @@ export default context => {
       const role = get(filter(ROLE_MAP, { key: get(res, [ 0, 'profile', 'role', ]), }), [ 0, 'route', ], 'visitor')
       const permission = get(route, [ 'meta', 'permission', ])
       const isInitMember = get(route, [ 'path', ]) === '/initmember'
+      
+      console.error('-- entry server role', role)
+      console.error('-- entry server permission', permission)
+      console.error('-- entry server isInitMember', isInitMember)
+      
       debug('role:', role)
       debug('permission:', permission)
       debug('url', url)
@@ -39,7 +44,6 @@ export default context => {
       let targUrl
       if ((permission && (role === 'visitor' || (permission !== role && permission !== 'member'))) || (isInitMember && !initmember)) {
         store.state.unauthorized = true
-        console.error('-- entry server cookie', cookie)
         if (!cookie) {
           router.push('/login')
           targUrl = '/login'

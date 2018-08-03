@@ -54,6 +54,7 @@ router.get('/profile', [ authVerify ], (req, res) => {
   debug(req.user)
   const targetProfile = req.user.id
   const url = `/member/${targetProfile}`
+  console.error('--- /profile url', url)
   Promise.all([
     fetchPromise(url, req),
     fetchPermissions()
@@ -61,6 +62,9 @@ router.get('/profile', [ authVerify ], (req, res) => {
     const profile = response[ 0 ][ 'items' ][ 0 ]
     const perms = response[ 1 ]
     const scopes = constructScope(perms, profile.role)
+    console.error('--- profile', profile)
+    console.error('--- perms', perms)
+    console.error('--- scopes', scopes)
     res.json({
       name: profile.name,
       nickname: profile.nickname,

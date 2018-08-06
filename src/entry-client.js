@@ -11,6 +11,7 @@ const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
 document.body.appendChild(bar.$el)
 
 const debug = require('debug')('CLIENT:entry-client')
+const { app, i18n, router, store, } = createApp()
 
 // a global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
@@ -34,15 +35,11 @@ Vue.mixin({
     ]).then(() => {
       debug(get(store, 'state.profile.role'))
       debug(get(store, 'state.isLoggedIn'))
-      console.info('-- info permission', permission)
-      console.error('-- error permission', permission)
       if (permission) {
         next(vm => { 
-          console.error('-- cookie', cookie)
           if (cookie) {
             const role = get(filter(ROLE_MAP, { key: get(vm, '$store.state.profile.role'), }), [ 0, 'route', ], 'visitor') 
             debug('role', role)
-            console.error('-- role', role)
             if (role === 'visitor' || (permission !== 'member' && permission !== role)) {
               /** User doesn't have the right to go to route "to". So, go back to route "from" */
               debug(`User doesn't have the right to go to route "to". So, go back to route "from"`)
@@ -74,8 +71,6 @@ Vue.mixin({
     }
   },
 })
-
-const { app, i18n, router, store, } = createApp()
 
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.

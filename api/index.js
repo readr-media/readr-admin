@@ -54,7 +54,6 @@ router.get('/profile', [ authVerify ], (req, res) => {
   debug(req.user)
   const targetProfile = req.user.id
   const url = `/member/${targetProfile}`
-  console.error('--- /profile url', url)
   Promise.all([
     fetchPromise(url, req),
     fetchPermissions()
@@ -62,7 +61,6 @@ router.get('/profile', [ authVerify ], (req, res) => {
     const profile = response[ 0 ][ 'items' ][ 0 ]
     const perms = response[ 1 ]
     const scopes = constructScope(perms, profile.role)
-    console.error('--- profile', profile)
     res.json({
       name: profile.name,
       nickname: profile.nickname,
@@ -105,7 +103,6 @@ router.route('*')
     debug('Abt to send req to api.')
     const url = `${apiHost}${req.url}`
     if (res.redis) {
-      console.log('fetch data from Redis.', req.url)
       const resData = JSON.parse(res.redis)
       res.json(resData)
     } else {

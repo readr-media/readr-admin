@@ -70,23 +70,18 @@ export function removeToken (domain) {
   })
 }
 export function getProfile (cookie) {
-  console.error('- util getProfile')
   return new Promise(resolve => {
     const token = cookie || getToken()
-    console.error('- util getProfile token', token)
     if (token) {
       const url = `${host}/api/profile`
-      console.error('- util getProfile url', url)
       superagent
       .get(url)
       .set('Authorization', `Bearer ${token}`)
       .end(function (err, res) {
         if (err) {
-          console.error('- util getProfile err', err)
           debug(err)
           resolve(err)
         } else {
-          console.error('- util getProfile res.body', res.body)
           debug({ status: res.status, body: camelizeKeys(res.body), })
           resolve({ profile: camelizeKeys(res.body), })
         }

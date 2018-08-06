@@ -21,19 +21,14 @@ const constructScope = (perms, role) => (
 )
 
 const fetchPermissions = () => {
-  console.error('--- fetchPermissions')
   return new Promise((resolve, reject) => {
     debug('About to fetch permissions')
     const url = `/permission/all`
-    console.error('--- fetchPermissions url', url)
     redisFetching(url, ({ error, data, }) => {
       if (!error && data) {
         debug('Got permissions from Redis secessfully')
-        console.error('--- fetchPermissions secessfully', JSON.parse(data))
         resolve(JSON.parse(data))
       } else {
-        console.error('--- fetchPermissions error', error)
-        console.error('--- fetchPermissions error url', `${apiHost}${url}`)
         debug('About to fetch permissions from api')
         superagent
         .get(`${apiHost}${url}`)

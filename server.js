@@ -93,11 +93,11 @@ function render (req, res, next) {
   const cookies = new Cookies( req, res, {} )
   const csrf = cookies.get('csrf')
   
-  if (!csrf) {
-    return res.redirect('https://www.readr.tw/login')
-  } else if (req.url.indexOf('/api/') === 0) {
+  if (req.url.indexOf('/api/') === 0) {
     next()
     return
+  } else if (!csrf) {
+    return res.redirect('https://www.readr.tw/login')
   } else if (req.url.indexOf('/404') === 0) {
     res.status(404).send('404 | Page Not Found')
     return

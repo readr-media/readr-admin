@@ -17,6 +17,9 @@ export default {
     PageAside,
     PageHeader
   },  
+  mounted () {
+    this.$store.dispatch('UPDATE_CLIENT_SIDE')
+  },
 }
 </script>
 

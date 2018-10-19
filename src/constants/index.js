@@ -1,3 +1,6 @@
+import { ROLE_MAP as ROLE_MAP_CONF, } from 'api/config'
+import { get, } from 'lodash'
+
 export const managerTools = [
   {
     name: 'candidate',
@@ -26,12 +29,20 @@ export const managerTools = [
       { name: 'memo-replies', route: 'memo-manager/replies' }
     ]
   },
+  {
+    name: 'member',
+    routee: 'member-manager',
+    sub: [
+      { name: 'member', route: 'member-manager/member' },
+    ]
+  },
 ]
+export const CUSTOM_EDITOR_LIMIT = 3
 export const ROLE_MAP = [
-  { key: 9, value: '管理員', route: 'admin' },
-  { key: 3, value: '編輯', route: 'editor' },
-  { key: 2, value: '總編', route: 'guesteditor' },
-  { key: 1, value: '會員', route: 'member' }
+  { key: get(ROLE_MAP_CONF, 'ADMIN'), value: '管理員', route: 'admin', },
+  { key: get(ROLE_MAP_CONF, 'EDITOR'), value: '編輯', route: 'editor', },
+  { key: get(ROLE_MAP_CONF, 'GUESTEDITOR'), value: '總編', route: 'guesteditor', },
+  { key: get(ROLE_MAP_CONF, 'MEMBER'), value: '會員', route: 'member', },
 ]
 export const PROJECT_STATUS_MAP = [
   { code: 0, name: 'status_canadate' },

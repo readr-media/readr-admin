@@ -1,13 +1,14 @@
 const _ = require('lodash')
 const { camelizeKeys } = require('humps')
 const { authorize, constructScope, fetchPermissions } = require('./services/perm')
+const { sendActivationMail } = require('./middle/member/comm')
 // const { verifyToken } = require('./middle/member/comm')
 const CONFIG = require('./config')
 const Cookies = require('cookies')
 const GoogleAuth = require('google-auth-library')
 const bodyParser = require('body-parser')
 const crypto = require('crypto')
-const debug = require('debug')('READR:api')
+const debug = require('debug')('READR-API:api')
 const express = require('express')
 const fs = require('fs')
 const isProd = process.env.NODE_ENV === 'production'
@@ -47,7 +48,43 @@ router.use('/project', require('./middle/project'))
 router.use('/report', require('./middle/report'))
 router.use('/tags', require('./middle/tags'))
 router.use('/image-post', require('./middle/image'))
-router.use('/members/nickname', authVerify)
+router.use('/members/*', authVerify)
+router.use('/member/*', authVerify)
+
+router.use('/register/admin', authVerify, (req, res, next) => {
+  const url = `${apiHost}/member`
+  const payload = req.body
+
+  payload.role = payload.role || 1
+  delete payload.id 
+
+  superagent
+    .post(url)
+    .send(payload)
+    .end((err, resp) => {
+      if (!err) {
+        debug('Added member by Admin successfully.')
+        next()
+      } else {
+        res.status(resp.status).json(err)
+        console.error(`Error occurred during register`)
+        console.error(err)
+      }
+    })
+}, (req, res) => {
+  debug('GOIN TO SEN EMAIL')
+  sendActivationMail({ id: req.body.mail, email: req.body.mail, role: _.get(req, 'body.role', 1), type: 'init', }, (e, response) => {
+    if (!e && response) {
+      debug('A member added by Admin')
+      debug(req.body)
+      res.status(200).end()
+    } else {
+      res.status(response.status).json(e)
+      console.error(`Error occurred during register`)
+      console.error(e)
+    }
+  })
+})
 
 router.get('/profile', [ authVerify ], (req, res) => {
   debug('req.user')
@@ -96,6 +133,21 @@ router.all('/memo', authVerify, (req, res, next) => {
 })
 router.all('/memo/:id', authVerify, (req, res, next) => {
   next()
+})
+
+
+router.delete('/member/:id', function (req, res) {
+  const url = `${apiHost}${req.url}`
+  superagent
+  .delete(url)
+  .end((err, response) => {
+    if (!err && response) {
+      res.status(200).end()
+    } else {
+      console.log('Error occurred when deleting stuff', err)
+      res.status(500).json(err)
+    }
+  })
 })
 
 router.route('*')

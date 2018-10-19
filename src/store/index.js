@@ -9,10 +9,14 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     state: {
+      customEditors: [],
+      isClientSide: false,
       projects: [],
       projectsCount: 0,
       memos: [],
       memosCount: 0,
+      members: [],
+      membersCount: 0,
       isLoggedIn: false,
       peopleList: [],
       profile: {},

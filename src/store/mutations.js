@@ -3,6 +3,9 @@ import { get } from 'lodash'
 const debug = require('debug')('CLIENT:mutations')
 
 export default {
+  SET_CLIENT_SIDE: (state) => {
+    state['isClientSide'] = true
+  },
   SET_LOGGEDIN_STATUS: (state, { status, body }) => {
     state['isLoggedIn'] = body
   },
@@ -32,6 +35,15 @@ export default {
   },
   SET_MEMOS_COUNT: (state, { count }) => {
     state.memosCount = count
+  },
+  SET_CUSTOM_EDITORS: (state, { members, }) => {
+    state['customEditors'] = members
+  },
+  SET_MEMBERS_COUNT: (state, { count, }) => {
+    state['membersCount'] = count
+  },
+  SET_MEMBERS: (state, { members, }) => {
+    state['members'] = members
   },
   REMOVE_MEMOS: (state, ids) => {
     state['memos'] = state['memos'].filter(memo => !ids.includes(memo.id))

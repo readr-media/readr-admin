@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { get, } from 'lodash'
 
 const debug = require('debug')('CLIENT:comm')
 
@@ -15,6 +16,10 @@ export function getHost () {
     const port = parseInt(process.env.PORT) || 8080
     return `${host}:${port}`
   }
+}
+
+export function isClientSide () {
+  return get(this.$store, 'state.isClientSide', false)
 }
 
 export function isDescendant (child, { parentClassname = 'none', parant }) {

@@ -3,7 +3,7 @@ import superagent from 'superagent'
 import { camelizeKeys, decamelize, decamelizeKeys } from 'humps'
 import { getHost } from 'src/util/comm'
 import { getToken } from '../util/services'
-import { mapValues } from 'lodash'
+import { get, mapValues } from 'lodash'
 
 const debug = require('debug')('CLIENT:api')
 const host = getHost()
@@ -20,7 +20,8 @@ function _buildQuery (params = {}) {
     'memberId',
     'page',
     'sort',
-    'where'
+    'where',
+    'custom_editor',
   ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
@@ -44,6 +45,15 @@ function _buildQuery (params = {}) {
   query = qs.stringify(query)
   debug('Query build done.', query)
   return query
+}
+
+export function constructUrlWithQuery (url, params) {
+  const _query = _buildQuery(params)
+  let _url = url
+  if (_query && (_query.length > 0)) {
+    _url = _url + `?${_query}`
+  }
+  return _url
 }
 
 function _doDelete (url, params) {
@@ -109,6 +119,19 @@ function _doPut (url, params) {
   })
 }
 
+export function addMember (params) {
+  const url = `${host}/api/register/admin`
+  params.register_mode = 'ordinary'
+  params.id = params.email
+  params.mail = params.email
+  params.active = 0
+  return _doPost(url, params)
+    .then(res => ({ status: res.status, }))
+    .catch(err => {
+      return Promise.reject(get(JSON.parse(get(err, 'response.text')), 'response.text'))
+    })
+}
+
 export function checkLoginStatus ({ params = {}}) {
   debug('Going to send req to check status...')
   const url = `${host}/api/status`
@@ -125,6 +148,11 @@ export function createProject ({ params }) {
 
 export function createReport ({ params }) {
   return _doPost(`${host}/api/report/create`, params)
+}
+
+export function deleteMember ({ params, }) {
+  const url = `${host}/api/member/${params.id}`
+  return _doDelete(url, {})
 }
 
 export function deleteMemos ({ params }) {
@@ -225,6 +253,29 @@ export function fetchTags ({ params }) {
   debug('params', params)
   debug('Abt to fetch data:', url)
   return _doFetchStrict(url, {})
+}
+
+export function getMembers ({ params, }) {
+  const url = constructUrlWithQuery(`${host}/api/members`, params)
+  return _doFetchStrict(url, {})
+}
+
+
+export function getMembersByName ({ params, }) {
+  const url = constructUrlWithQuery(`${host}/api/members/nickname`, params)
+  return _doFetchStrict(url, {})
+}
+
+export function getMembersCount () {
+  let url = `${host}/api/members/count`
+  return _doFetchStrict(url, {})
+}
+
+export function updateMember ({ params, type, }) {
+  const url = type !== 'role' ? `${host}/api/member` : `${host}/api/member/role`
+  return _doPut(url, params)
+    .then(res => ({ status: res.status, }))
+    .catch(err => err)
 }
 
 export function updateMemo ({ params }) {
